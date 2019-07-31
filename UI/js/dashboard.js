@@ -7,6 +7,7 @@ class Dashboard {
         this.createTrip();
         this.handleBooking();
         this.submitBooking();
+        this.deleteBooking();
     }
     createTrip(){
         $('#btn_create_trip').addEventListener('click',()=>{
@@ -45,6 +46,11 @@ class Dashboard {
                 access.style.display = 'none';
                 $('.user-default-tab').id = 'defaultOpen'; //Set user default tab id 
                 $('.admin-default-tab').id = ""; // Remove default admin tab. Create trips
+            });
+
+            // Append default user name in bookings
+            $$('.username').forEach(username => {
+                username.textContent = "Jon Doe";
             });
             $('.avatar').src = "../assets/images/default_avatar.png";
         }
@@ -98,6 +104,17 @@ class Dashboard {
                 $('#seat_not_entered').textContent = 'Seat number is not selected';
             }
         });
+    }
+
+      deleteBooking() {
+        const deleteButtons = $$('.delete_booking');
+        for (const btnDelete of deleteButtons) {
+            btnDelete.addEventListener('click', () => {
+                if(this.isAdmin === "user"){
+                showSnackBar('Booking deleted successfully ');
+                }
+            });
+        }
     }
 
 }
