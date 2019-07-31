@@ -42,7 +42,7 @@
                 trip</button>
             <button class="tablinks user-default-tab" onclick="new Dashboard().displayDash(event, 'view_trip')" aria-both-access>View trips</button>
             <button class="tablinks" onclick="new Dashboard().displayDash(event, 'book_seat')" id="book_a_seat" aria-user-access>Book seat</button>
-            <button class="tablinks" aria-both-access>Bookings</button>
+            <button class="tablinks" onclick="new Dashboard().displayDash(event, 'bookings')" aria-both-access>Bookings</button>
         </div>
     </section>
     <section class="content">
@@ -292,6 +292,101 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Start bookings section -->
+            <div id="bookings" class="tabcontent marg-top">
+                <div class="col-md-2 marg-top">
+                    <!-- First booking card -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/avatar.png" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h3 class="section-title username">John Doe</h3>
+                            <p class="align-center">
+                                <span>Booking ID :</span>
+                                <span></i> 020</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Seat No.:</span>
+                                <span></i>34</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Created on.:</span>
+                                <span></i>16 July 2019</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Second booking card -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/default_avatar.png" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h3 class="section-title username">Don Basubi</h3>
+                            <p class="align-center">
+                                <span>Booking ID :</span>
+                                <span></i> 006</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Seat No.:</span>
+                                <span></i>06</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Created on.:</span>
+                                <span></i>10 August 2019</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Third booking card -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/default_avatar.png" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h3 class="section-title username">Don Basubi</h3>
+                            <p class="align-center">
+                                <span>Booking ID :</span>
+                                <span></i> 001</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Seat No.:</span>
+                                <span></i>09</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Created on.:</span>
+                                <span></i>16 August 2019</span>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <!-- Fourth booking card -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/avatar.png" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h3 class="section-title username">John Doe</h3>
+                            <p class="align-center">
+                                <span>Booking ID :</span>
+                                <span></i> 004</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Seat No.:</span>
+                                <span></i>20</span>
+                            </p>
+                            <p class="align-center">
+                                <span>Created on.:</span>
+                                <span></i>01 August 2019</span>
+                            </p>
+
+                        </div>
+                    </div>
+                </div> <!-- End of col-md-2 div-->
+            </div> <!-- End of bookings tab content -->
         </div> <!-- End of wrapper div -->
     </section>
     <!-- POP MODAL -->

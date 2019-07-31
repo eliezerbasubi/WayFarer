@@ -46,11 +46,6 @@ class Dashboard {
                 $('.user-default-tab').id = 'defaultOpen'; //Set user default tab id 
                 $('.admin-default-tab').id = ""; // Remove default admin tab. Create trips
             });
-
-            // Append default user name in bookings
-            $$('.username').forEach(username => {
-                username.textContent = "Jon Doe";
-            });
             $('.avatar').src = "../assets/images/default_avatar.png";
         }
     }
