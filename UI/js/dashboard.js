@@ -1,10 +1,11 @@
 class Dashboard {
     constructor() {
-        this.isAdminD = localStorage.getItem('isAdmin');
+        this.isAdmin = localStorage.getItem('isAdmin');
         this.manageUsers();
         this.displayBoxModal();
         this.defaultClick();
         this.createTrip();
+        this.handleBooking();
     }
     createTrip(){
         $('#btn_create_trip').addEventListener('click',()=>{
@@ -54,10 +55,9 @@ class Dashboard {
     }
 
     cancelTrip(){
-        const isAdmin = localStorage.getItem('isAdmin');
         $$('.cancel_trip').forEach(button => {
             button.addEventListener('click',()=>{
-                if(isAdmin === "admin"){
+                if(this.isAdmin === "admin"){
                     showSnackBar('Trip cancelled successfully');
                 }
             });
@@ -79,6 +79,18 @@ class Dashboard {
         $(".close").onclick = function () {
             $('#myModal').style.display = "none";
         }
+    }
+
+      // Handle button from specific trip page
+      handleBooking() {
+        if(this.isAdmin === 'admin'){
+            $('#btn-booking').style.display = 'none'
+        }
+        $('#btn-booking').addEventListener('click', () => {
+            this.displayDash(event, 'book_seat');
+            $('#book_a_seat').className += ' active';
+            $('#myModal').style.display = 'none';
+        });
     }
 
 }
