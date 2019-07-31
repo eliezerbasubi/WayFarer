@@ -2,6 +2,7 @@ class HomePage {
     constructor() {
         this.showModal();
         this.scrollLoader();
+        this.openSignUp();
     }
 
     showModal() {
@@ -38,6 +39,11 @@ class HomePage {
         }
     }
 
+    openSignUp(){
+        $('#btn-create-account').addEventListener('click',()=>{
+            document.location.href = "html/signup.html";
+        });
+    }
 }
 
 document.addEventListener("DOMContentLoaded", new HomePage());

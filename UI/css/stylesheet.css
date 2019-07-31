@@ -6,7 +6,7 @@
 
 html,
 body {
-    font: 100%/1.5 Tahoma, Helvetica, sans-serif;
+    font: 100%/1.5 Tahoma,cursive ,Helvetica, sans-serif;
 }
 
 /*--- Start Globals ---*/
@@ -227,7 +227,7 @@ textarea {
 
 .flex-right-card {
     justify-content: right;
-    margin: 4rem 3rem;
+    margin: 2rem ;
     max-width: 500px;
     padding: 3rem 2rem;
     background: #fff;
@@ -269,9 +269,9 @@ textarea {
 }
 
 .flex-right {
-    margin: 4rem 3rem;
+    margin: 2rem 1rem;
     max-width: 500px;
-    padding: 3rem 2rem;
+    padding: 3rem 1rem;
     color: #fff;
 }
 
@@ -1059,20 +1059,17 @@ header .navbar {
         flex: 0 0 calc(25%- 0.5rem);
     }
 }
-[aria-hidden-default]{
-    display: none;
-}
 @media screen and (max-width: 768px) {
+    .responsive-margin-top{
+        margin-top: 1rem;
+    }
+    .flex-right-card{
+        margin: -4rem 1rem 1rem;
+        justify-items: center;
+    }
     .col-md-2{
         display: block;
         flex: 0 1 calc(100%);
-    }
-    [aria-display]{
-        display: none;
-    }
-
-    [aria-hidden-default]{
-        display: block;
     }
     .marg-top {
         margin-top: 0;
