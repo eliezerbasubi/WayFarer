@@ -26,7 +26,7 @@ class SignUp extends Validator {
         const phone = $("#phone").value;
         const password = $("#password").value;
         const confirmPassword = $("#confirmPassword").value;
-        const city = $("#user_city").value;
+        const city = $("#user_city").textContent;
 
         let isValid = true;
 
