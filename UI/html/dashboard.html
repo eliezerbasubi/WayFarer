@@ -40,7 +40,7 @@
             <button class="tablinks admin-default-tab" onclick="new Dashboard().displayDash(event, 'create_trip')"
                 id="defaultOpen" aria-admin-access>Create
                 trip</button>
-            <button class="tablinks user-default-tab" aria-both-access>View trips</button>
+            <button class="tablinks user-default-tab" onclick="new Dashboard().displayDash(event, 'view_trip')" aria-both-access>View trips</button>
             <button class="tablinks"aria-user-access>Book seat</button>
             <button class="tablinks" aria-both-access>Bookings</button>
         </div>
@@ -132,6 +132,111 @@
                         placeholder="Say Something about your trip" class="form-input"></textarea>
                     <button type="submit" class="btn btn-secondary" id="btn_create_trip">Create trip</button>
                 </div>
+            </div>
+
+            <!-- Start view trips section -->
+            <div id="view_trip" class="tabcontent marg-top">
+                <div class="col-md-2 flex-justify-space-evenly">
+                    <!-- First trip card -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/trip4.jpg" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h2 class="section-title trip-name">Smart trip</h2>
+                            <p class="align-center">
+                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
+                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
+                            </p>
+                            <p class="align-center pad-small">
+                                <span><i class="far fa-calendar-alt fg-origin"></i> 16 August 2019</span>
+                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
+                            </p>
+                        </div>
+                        <div class="flex-card-minified">
+                            <div class="flex flex-card-fare">
+                                <p class="box-shadowed">$12.5</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Second trip card -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/trip5.jpg" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h2 class="section-title trip-name">Agile trip</h2>
+                            <p class="align-center">
+                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
+                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
+                            </p>
+                            <p class="align-center pad-small">
+                                <span><i class="far fa-calendar-alt fg-origin"></i> 12 August 2019</span>
+                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
+                            </p>
+                        </div>
+                        <div class="flex-card-minified">
+                            <div class="flex flex-card-fare">
+                                <p class="box-shadowed">$90.5</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row  -->
+                <div class="col-md-2 flex-justify-space-evenly">
+                    <!-- Third trip card -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/trip7.jpg" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h2 class="section-title trip-name">Easter trip</h2>
+                            <p class="align-center">
+                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
+                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
+                            </p>
+                            <p class="align-center pad-small">
+                                <span><i class="far fa-calendar-alt fg-origin"></i> 25 August 2019</span>
+                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
+                            </p>
+                        </div>
+                        <div class="flex-card-minified">
+                            <div class="flex flex-card-fare">
+                                <p class="box-shadowed">$35.5</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fourth trip -->
+                    <div class="flex-justify-card marg-bottom">
+                        <div class="flex-img-left">
+                            <img src="../assets/images/tn_trip9.jpg" alt="" class="trip_img_view">
+                        </div>
+                        <div class="flex-align-items-center">
+                            <h2 class="section-title trip-name">Classic trip</h2>
+                            <p class="align-center">
+                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
+                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
+                            </p>
+                            <p class="align-center pad-small">
+                                <span><i class="far fa-calendar-alt fg-origin"></i> 16 August 2019</span>
+                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
+                            </p>
+                        </div>
+                        <div class="flex-card-minified">
+                            <div class="flex flex-card-fare">
+                                <p class="box-shadowed">$45.5</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- VIEW MORE  -->
+                <div class="view_more align-center">
+                    <button type="button" value="" class="btn btn-primary"><i class="fas fa-angle-double-down"></i> View more</button>
+                </div>
+                <!-- End of view trips tab -->
             </div>
         </div> <!-- End of wrapper div -->
     </section>
