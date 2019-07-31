@@ -28,7 +28,7 @@
         <div class="avatar-cover">
             <img src="../assets/images/avatar.png" alt="user profile" class="avatar" aria-hidden="true">
             <span>
-                <p>Eliezer Basubi</p>
+                <p class="username">Eliezer Basubi</p>
             </span>
             <label for="toggler">
                 <img src="../assets/images/humberger.png" alt="menu icon" class="navbar-icon">
@@ -158,6 +158,8 @@
                                 <p class="box-shadowed">$12.5</p>
                             </div>
                             <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
+                                <button class="view_specific_trip flex-button-action"><i
+                                    class="fas fa-eye "></i></button>
                                 <button class="cancel_trip flex-button-action" aria-admin-access><i
                                         class="far fa-trash-alt flex-fare-style"></i></button>
                             </div>
@@ -185,6 +187,8 @@
                                 <p class="box-shadowed">$90.5</p>
                             </div>
                             <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
+                                <button class="view_specific_trip flex-button-action"><i
+                                    class="fas fa-eye "></i></button>
                                 <button class="cancel_trip flex-button-action" aria-admin-access><i
                                         class="far fa-trash-alt flex-fare-style"></i></button>
                             </div>
@@ -215,6 +219,8 @@
                                 <p class="box-shadowed">$35.5</p>
                             </div>
                             <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
+                                <button class="view_specific_trip flex-button-action"><i
+                                    class="fas fa-eye "></i></button>
                                 <button class="cancel_trip flex-button-action" aria-admin-access><i
                                         class="far fa-trash-alt flex-fare-style"></i></button>
                             </div>
@@ -242,6 +248,8 @@
                                 <p class="box-shadowed">$45.5</p>
                             </div>
                             <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
+                                <button class="view_specific_trip flex-button-action"><i
+                                        class="fas fa-eye "></i></button>
                                 <button class="cancel_trip flex-button-action" aria-admin-access><i
                                         class="far fa-trash-alt flex-fare-style"></i></button>
                             </div>
@@ -256,7 +264,41 @@
             </div>
         </div> <!-- End of wrapper div -->
     </section>
+    <!-- POP MODAL -->
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
 
+        <div class="modal-content bg-white">
+            <div class="flex-justify-card flex-description" id="specific_trip">
+                <div class="flex-img-trip">
+                    <p class="trip-details-fare box-shadowed">$45.0</p>
+                    <img src="../assets/images/tn_trip1.jpg" alt="trip image" class="trip_img_view"
+                        id="displayer-trip-img">
+                </div>
+                <div class="flex-trip-description">
+                    <h2 class="section-title display-trip-name">Easter trip</h2>
+                    <p>
+                        <span>Origin :</span> <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span> </p>
+                    <p>Destination: <i class="fas fa-map-marker-alt fg-destination"></i> Kampala</p>
+                    <p>Departure : <i class="far fa-calendar-alt fg-origin"></i> 16 August 2019</p>
+                    <p>Time: <i class="far fa-clock fg-origin"></i> 11:30</p>
+                    <p>Arrival : <i class="far fa-calendar-alt fg-destination"></i> 16 August 2019</p>
+                    <p>Bus license number : <i class="fas fa-bus fg-destination"></i> FW009845</p>
+                    <p>Seating Capacity : <i class="fas fa-bus fg-destination"></i> 44</p>
+
+                    <div class="flex-book-button">
+                        <input type="button" value="Book now" class="btn btn-secondary" id="btn-booking">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="caption">
+            Never miss the chance to visit the stunning places around you. Book now and keep your seat for this
+            upcoming trip.
+        </div>
+    </div>
     <!-- Snackbar -->
     <div id="snackbar"></div>
 </body>
