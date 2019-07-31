@@ -6,7 +6,7 @@ class SignIn extends Validator {
 
     // Open dashboard page
     intent() {
-        const adminDefaultEmail = "admin1234gmail.com";
+        const adminDefaultEmail = "admin1234@gmail.com";
         const input_email = $('#email_log').value;
         if (input_email === adminDefaultEmail) {
             localStorage.setItem('isAdmin', 'admin'); 
