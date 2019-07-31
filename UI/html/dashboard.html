@@ -41,7 +41,7 @@
                 id="defaultOpen" aria-admin-access>Create
                 trip</button>
             <button class="tablinks user-default-tab" onclick="new Dashboard().displayDash(event, 'view_trip')" aria-both-access>View trips</button>
-            <button class="tablinks"aria-user-access>Book seat</button>
+            <button class="tablinks" onclick="new Dashboard().displayDash(event, 'book_seat')" id="book_a_seat" aria-user-access>Book seat</button>
             <button class="tablinks" aria-both-access>Bookings</button>
         </div>
     </section>
@@ -261,6 +261,36 @@
                     <button type="button" value="" class="btn btn-primary"><i class="fas fa-angle-double-down"></i> View more</button>
                 </div>
                 <!-- End of view trips tab -->
+            </div>
+
+            <!-- Start book seat section -->
+            <div id="book_seat" class="tabcontent">
+                <div class="flex-justify-card flex-description marg-top pad-responsive" id="specific_trip">
+                    <div class="flex-align-items-center trip_img_view">
+                        <h2 class="section-title trip-name">Click to select</h2>
+                        <div id="bus_maps" class="align-center"></div>
+
+                    </div>
+                    <div class="flex-trip-description" id="booking_details">
+                        <h2>Submit your booking</h2>
+                        <p class="error" id="seat_not_entered"></p>
+                        <form action="" id="form-booking">
+                            <!-- <input type="text" class="form-input-control"> -->
+                            <select name="select_trip" id="select_trip" class="flex-input-center">
+                                <option value="" selected disabled>Select a trip</option>
+                                <option value="">Summer camp</option>
+                                <option value="">Quantico</option>
+                                <option value="">Bootcamp</option>
+                                <option value="">Trinity</option>
+                                <option value="">Pilgrimage</option>
+                            </select>
+                            <input type="text" class="form-input-control" id="fare" value="$45.9" readonly>
+                            <input type="text" class="form-input-control" id="selected_seat_no"
+                                placeholder="Seat number">
+                            <input type="button" value="Submit" class="btn btn-secondary" id="btn-submit-booking">
+                        </form>
+                    </div>
+                </div>
             </div>
         </div> <!-- End of wrapper div -->
     </section>
