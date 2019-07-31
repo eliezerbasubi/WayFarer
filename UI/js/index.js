@@ -19,6 +19,21 @@ const $$ = (selector) => {
     return document.querySelectorAll(selector);
 }
 
+/**
+ * This function display snackbar
+ * @param {String} snackContent 
+ */
+const showSnackBar = (snackContent) =>{
+    // Show snackbar for 3s 
+    const displaySnack = $("#snackbar");
+    displaySnack.textContent = snackContent;
+    displaySnack.className = "show";
+    setTimeout(() => {
+        displaySnack.className = displaySnack.className.replace("show", "")
+    }, 3000);
+}
+
+
 /** Validator Class  */
 class Validator {
     validate(inputType, value) {

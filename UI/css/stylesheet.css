@@ -908,6 +908,8 @@ header .navbar {
     color: #000;
     padding: 1rem;
     border-radius: 50%;
+    font-family: cursive;
+    font-weight: 700;
 }
 
 .flex-button-action {
