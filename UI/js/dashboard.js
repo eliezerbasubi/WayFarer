@@ -28,12 +28,10 @@ class Dashboard {
         evt.currentTarget.className += " active";
     }
 
-    // Set default click for first item in menu
     defaultClick() {
         $("#defaultOpen").click();
     }
 
-    // Retrieve user status (isAdmin)
     manageUsers() {
         if (this.isAdmin === 'admin') {
             $$('[aria-user-access]').forEach(access => {
@@ -41,10 +39,16 @@ class Dashboard {
             });
             this.cancelTrip();
         } else {
+            this.deleteBooking();
+
             $$('[aria-admin-access]').forEach(access => {
                 access.style.display = 'none';
-                $('.user-default-tab').id = 'defaultOpen'; //Set user default tab id 
-                $('.admin-default-tab').id = ""; // Remove default admin tab. Create trips
+                $('.user-default-tab').id = 'defaultOpen'; 
+                $('.admin-default-tab').id = ""; 
+            });
+
+            $$('.username').forEach(username => {
+                username.textContent = "Jon Doe";
             });
 
             // Append default user name in bookings
@@ -58,9 +62,7 @@ class Dashboard {
     cancelTrip(){
         $$('.cancel_trip').forEach(button => {
             button.addEventListener('click',()=>{
-                if(this.isAdmin === "admin"){
-                    showSnackBar('Trip cancelled successfully');
-                }
+                showSnackBar('Trip deleted successfully');
             });
         });
     }
@@ -82,7 +84,6 @@ class Dashboard {
         }
     }
 
-      // Handle button from specific trip page
       handleBooking() {
         if(this.isAdmin === 'admin'){
             $('#btn-booking').style.display = 'none'
@@ -103,6 +104,17 @@ class Dashboard {
                 $('#seat_not_entered').textContent = 'Seat number is not selected';
             }
         });
+    }
+
+      deleteBooking() {
+        const deleteButtons = $$('.delete_booking');
+        for (const btnDelete of deleteButtons) {
+            btnDelete.addEventListener('click', () => {
+                if(this.isAdmin === "user"){
+                    showSnackBar('Booking deleted successfully ');
+                }
+            });
+        }
     }
 
 }
