@@ -1,7 +1,9 @@
 class Dashboard {
     constructor() {
+        this.isAdminD = localStorage.getItem('isAdmin');
         this.defaultClick();
         this.createTrip();
+        this.cancelTrip();
     }
     createTrip(){
         $('#btn_create_trip').addEventListener('click',()=>{
@@ -26,6 +28,45 @@ class Dashboard {
     // Set default click for first item in menu
     defaultClick() {
         $("#defaultOpen").click();
+    }
+
+    // Retrieve user status (isAdmin)
+    manageUsers() {
+        const adminAccess = $$('[aria-admin-access]');
+        const userAccess = $$('[aria-user-access]');
+        const adminTabDefault = $('.admin-default-tab');
+        const userDefaultTab = $('.user-default-tab');
+        const names = $$('.username');
+
+        if (this.isAdmin === 'admin') {
+            userAccess.forEach(access => {
+                access.style.display = 'none';
+            });
+            this.cancelTrip();
+        } else {
+            adminAccess.forEach(access => {
+                access.style.display = 'none';
+                userDefaultTab.id = 'defaultOpen'; //Set user default tab id 
+                adminTabDefault.id = ""; // Remove default admin tab. Create trips
+            });
+
+            // Append default user name in bookings
+            names.forEach(username => {
+                username.textContent = "Jon Doe";
+            });
+        }
+    }
+
+    cancelTrip(){
+        const isAdmin = localStorage.getItem('isAdmin');
+        const btns_cancel = $$('.cancel_trip');
+        btns_cancel.forEach(button => {
+            button.addEventListener('click',()=>{
+                if(isAdmin === "admin"){
+                    showSnackBar('Trip cancelled successfully');
+                }
+            });
+        });
     }
 
 }
