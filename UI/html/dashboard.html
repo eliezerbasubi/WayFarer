@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard | WayFarer</title>
+    <link rel="shortcut icon" href="../assets/images/waytrip.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/stylesheet.css">
+    <script src="../js/all.js"></script>
+    <script src="../js/index.js"></script>
+</head>
+
+<body>
+    <header>
+        <!-- Start Navigation  bar -->
+        <div class="navbar">
+            <h1 class="logo" id="logo"><a href="../index.html">WayFarer<span> Trips</span></a></h1>
+            <ul class="navbar-list">
+                <li class="current"><a href="../index.html">Home</a></li>
+                <li><a href="login.html">Logout</a></li>
+            </ul>
+        </div>
+        <!-- End Navigation bar -->
+    </header>
+    <section class="sidebar">
+        <div class="avatar-cover">
+            <img src="../assets/images/avatar.png" alt="user profile" class="avatar" aria-hidden="true">
+            <span>
+                <p>Eliezer Basubi</p>
+            </span>
+            <label for="toggler">
+                <img src="../assets/images/humberger.png" alt="menu icon" class="navbar-icon">
+            </label>
+            </span>
+        </div>
+        <input type="checkbox" name="" id="toggler">
+        <div class="tab">
+            <button class="tablinks admin-default-tab" onclick="new Dashboard().displayDash(event, 'create_trip')"
+                id="defaultOpen" aria-admin-access>Create
+                trip</button>
+            <button class="tablinks user-default-tab" aria-both-access>View trips</button>
+            <button class="tablinks"aria-user-access>Book seat</button>
+            <button class="tablinks" aria-both-access>Bookings</button>
+        </div>
+    </section>
+    <section class="content">
+        <div class="wrapper">
+            <!-- Create trip -->
+            <div id="create_trip" class="tabcontent">
+                <div class="flex-center-card">
+                    <p><span class="error"></span></p>
+                    <h1 class="section-title">Create a trip</h1>
+
+                    <div class="col-md-2">
+                        <div class="flex-input-center">
+                            <label for="trip_name"><b>Trip name</b></label>
+                            <input type="text" placeholder="Enter trip name" class="form-input flex-input-center"
+                                id="trip_name">
+                            <label for="trip_name" class="error error-tripname"></label>
+                        </div>
+                        <div class="flex-input-center">
+                            <label for="bus_license" class="flex-input-center"><b>Bus License No</b></label>
+                            <input type="text" placeholder="Enter bus license number"
+                                class="form-input flex-input-center" id="bus_license_no">
+                            <label for="bus_license" class="error error-bus_license"></label>
+                        </div>
+                    </div>
+
+                    <!-- Seating capacity and fare -->
+                    <div class="col-md-2">
+                        <div class="flex-input-center">
+                            <label for="seating_capacity"><b>Seating Capacity</b></label>
+                            <input type="text" placeholder="Enter seating capacity" class="form-input flex-input-center"
+                                id="seating_capacity">
+                            <label for="seating_capacity" class="error error-seating_capacity"></label>
+                        </div>
+                        <div class="flex-input-center">
+                            <label for="fare" class="flex-input-center"><b>Fare</b></label>
+                            <input type="text" placeholder="Enter fare" class="form-input flex-input-center" id="fare">
+                            <label for="fare" class="error error-fare"></label>
+                        </div>
+                    </div>
+
+                    <!-- Origin and destination -->
+                    <div class="col-md-2">
+                        <div class="flex-input-center">
+                            <label for="origin"><b>Origin</b></label>
+                            <input type="text" placeholder="Enter origin" class="form-input flex-input-center"
+                                id="origin">
+                                <label for="origin" class="error error-origin"></label>
+                        </div>
+                        <div class="flex-input-center">
+                            <label for="destination" class="flex-input-center"><b>Destination</b></label>
+                            <input type="text" placeholder="Enter destination" class="form-input flex-input-center"
+                                id="destination">
+                            <label for="destination" class="error error-destination"></label>
+                        </div>
+                    </div>
+
+                    <!-- Departure date and time -->
+                    <div class="col-md-2">
+                        <div class="flex-input-center">
+                            <label for="departure"><b>Departure</b></label>
+                            <input type="date" placeholder="Departure date" class="form-input" id="departure">
+                            <label for="departure" class="error error-departure"></label>
+                        </div>
+                        <div class="flex-input-center">
+                            <label for="departure_time"><b>Time</b></label>
+                            <input type="time" placeholder="Time of departure" class="form-input" id="departure_time">
+                            <label for="departure_time" class="error error-departure_time"></label>
+                        </div>
+                    </div>
+
+                    <!-- Departure date and time -->
+                    <div class="col-md-2">
+                        <div class="flex-input-center">
+                            <label for="arrival"><b>Arrival Date</b></label>
+                            <input type="date" class="form-input flex-input-center" id="arrival">
+                            <label for="departure_time" class="error error-arrival"></label>  
+                        </div>
+                        <div class="flex-input-center">
+                            <label for="duration" class="flex-input-center"><b>Duration</b></label>
+                            <input type="number" placeholder="Enter trip duration" class="form-input flex-input-center"
+                                id="duration">
+                            <label for="duration" class="error error-duration"></label>
+                        </div>
+                    </div>
+                    <label for="contact-textarea"><b>Describe your trip</b></label>
+                    <textarea name="description" id="contact-textarea" cols="30" rows="3"
+                        placeholder="Say Something about your trip" class="form-input"></textarea>
+                    <button type="submit" class="btn btn-secondary" id="btn_create_trip">Create trip</button>
+                </div>
+            </div>
+        </div> <!-- End of wrapper div -->
+    </section>
+
+    <!-- Snackbar -->
+    <div id="snackbar"></div>
+</body>
+
+<script src="../js/dashboard.js"></script>
+
+</html>
