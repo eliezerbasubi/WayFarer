@@ -694,6 +694,7 @@ header .navbar {
     margin: 1rem 0 0 auto;
     padding: 1rem 0;
     border-bottom: 1px ridge #fff;
+    cursor: pointer;
 }
 
 .avatar {
@@ -966,6 +967,8 @@ header .navbar {
     padding: 1rem;
     border-top-left-radius: 15px;
     border-bottom-right-radius: 15px;
+    font-family: cursive;
+    font-weight: 700;
 }
 
 /* ******************************** */
@@ -1111,6 +1114,12 @@ header .navbar {
 
     #specific_trip .flex-img-trip {
         flex: 0 1 100%;
+    }
+
+    .trip-details-fare{
+        top: 50%;
+        right: 6%;
+        transition: 1s;
     }
 }
 
