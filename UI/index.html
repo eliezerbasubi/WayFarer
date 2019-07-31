@@ -20,7 +20,7 @@
             <ul class="navbar-list">
                 <li class="current"><a href="">Home</a></li>
                 <li><a href="html/login.html">Login</a></li>
-                <li><a href="">Signup</a></li>
+                <li><a href="html/signup.html">Signup</a></li>
             </ul>
         </div>
         <!-- End Navigation bar -->
@@ -33,7 +33,7 @@
                 times with family and beloved ones. We feed your envy to visit wonderful places, places that you can
                 even imagine they exist.
                 We seek for environments for you to refresh your mind and relax. </p>
-            <input type="button" value="Create an account" class="btn btn-primary box-shadowed">
+            <input type="button" value="Create an account" class="btn btn-primary box-shadowed" id="btn-create-account">
         </div>
         <!-- End description -->
     </header>
@@ -241,13 +241,16 @@
         <div class="column">
             <form>
                 <div class="col-md-2">
-                    <label for="arrival"><b>Full name</b></label>
-                    <label for="duration" class="flex-input-center" aria-display><b>Email</b></label>
-                    <input type="text" placeholder="Enter your name" class="form-input flex-input-center"
-                        id="contact-name">
-                    <label for="duration" class="flex-input-center" aria-hidden-default><b>Email</b></label>
-                    <input type="email" placeholder="Enter your email" class="form-input flex-input-center"
-                        id="contact-email">
+                    <div class="flex-input-center">
+                        <label for="arrival"><b>Full name</b></label>
+                        <input type="text" placeholder="Enter your name" class="form-input"
+                            id="contact-name">
+                    </div>
+                    <div class="flex-input-center">
+                        <label for="duration" ><b>Email</b></label>
+                        <input type="email" placeholder="Enter your email" class="form-input"
+                            id="contact-email">
+                    </div>
                 </div>
                 <label for="arrival"><b>About your message</b></label>
                 <textarea name="message" id="contact-textarea" cols="30" rows="10" class="form-input"
