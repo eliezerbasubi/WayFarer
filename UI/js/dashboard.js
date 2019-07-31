@@ -1,9 +1,10 @@
 class Dashboard {
     constructor() {
         this.isAdminD = localStorage.getItem('isAdmin');
+        this.manageUsers();
+        this.displayBoxModal();
         this.defaultClick();
         this.createTrip();
-        this.cancelTrip();
     }
     createTrip(){
         $('#btn_create_trip').addEventListener('click',()=>{
@@ -32,41 +33,52 @@ class Dashboard {
 
     // Retrieve user status (isAdmin)
     manageUsers() {
-        const adminAccess = $$('[aria-admin-access]');
-        const userAccess = $$('[aria-user-access]');
-        const adminTabDefault = $('.admin-default-tab');
-        const userDefaultTab = $('.user-default-tab');
-        const names = $$('.username');
-
         if (this.isAdmin === 'admin') {
-            userAccess.forEach(access => {
+            $$('[aria-user-access]').forEach(access => {
                 access.style.display = 'none';
             });
             this.cancelTrip();
         } else {
-            adminAccess.forEach(access => {
+            $$('[aria-admin-access]').forEach(access => {
                 access.style.display = 'none';
-                userDefaultTab.id = 'defaultOpen'; //Set user default tab id 
-                adminTabDefault.id = ""; // Remove default admin tab. Create trips
+                $('.user-default-tab').id = 'defaultOpen'; //Set user default tab id 
+                $('.admin-default-tab').id = ""; // Remove default admin tab. Create trips
             });
 
             // Append default user name in bookings
-            names.forEach(username => {
+            $$('.username').forEach(username => {
                 username.textContent = "Jon Doe";
             });
+            $('.avatar').src = "../assets/images/default_avatar.png";
         }
     }
 
     cancelTrip(){
         const isAdmin = localStorage.getItem('isAdmin');
-        const btns_cancel = $$('.cancel_trip');
-        btns_cancel.forEach(button => {
+        $$('.cancel_trip').forEach(button => {
             button.addEventListener('click',()=>{
                 if(isAdmin === "admin"){
                     showSnackBar('Trip cancelled successfully');
                 }
             });
         });
+    }
+
+    displayBoxModal() {
+        const views = $$('.view_specific_trip');
+
+        for (let index = 0; index < views.length; index++) {
+            views[index].addEventListener('click', () => {
+                $('#myModal').style.display = "block";
+                $("#displayer-trip-img").src = $$('.trip_img_view')[index].src;
+                $('.display-trip-name').textContent = $$('.trip-name')[index].textContent
+            });
+
+        }
+
+        $(".close").onclick = function () {
+            $('#myModal').style.display = "none";
+        }
     }
 
 }
