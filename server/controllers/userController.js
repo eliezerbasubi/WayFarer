@@ -120,8 +120,12 @@ export default class UserController {
 
         if (matchedPwd) {
           user.password = hashednewPassword;
-
-          return Helper.success(res, SUCCESS_CODE, req.body, RESET_SUCCESSFUL);
+          const display = {
+            id: user.id,
+            firstName: user.firstName,
+            email: user.email
+          };
+          return Helper.success(res, SUCCESS_CODE, display, RESET_SUCCESSFUL);
         }
         return Helper.error(res, UNAUTHORIZED_CODE, OLD_PASSWORD_NOT_MATCH);
       }
