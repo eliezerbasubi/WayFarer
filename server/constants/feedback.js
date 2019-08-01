@@ -21,3 +21,7 @@ export const ACCESS_RESTRICTED = 'Access restricted';
 export const NO_BOOKINGS = 'No bookings yet';
 export const HAVE_NO_BOOKINGS = 'You have no bookings';
 export const BOOKING_NOT_FOUND = 'Cannot find booking with the given ID';
+export const RESET_SUCCESSFUL = 'Password resetted successfully';
+export const PASSWORD_DOESNT_MATCH = 'Password does not match';
+export const OLD_PASSWORD_NOT_MATCH = 'Unable to match your old password';
+export const USER_ID_NOT_FOUND = 'The Specified ID Is Not Found';

@@ -35,7 +35,11 @@ export const shortPassword = {
   email: 'eliezer.basubi@gmail.com',
   password: 'abcd'
 };
-
+export const changePassword = {
+  old_password: '123456',
+  new_password: '12345678',
+  confirm_password: '12345678'
+};
 const road = '/api/v1/';
 
 export const routes = {

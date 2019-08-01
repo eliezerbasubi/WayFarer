@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import omit from 'object.omit';
 import {
-  EMAIL_ALREADY_EXIST
+  EMAIL_ALREADY_EXIST, RESET_SUCCESSFUL, OLD_PASSWORD_NOT_MATCH,
+  PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND
 } from '../constants/feedback';
 import {
   userTable,
@@ -67,9 +68,7 @@ export default class UserController {
       userTable.push(...user);
 
       return Helper.success(res, CREATED_CODE, omit(req.body, ['password', 'isAdmin']), 'Account successfully created');
-    } catch (error) {
-      return Helper.error(res, INTERNAL_SERVER_ERROR_CODE, error);
-    }
+    } catch (error) { return Helper.error(res, INTERNAL_SERVER_ERROR_CODE, error); }
   }
 
   /**
@@ -106,5 +105,32 @@ export default class UserController {
       });
     }
     return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS);
+  }
+
+  static async resetPassword(req, res) {
+    const userId = req.params.user_id;
+    // eslint-disable-next-line radix
+    const user = userTable.find(info => info.id === parseInt(userId));
+    if (user) {
+      const userOldPwd = user.password;
+      if (req.body.new_password === req.body.confirm_password) {
+        const salt = await bcrypt.genSalt(10);
+        const hashednewPassword = await bcrypt.hash(req.body.confirm_password, salt);
+        const matchedPwd = await bcrypt.compare(req.body.old_password, userOldPwd);
+
+        if (matchedPwd) {
+          user.password = hashednewPassword;
+          const display = {
+            id: user.id,
+            firstName: user.firstName,
+            email: user.email
+          };
+          return Helper.success(res, SUCCESS_CODE, display, RESET_SUCCESSFUL);
+        }
+        return Helper.error(res, UNAUTHORIZED_CODE, OLD_PASSWORD_NOT_MATCH);
+      }
+      return Helper.error(res, UNAUTHORIZED_CODE, PASSWORD_DOESNT_MATCH);
+    }
+    return Helper.error(res, UNAUTHORIZED_CODE, USER_ID_NOT_FOUND);
   }
 }
