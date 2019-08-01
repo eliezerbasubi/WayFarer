@@ -7,6 +7,7 @@ class Dashboard {
         this.createTrip();
         this.handleBooking();
         this.submitBooking();
+        this.viewMoreTrips();
     }
     createTrip(){
         $('#btn_create_trip').addEventListener('click',()=>{
@@ -57,7 +58,7 @@ class Dashboard {
     cancelTrip(){
         $$('.cancel_trip').forEach(button => {
             button.addEventListener('click',()=>{
-                showSnackBar('Trip deleted successfully');
+                showSnackBar('Trip cancelled successfully');
             });
         });
     }
@@ -112,6 +113,11 @@ class Dashboard {
         }
     }
 
+    viewMoreTrips(){
+        $('#btn_view_more').addEventListener('click',()=>{
+            $('#aria-view-more').style.display = "flex";
+        });
+    }
 }
 
 
@@ -129,6 +135,7 @@ class BusMapBuilder {
         this.selector = selector;
         this.builder(this.capacity, this.selector);
         this.seatBooking();
+        this.togglePickedSeat();
     }
 
     builder() {
@@ -175,6 +182,21 @@ class BusMapBuilder {
             });
         });
     };
+
+    
+    togglePickedSeat(){
+        const btns = $('#bus_maps').querySelectorAll("[data-trip-seat]");
+        btns.forEach(item =>{
+            item.addEventListener('click',(event)=>{
+                const current = $$(".picked");
+                if (current.length > 0) { 
+                    current[0].className = current[0].className.replace(" picked", "");
+                }
+                event.currentTarget.className += " picked";
+            });
+        });
+    }
+
 }
 
 document.addEventListener("DOMContentLoaded", () => {
