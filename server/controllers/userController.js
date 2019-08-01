@@ -7,14 +7,18 @@ import {
 } from '../constants/feedback';
 import {
   userTable,
-  User
+  User,
+  cache
 } from '../models/user';
 import {
   RESOURCE_CONFLICT,
   CREATED_CODE,
-  INTERNAL_SERVER_ERROR_CODE
+  INTERNAL_SERVER_ERROR_CODE,
+  UNAUTHORIZED_CODE,
+  SUCCESS_CODE
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
+import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
 
 dotenv.config();
 
@@ -66,5 +70,41 @@ export default class UserController {
     } catch (error) {
       return Helper.error(res, INTERNAL_SERVER_ERROR_CODE, error);
     }
+  }
+
+  /**
+   * This function logs user in the system.
+   * @param {*} request
+   * @param {*} response
+   * @param {*} next
+   */
+  static async signIn(request, response) {
+    const user = userTable.find(users => users.email === request.body.email);
+    if (user) {
+      return bcrypt.compare(request.body.password, user.password, (err, result) => {
+        if (err) { return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS); }
+        if (result) {
+          const tokenId = jwt.sign({
+            email: user.email,
+            id: user.id,
+            isAdmin: user.isAdmin
+          }, process.env.JWT_KEY, {
+            expiresIn: '24h'
+          });
+          cache.push({
+            token: tokenId,
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            isAdmin: user.isAdmin
+          });
+          user.token = tokenId;
+          return Helper.success(response, SUCCESS_CODE, cache, 'Welcome to Wayfarer');
+        }
+        return Helper.error(response, INTERNAL_SERVER_ERROR_CODE, UNAUTHORIZED_ACCESS);
+      });
+    }
+    return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS);
   }
 }
