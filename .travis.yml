@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+  - "stable"
+env: 
+  global: 
+    — JWT_KEY=secret
+cache:
+  directories:
+    - node_modules
+script:
+  - npm test
+after_success:
+  - npm run coverage 
+notifications:
+  email: false
+
