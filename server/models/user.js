@@ -24,6 +24,6 @@ export class User {
     this.phoneNumber = phoneNumber;
     this.country = country;
     this.city = city;
-    this.isAdmin = false;
+    this.isAdmin = this.isAdmin;
   }
 }
