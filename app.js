@@ -9,6 +9,7 @@ import {
   NOT_FOUND_CODE,
   INTERNAL_SERVER_ERROR_CODE
 } from './server/constants/responseCodes';
+import routes from './server/routes/index';
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.use(bordyParser.urlencoded({
 }));
 
 app.use(bordyParser.json());
+
+app.use('/api/v1', routes);
 
 app.use((req, res, next) => {
   const error = new Error(NOT_FOUND);
