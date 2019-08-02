@@ -6,12 +6,13 @@ import {
   dbTrip
 } from '../models/trip';
 import {
-  NOT_FOUND_CODE, CREATED_CODE
+  NOT_FOUND_CODE, CREATED_CODE, SUCCESS_CODE
 } from '../constants/responseCodes';
 import {
   cache
 } from '../models/user';
 import Helper from '../helpers/helper';
+import { NO_BOOKINGS, HAVE_NO_BOOKINGS } from '../constants/feedback';
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ export default class BookingController {
     const bookingTripId = req.headers.trip_id;
 
     // eslint-disable-next-line radix
-    tripInfo = dbTrip.find(trip => trip.tripId === parseInt(bookingTripId));
+    tripInfo = dbTrip.find(trip => parseInt(trip.tripId) === parseInt(bookingTripId));
 
     if (tripInfo) {
       const {
@@ -57,5 +58,24 @@ export default class BookingController {
     }
 
     return Helper.error(res, NOT_FOUND_CODE, 'We could not find a trip with the specified ID');
+  }
+
+  static viewBookings(req, res) {
+    let connectedUserStatus;
+    let connectedUserEmail;
+
+    cache.forEach((item) => {
+      connectedUserStatus = item.isAdmin;
+      connectedUserEmail = item.email;
+    });
+
+    if (dbBookings.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NO_BOOKINGS); }
+
+    if (!connectedUserStatus) {
+      const userBookings = dbBookings.filter(booking => booking.email === connectedUserEmail);
+      if (userBookings.length < 1) { return Helper.error(res, NOT_FOUND_CODE, HAVE_NO_BOOKINGS); }
+      return Helper.success(res, SUCCESS_CODE, userBookings, 'We Have Found Your Bookings');
+    }
+    return Helper.success(res, SUCCESS_CODE, dbBookings, 'We Have Found Your Bookings');
   }
 }
