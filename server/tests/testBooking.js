@@ -159,4 +159,93 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                 });
         });
     });
+
+    describe('Base case: User can view all of his/her bookings', () => {
+        it('Should return 401 If user is not logged in', (done) => {
+            cache.map(user => { user.id = 2 });
+            request(app)
+                .get(routes.bookings)
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNAUTHORIZED_CODE);
+                    expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
+                    expect(res.body.error).to.be.equal(NOT_LOGGED_IN);
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    expect(res).to.have.headers;
+                    done();
+                })
+        });
+
+        // User has logged in
+        it('Should return 200 If user has logged in', (done) => {
+            cache.push({
+                id: 1,
+                firstName: 'Eliezer',
+                lastName: 'Basubi',
+                email: 'eliezer.basubi30@gmail.com',
+                isAdmin: false
+            });
+            request(app)
+                .get(routes.bookings)
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    expect(res.body).to.have.property('data');
+                
+                    done();
+                });
+        });
+
+        it('Should return 404 If user has no yet booked', (done) => {
+            cache.map(item => {
+                item.email = 'eliezer.hacker30@gmail.com'
+            });
+            dbBookings.push(correctBooking);
+            request(app)
+                .get(routes.bookings)
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.error).to.be.equal('You have no bookings');
+                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE)
+                    done();
+                });
+        });
+
+        it('Should return 404 If booking is empty', (done) => {
+            for (let index = 0; index < dbBookings.length; index++) {
+                dbBookings.splice(index, dbBookings.length);
+            }
+            request(app)
+                .get(routes.bookings)
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.error).to.be.equal('No bookings yet');
+                    done();
+                });
+        });
+    });
+
+    describe('Base case: Admin can view all bookings', () => {
+        it('Should display all bookings if user is an admin', (done) => {
+            cache.map(item => {
+                item.isAdmin = true
+            });
+            dbBookings.push(bookingStore)
+            request(app)
+                .get(routes.bookings)
+                .set('Authorization', adminToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    done();
+                });
+        });
+    });
 });
