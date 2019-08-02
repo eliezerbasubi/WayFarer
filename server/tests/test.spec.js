@@ -13,6 +13,7 @@ import {
     noTokenTrip,
     userToken,
     adminToken,
+    invalidToken,
 } from '../data/data';
 import {
     CREATED_CODE, INTERNAL_SERVER_ERROR_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE
@@ -289,7 +290,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
     });
 
-    describe('Base case: Admin can cancel a trip. part II => /api/v1/trips/:trip_id/cancel', () => {
+    describe('Base case: Admin can cancel a trip => /api/v1/trips/:trip_id/cancel', () => {
         it('Should validate admin token', (done) => {
             cache.map(user => { user.id = 1 });
             request(app)
@@ -347,4 +348,57 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
                 });
         });
     });
+
+    describe('Base case: Both admin and users can view all trips => /api/v1/trips', () =>{
+        it('Should return 404. If database(dbTrip) is empty', (done) => {
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', correctTrip.token)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.status).to.be.equal(NOT_FOUND_CODE);
+                    done();
+                });
+        });
+
+        it('Should return 401. If user puts an invalid token', (done) => {
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', invalidToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNAUTHORIZED_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.status).to.be.equal(UNAUTHORIZED_CODE);
+                    done();
+                });
+        });
+
+        it('Should return 401. If user is not logged in', (done) => {
+            cache.map(user => { user.id = 2 });
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNAUTHORIZED_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.status).to.be.equal(UNAUTHORIZED_CODE);
+                    done();
+                });
+        });
+
+        it('Should return 200. Display all trips', (done) => {
+            cache.map(user => { user.id = 1 });
+            dbTrip.push(correctTrip);
+            correctTrip.trip_id = 455;
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', correctTrip.token)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    done();
+                });
+        });
+    })
 });
