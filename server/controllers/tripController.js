@@ -2,13 +2,14 @@ import Trip, {
   dbTrip
 } from '../models/trip';
 import {
-  RESOURCE_CONFLICT, CREATED_CODE
+  RESOURCE_CONFLICT, CREATED_CODE, NOT_FOUND_CODE, BAD_REQUEST_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE
 } from '../constants/responseCodes';
 import {
   TRIP_ID_EXISTS,
   BUS_ALREADY_TAKEN
 } from '../constants/feedback';
 import Helper from '../helpers/helper';
+import { NOT_FOUND, BAD_REQUEST_MSG } from '../constants/responseMessages';
 
 export default class TripController {
   static createTrip(req, res) {
@@ -44,5 +45,16 @@ export default class TripController {
 
     dbTrip.push(...tripData);
     return Helper.success(res, CREATED_CODE, ...tripData, 'Trip Created Successfully');
+  }
+
+  static cancelTrip(req, res) {
+    if (dbTrip.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NOT_FOUND); }
+    const cancelQuest = dbTrip.find(query => query.tripId === req.params.trip_id);
+    if (cancelQuest) {
+      cancelQuest.status = 'cancelled';
+      return Helper.success(res, SUCCESS_CODE, cancelQuest, cancelQuest.adminId);
+    }
+
+    return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
   }
 }
