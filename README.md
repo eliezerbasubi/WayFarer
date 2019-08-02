@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/eliezerbasubi/WayFarer.svg?branch=develop)](https://travis-ci.org/eliezerbasubi/WayFarer)
+[![Coverage Status](https://coveralls.io/repos/github/eliezerbasubi/WayFarer/badge.svg?branch=develop)](https://coveralls.io/github/eliezerbasubi/WayFarer?branch=develop)
 ## WayFarer
 WayFarer is a public bus transportation service
 
