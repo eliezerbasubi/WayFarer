@@ -248,4 +248,66 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                 });
         });
     });
+
+    describe('Base case: Users can delete their booking', () => {
+        it('Should not delete booking if user has no booking', (done) => {
+            request(app)
+                .delete('/api/v1/bookings/1')
+                .set('Authorization', userToken)
+
+                .end((err, res) => {
+                    expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.error).to.be.equal('You have no bookings');
+                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE)
+                    done();
+                });
+        });
+
+        it('Should delete a booking', (done) => {
+            cache.map(item => {
+                item.email = 'eliezer.basubi30@gmail.com';
+                item.isAdmin = false;
+            });
+            bookingStore.email = 'eliezer.basubi30@gmail.com';
+            dbBookings.push(bookingStore);
+            request(app)
+                .delete('/api/v1/bookings/1')
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    expect(res.body).to.have.property('data');
+                    done();
+                });
+        });
+
+        it('Should return 404 If booking with wrong ID', (done) => {
+            request(app)
+                .delete('/api/v1/bookings/10')
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    done();
+                });
+        });
+
+        it('Should not delete booking with wrong ID', (done) => {
+            request(app)
+                .delete('/api/v1/bookings/-1')
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(BAD_REQUEST_CODE);
+                    expect(res.body).to.have.property('status').equal(BAD_REQUEST_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    done();
+                });
+        });
+    });
 });
