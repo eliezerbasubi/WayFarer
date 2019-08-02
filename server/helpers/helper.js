@@ -27,4 +27,19 @@ export default class Helper {
     };
     return res.status(INTERNAL_SERVER_ERROR_CODE).json(body);
   }
+
+  static today() {
+    const todayTime = new Date();
+    const month = todayTime.getMonth() + 1;
+    const day = todayTime.getDate();
+    const year = todayTime.getFullYear();
+
+    const now = `${year}-${month}-${day}`;
+    return now;
+  }
+
+  static slice(token) {
+    if (token.startsWith('Bearer ')) return token.slice(7, token.length);
+    return token;
+  }
 }

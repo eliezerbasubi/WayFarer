@@ -66,8 +66,7 @@ export default class UserController {
         isAdmin
       }));
       userTable.push(...user);
-
-      return Helper.success(res, CREATED_CODE, omit(req.body, ['password', 'isAdmin']), 'Account successfully created');
+      return Helper.success(res, CREATED_CODE, omit(Object.assign({ token: tokenId }, req.body), ['password', 'isAdmin']), 'Account successfully created');
     } catch (error) { return Helper.error(res, INTERNAL_SERVER_ERROR_CODE, error); }
   }
 
@@ -99,7 +98,7 @@ export default class UserController {
             isAdmin: user.isAdmin
           });
           user.token = tokenId;
-          return Helper.success(response, SUCCESS_CODE, cache, 'Welcome to Wayfarer');
+          return Helper.success(response, SUCCESS_CODE, omit(Object.assign(...cache), 'isAdmin'), 'Welcome to Wayfarer');
         }
         return Helper.error(response, INTERNAL_SERVER_ERROR_CODE, UNAUTHORIZED_ACCESS);
       });
