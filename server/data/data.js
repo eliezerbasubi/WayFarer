@@ -89,3 +89,32 @@ export const adminToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpb
 export const userToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVsaWV6ZXIuYmFzdWJpMzBAZ21haWwuY29tIiwiaWQiOjEsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE1NjQwNzI0NDIsImV4cCI6MTU2NjY2NDQ0Mn0.pnO2EoWg0gBbkAIqVuISNlEyEGhbQiIPWF1aonu-sPQ';
 
 export const invalidToken = 'Bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVsaWV6ZXIuYmFzdWJpQGdtYWlsLmNvbSIsImlkIjoyLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNTYzNTQwNjYzLCJleHAiOjE1NjYxMzI2NjN9.n4aicJYMqwrp0HgGeRgBifb-1ycDGKRID7rKIxrcAHk';
+
+export const correctBooking = {
+  token: userToken,
+  trip_id: '455',
+  seat_number: '23'
+};
+
+export const adminBooking = {
+  token: adminToken,
+  trip_id: '20',
+  seat_number: '23'
+};
+
+export const bookingStore = {
+  bookingID: '1',
+  busLicenseNumber: 'OPBIEW4',
+  tripId: '1',
+  tripDate: '2019-08-12',
+  tripTime: '13:30',
+  tripName: 'Boot trip',
+  fare: '45.9',
+  userId: '1',
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'johndoe@gmail.com',
+  seatNumber: '34',
+  createdOn: '2019-08-15',
+  status: 'valid'
+};
