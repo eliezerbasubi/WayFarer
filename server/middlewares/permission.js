@@ -6,9 +6,10 @@ import {
 import Helper from '../helpers/helper';
 import {
   INVALID_TOKEN,
-  NOT_LOGGED_IN
+  NOT_LOGGED_IN,
+  ACCESS_USERS_ONLY
 } from '../constants/feedback';
-import { cache } from '../models/user';
+import { cache, userCredentials } from '../models/user';
 import { FORBIDDEN_MSG } from '../constants/responseMessages';
 
 dotenv.config();
@@ -51,5 +52,19 @@ export default class Permission {
 
       return next();
     } catch (error) { return Helper.error(res, UNAUTHORIZED_CODE, INVALID_TOKEN); }
+  }
+
+  static authUsersOnly(request, response, next) {
+    const token = request.headers.authorization || request.headers.token;
+
+    try {
+      const { isAdmin, id, email } = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
+
+      userCredentials.push({ email, id });
+
+      if (isAdmin) { return Helper.error(response, UNAUTHORIZED_CODE, ACCESS_USERS_ONLY); }
+
+      return next();
+    } catch (error) { return Helper.error(response, UNAUTHORIZED_CODE, INVALID_TOKEN); }
   }
 }
