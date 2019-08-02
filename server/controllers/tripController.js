@@ -63,4 +63,13 @@ export default class TripController {
     if (dbTrip.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE); }
     return Helper.success(res, SUCCESS_CODE, dbTrip, 'Success ! WayFarer Trips !');
   }
+
+  static viewSpecificTrip(req, res) {
+    if (dbTrip.length < 1) {
+      return Helper.error(res, NOT_FOUND_CODE, 'The Specified Trip was Not Found');
+    }
+
+    const questTrip = dbTrip.find(quest => quest.tripId === req.params.trip_id);
+    return Helper.success(res, SUCCESS_CODE, questTrip, 'Trip Successfully Found');
+  }
 }

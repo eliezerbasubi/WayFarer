@@ -400,5 +400,46 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
                     done();
                 });
         });
-    })
+    });
+
+    describe('Base Case : Both admin and users can view a specific trip', () =>{
+        it('Should return 404. When there is no trip available', (done) => {
+            dbTrip.pop();
+            request(app)
+                .get(`${routes.getSpecificTrip}445`)
+                .set('Authorization', correctTrip.token)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE)
+                    done();
+                });
+        });
+
+        it('Should return 200. For valid token and trip ID', (done) => {
+            dbTrip.push(correctTrip)
+            request(app)
+                .get(`${routes.getSpecificTrip}455`)
+                .set('Authorization', adminToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.type).to.equal(JSON_TYPE);
+                    done();
+                });
+        });
+
+        it('Should return 401. For invalid token', (done) => {
+            request(app)
+                .get(`${routes.getSpecificTrip}455`)
+                .set('Authorization', invalidToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNAUTHORIZED_CODE);
+                    expect(res.body.error).to.be.equal('Token is not valid');
+                    expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    expect(res).to.have.headers;
+                    done();
+                });
+        });
+    });
 });
