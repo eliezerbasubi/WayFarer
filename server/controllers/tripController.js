@@ -2,7 +2,7 @@ import Trip, {
   dbTrip
 } from '../models/trip';
 import {
-  RESOURCE_CONFLICT, CREATED_CODE, NOT_FOUND_CODE, BAD_REQUEST_CODE, SUCCESS_CODE, UNAUTHORIZED_CODE
+  RESOURCE_CONFLICT, CREATED_CODE, NOT_FOUND_CODE, BAD_REQUEST_CODE, SUCCESS_CODE
 } from '../constants/responseCodes';
 import {
   TRIP_ID_EXISTS,

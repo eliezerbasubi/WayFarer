@@ -19,5 +19,6 @@ router.get('/trips', Permission.authorize, TripController.getAllTrips);
 router.get('/trips/:trip_id', Permission.authorize, TripController.viewSpecificTrip);
 
 // #Booking routes
-router.post('/bookings', Validator.validateBooking, BookingController.createBooking);
+router.post('/bookings', Validator.validateBooking, Permission.authUsersOnly, BookingController.createBooking);
+router.get('/bookings', Permission.authorize, BookingController.viewBookings);
 export default router;
