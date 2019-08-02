@@ -1,7 +1,15 @@
 import Joi from 'joi';
 import Helper from '../helpers/helper';
-import { BAD_REQUEST_CODE } from '../constants/responseCodes';
-import { BAD_REQUEST_MSG } from '../constants/responseMessages';
+import {
+  BAD_REQUEST_CODE, UNPROCESSABLE_ENTITY, NOT_FOUND_CODE, RESOURCE_CONFLICT, UNAUTHORIZED_CODE
+} from '../constants/responseCodes';
+import { BAD_REQUEST_MSG, UNPROCESSABLE_ENTITY_MSG } from '../constants/responseMessages';
+import { dbTrip } from '../models/trip';
+import {
+  TRIP_CANCELLED, MAXIMUM_BOOKINGS, SEAT_ALREADY_TAKEN, NOT_LOGGED_IN
+} from '../constants/feedback';
+import { dbBookings } from '../models/booking';
+import { cache } from '../models/user';
 
 export default class Validator {
   /**
@@ -90,5 +98,52 @@ export default class Validator {
     }
 
     return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
+  }
+
+  static validateBooking(req, res, next) {
+    const bookTripID = req.headers.trip_id;
+    const bookSeatNumber = req.headers.seat_number;
+    const schema = Joi.object().keys({
+      trip_id: Joi.number().min(1).max(10000).positive()
+        .required(),
+      seat_number: Joi.number().min(1).max(60).positive()
+        .required()
+    });
+
+    const bookingHeaders = {
+      trip_id: bookTripID,
+      seat_number: bookSeatNumber
+    };
+
+    const { error } = Joi.validate(bookingHeaders, schema);
+
+    if (error) { return Helper.joiError(res, error); }
+
+    if (cache.length < 1) { return Helper.error(res, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
+
+    const isBooked = dbBookings.find(booking => booking.tripId === bookTripID
+      && booking.seatNumber === bookSeatNumber);
+    if (isBooked) { return Helper.error(res, RESOURCE_CONFLICT, SEAT_ALREADY_TAKEN); }
+
+    let userEmail = '';
+    cache.forEach((element) => { userEmail = element.email; });
+
+    const hasBooked = dbBookings.find(booking => booking.email === userEmail
+      && booking.tripId === bookTripID);
+    if (hasBooked) { return Helper.error(res, RESOURCE_CONFLICT, MAXIMUM_BOOKINGS); }
+
+    const isCancelled = dbTrip.find(trip => trip.tripId === bookTripID
+      && trip.status === 'cancelled');
+
+    if (isCancelled) { return Helper.error(res, NOT_FOUND_CODE, TRIP_CANCELLED); }
+    const hasAtrip = dbTrip.find(atrip => atrip.tripId === bookTripID);
+    if (hasAtrip) {
+      // eslint-disable-next-line radix
+      if (parseInt(hasAtrip.seatingCapacity) < parseInt(bookSeatNumber)) {
+        return Helper.error(res, UNPROCESSABLE_ENTITY, UNPROCESSABLE_ENTITY_MSG);
+      }
+    }
+
+    return next();
   }
 }
