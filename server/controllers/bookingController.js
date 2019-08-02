@@ -12,7 +12,7 @@ import {
   cache
 } from '../models/user';
 import Helper from '../helpers/helper';
-import { NO_BOOKINGS, HAVE_NO_BOOKINGS } from '../constants/feedback';
+import { NO_BOOKINGS, HAVE_NO_BOOKINGS, BOOKING_NOT_FOUND } from '../constants/feedback';
 
 dotenv.config();
 
@@ -77,5 +77,28 @@ export default class BookingController {
       return Helper.success(res, SUCCESS_CODE, userBookings, 'We Have Found Your Bookings');
     }
     return Helper.success(res, SUCCESS_CODE, dbBookings, 'We Have Found Your Bookings');
+  }
+
+  static async deleteBooking(req, res) {
+    // eslint-disable-next-line radix
+    const bookingId = parseInt(req.params.booking_id);
+    let connectedUserEmail = '';
+
+    cache.forEach((item) => { connectedUserEmail = item.email; });
+
+    const myBookings = dbBookings.filter(booking => booking.email === connectedUserEmail);
+    if (myBookings.length < 1) { return Helper.error(res, NOT_FOUND_CODE, HAVE_NO_BOOKINGS); }
+    // eslint-disable-next-line radix
+    const toBeDeleted = myBookings.find(booking => parseInt(booking.bookingID) === bookingId);
+
+    if (!toBeDeleted) { return Helper.error(res, NOT_FOUND_CODE, BOOKING_NOT_FOUND); }
+
+    const index = myBookings.indexOf(toBeDeleted);
+    myBookings.splice(index, 1);
+
+    const indexBookings = dbBookings.indexOf(toBeDeleted);
+    dbBookings.splice(indexBookings, 1);
+
+    return Helper.success(res, SUCCESS_CODE, toBeDeleted, 'Your Booking Was Deleted Successfully');
   }
 }
