@@ -14,5 +14,5 @@ router.post('/auth/reset/:user_id', Validator.validatePassword, UserController.r
 // #Trip routes
 router.post('/trips', Validator.validateTrip, Permission.grantAccess, TripController.createTrip);
 router.patch('/trips/:trip_id/cancel', Validator.validateId, Permission.grantAccess, TripController.cancelTrip);
-
+router.get('/trips', Permission.authorize, TripController.getAllTrips);
 export default router;

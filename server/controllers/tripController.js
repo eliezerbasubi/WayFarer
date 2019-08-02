@@ -6,7 +6,8 @@ import {
 } from '../constants/responseCodes';
 import {
   TRIP_ID_EXISTS,
-  BUS_ALREADY_TAKEN
+  BUS_ALREADY_TAKEN,
+  NO_TRIP_AVAILABLE
 } from '../constants/feedback';
 import Helper from '../helpers/helper';
 import { NOT_FOUND, BAD_REQUEST_MSG } from '../constants/responseMessages';
@@ -56,5 +57,10 @@ export default class TripController {
     }
 
     return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
+  }
+
+  static getAllTrips(req, res) {
+    if (dbTrip.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE); }
+    return Helper.success(res, SUCCESS_CODE, dbTrip, 'Success ! WayFarer Trips !');
   }
 }
