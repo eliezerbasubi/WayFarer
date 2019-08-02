@@ -15,14 +15,15 @@ import {
     adminToken,
 } from '../data/data';
 import {
-    CREATED_CODE, INTERNAL_SERVER_ERROR_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE
+    CREATED_CODE, INTERNAL_SERVER_ERROR_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE
 } from '../constants/responseCodes';
 import {
     routes
 } from '../data/data';
-import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, TRIP_ID_EXISTS, ACCESS_RESTRICTED, INVALID_TOKEN, NOT_LOGGED_IN } from '../constants/feedback';
-import { UNAUTHORIZED_ACCESS, FORBIDDEN_MSG } from '../constants/responseMessages';
+import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, TRIP_ID_EXISTS, ACCESS_RESTRICTED, INVALID_TOKEN, NOT_LOGGED_IN, INVALID_ID } from '../constants/feedback';
+import { UNAUTHORIZED_ACCESS, FORBIDDEN_MSG, BAD_REQUEST_MSG } from '../constants/responseMessages';
 import { userTable, cache } from '../models/user';
+import { dbTrip } from '../models/trip';
 chai.use(chaiHttp);
 
 const {
@@ -283,6 +284,65 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
                     expect(res).to.have.status(UNAUTHORIZED_CODE);
                     expect(res.body.error).to.be.equal(NOT_LOGGED_IN);
                     expect(res.body.status).to.be.equal(UNAUTHORIZED_CODE);
+                    done();
+                });
+        });
+    });
+
+    describe('Base case: Admin can cancel a trip. part II => /api/v1/trips/:trip_id/cancel', () => {
+        it('Should validate admin token', (done) => {
+            cache.map(user => { user.id = 1 });
+            request(app)
+                .patch('/api/v1/trips/455/cancel')
+                .set('Authorization', adminToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res).to.have.headers;
+                    done();
+                });
+        });
+
+        it('Should reject invalid ID', (done) => {
+            request(app)
+                .patch('/api/v1/trips/-455/cancel')
+                .set('Authorization', correctTrip.token)
+                .end((err, res) => {
+                    expect(res).to.have.status(BAD_REQUEST_CODE);
+                    expect(res.body.error).to.be.equal(BAD_REQUEST_MSG);
+                    expect(res.body).to.have.property('status').equal(BAD_REQUEST_CODE)
+                    done();
+                });
+        });
+        it('Should reject Bad Requests', (done) => {
+            request(app)
+                .patch('/api/v1/trips/55/cancel')
+                .set('Authorization', correctTrip.token)
+                .end((err, res) => {
+                    expect(res).to.have.status(BAD_REQUEST_CODE);
+                    expect(res.body.error).to.be.equal(BAD_REQUEST_MSG);
+                    expect(res.body).to.have.property('status').equal(BAD_REQUEST_CODE)
+                    done();
+                });
+        });
+        it('Should return 401. If the person is not an admin', (done) => {
+            request(app)
+                .patch('/api/v1/trips/455/cancel')
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(FORBIDDEN_CODE);
+                    expect(res.body).to.have.property('status').equal(FORBIDDEN_CODE);
+                    done();
+                });
+        });
+        it('Should return 404. If trip table is empty', (done) => {
+            dbTrip.pop();
+            request(app)
+                .patch('/api/v1/trips/455/cancel')
+                .set('Authorization', adminToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE);
                     done();
                 });
         });
