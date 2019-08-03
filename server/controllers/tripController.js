@@ -60,6 +60,19 @@ export default class TripController {
 
   static getAllTrips(req, res) {
     if (dbTrip.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE); }
+
+    const { origin } = req.query;
+    const { destination } = req.query;
+
+    // Filter trips by destination and origin
+    if (req.query.origin && req.query.destination) {
+      const result = dbTrip.filter(trip => trip.origin.toLowerCase() === origin.toLowerCase()
+      && trip.destination.toLowerCase() === destination.toLowerCase());
+
+      if (result.length < 1) { return Helper.error(res, NOT_FOUND_CODE, 'Origin and Destination Are Not Found'); }
+      return Helper.success(res, SUCCESS_CODE, result, `${result.length} result(s) Found`);
+    }
+
     return Helper.success(res, SUCCESS_CODE, dbTrip, 'Success ! WayFarer Trips !');
   }
 
