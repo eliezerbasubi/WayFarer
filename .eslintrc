@@ -17,6 +17,7 @@
                 "vars" : "local" ,  "args" : "none"
             }
         ],
+        "linebreak-style": 0 
     },
     "globals": {"Promise": true}
 }
