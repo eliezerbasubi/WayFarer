@@ -1,12 +1,12 @@
 import Joi from 'joi';
 import Helper from '../helpers/helper';
 import {
-  BAD_REQUEST_CODE, UNPROCESSABLE_ENTITY, NOT_FOUND_CODE, RESOURCE_CONFLICT, UNAUTHORIZED_CODE, GONE
+  BAD_REQUEST_CODE, UNPROCESSABLE_ENTITY, RESOURCE_CONFLICT, UNAUTHORIZED_CODE, GONE
 } from '../constants/responseCodes';
 import { BAD_REQUEST_MSG, UNPROCESSABLE_ENTITY_MSG, GONE_MSG } from '../constants/responseMessages';
 import { dbTrip } from '../models/trip';
 import {
-  TRIP_CANCELLED, MAXIMUM_BOOKINGS, SEAT_ALREADY_TAKEN, NOT_LOGGED_IN
+  MAXIMUM_BOOKINGS, SEAT_ALREADY_TAKEN, NOT_LOGGED_IN
 } from '../constants/feedback';
 import { dbBookings } from '../models/booking';
 import { cache } from '../models/user';
@@ -133,7 +133,8 @@ export default class Validator {
       && trip.status === 'cancelled');
 
     if (isCancelled) { return Helper.error(res, GONE, GONE_MSG); }
-    const hasAtrip = dbTrip.find(atrip => atrip.tripId === bookTripID);
+
+    const hasAtrip = dbTrip.find(atrip => atrip.tripId === parseInt(bookTripID, 10));
     if (hasAtrip) {
       // eslint-disable-next-line radix
       if (parseInt(hasAtrip.seatingCapacity) < parseInt(bookSeatNumber)) {
