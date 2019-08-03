@@ -11,10 +11,8 @@ export default class Trip {
     time,
     fare,
     arrivalDate,
-    status,
-    message
+    status
   }) {
-    this.message = message;
     this.tripId = id;
     this.tripName = tripName;
     this.seatingCapacity = seatingCapacity;
