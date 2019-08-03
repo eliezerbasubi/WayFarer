@@ -9,7 +9,7 @@ import {
   NOT_LOGGED_IN,
   ACCESS_USERS_ONLY
 } from '../constants/feedback';
-import { cache, userCredentials } from '../models/user';
+import { cache } from '../models/user';
 import { FORBIDDEN_MSG } from '../constants/responseMessages';
 
 dotenv.config();
@@ -56,11 +56,14 @@ export default class Permission {
 
   static authUsersOnly(request, response, next) {
     const token = request.headers.authorization || request.headers.token;
-
+    let currentUserID = '';
     try {
-      const { isAdmin, id, email } = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
+      cache.forEach((item) => {
+        currentUserID = item.id;
+      });
+      const { isAdmin, id } = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
 
-      userCredentials.push({ email, id });
+      if (currentUserID !== id) { return Helper.error(response, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
 
       if (isAdmin) { return Helper.error(response, UNAUTHORIZED_CODE, ACCESS_USERS_ONLY); }
 

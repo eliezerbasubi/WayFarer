@@ -22,10 +22,9 @@ export default class BookingController {
     let userDetails = [];
     const bookingData = [];
     const displayMyBookings = [];
-    const bookingTripId = req.headers.trip_id;
+    const bookingTripId = req.body.tripId;
 
-    // eslint-disable-next-line radix
-    tripInfo = dbTrip.find(trip => parseInt(trip.tripId) === parseInt(bookingTripId));
+    tripInfo = dbTrip.find(trip => parseInt(trip.tripId, 10) === parseInt(bookingTripId, 10));
 
     if (tripInfo) {
       const {
@@ -43,7 +42,7 @@ export default class BookingController {
         tripTime: time,
         fare,
         busLicenseNumber,
-        seatNumber: req.headers.seat_number,
+        seatNumber: req.body.seatNumber,
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
         email: userDetails.email,
@@ -80,16 +79,15 @@ export default class BookingController {
   }
 
   static async deleteBooking(req, res) {
-    // eslint-disable-next-line radix
-    const bookingId = parseInt(req.params.booking_id);
+    const bookingId = parseInt(req.params.booking_id, 10);
     let connectedUserEmail = '';
 
     cache.forEach((item) => { connectedUserEmail = item.email; });
 
     const myBookings = dbBookings.filter(booking => booking.email === connectedUserEmail);
     if (myBookings.length < 1) { return Helper.error(res, NOT_FOUND_CODE, HAVE_NO_BOOKINGS); }
-    // eslint-disable-next-line radix
-    const toBeDeleted = myBookings.find(booking => parseInt(booking.bookingID) === bookingId);
+
+    const toBeDeleted = myBookings.find(booking => parseInt(booking.bookingID, 10) === bookingId);
 
     if (!toBeDeleted) { return Helper.error(res, NOT_FOUND_CODE, BOOKING_NOT_FOUND); }
 

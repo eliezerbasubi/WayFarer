@@ -16,7 +16,7 @@ router.post('/auth/reset/:user_id', Validator.validatePassword, UserController.r
 router.post('/trips', Validator.validateTrip, Permission.grantAccess, TripController.createTrip);
 router.patch('/trips/:trip_id/cancel', Validator.validateId, Permission.grantAccess, TripController.cancelTrip);
 router.get('/trips', Permission.authorize, TripController.getAllTrips);
-router.get('/trips/:trip_id', Permission.authorize, TripController.viewSpecificTrip);
+router.get('/trips/:trip_id', Validator.validateId, Permission.authorize, TripController.viewSpecificTrip);
 
 // #Booking routes
 router.post('/bookings', Validator.validateBooking, Permission.authUsersOnly, BookingController.createBooking);
