@@ -55,14 +55,13 @@ export default class TripController {
       return Helper.success(res, SUCCESS_CODE, cancelQuest, cancelQuest.adminId);
     }
 
-    return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
+    return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG, 'Trip cancelled successfully');
   }
 
   static getAllTrips(req, res) {
     if (dbTrip.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE); }
 
-    const { origin } = req.query;
-    const { destination } = req.query;
+    const { origin, destination } = req.query;
 
     // Filter trips by destination and origin
     if (req.query.origin && req.query.destination) {
@@ -71,6 +70,13 @@ export default class TripController {
 
       if (result.length < 1) { return Helper.error(res, NOT_FOUND_CODE, 'Origin and Destination Are Not Found'); }
       return Helper.success(res, SUCCESS_CODE, result, `${result.length} result(s) Found`);
+    }
+
+    if (destination) {
+      // eslint-disable-next-line
+      const place = dbTrip.filter(trip => trip.destination.toLowerCase() === destination.toLowerCase());
+      if (place.length < 1) { return Helper.error(res, NOT_FOUND_CODE, 'Destination Not Found'); }
+      return Helper.success(res, SUCCESS_CODE, place, `Find ${place.length} result(s) by destination ${destination}`);
     }
 
     return Helper.success(res, SUCCESS_CODE, dbTrip, 'Success ! WayFarer Trips !');
