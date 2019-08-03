@@ -288,4 +288,30 @@ describe('Users can filter trips',()=>{
             });
         });
     });
+
+    // Filter by destination
+    describe('Users can filter trip by destination',()=>{
+        it('Should filter all trips with the given destination',(done) =>{
+            request(app)
+            .get(`${routes.getAllTrips}?destination=Kigali`)
+            .set('Authorization', userToken)
+            .end((err,res) =>{
+                expect(res.status).to.be.equal(SUCCESS_CODE);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+        });
+
+        it('Should not filter if destination does not exist',(done) =>{
+            request(app)
+            .get(`${routes.getAllTrips}?destination=Goma`)
+            .set('Authorization', userToken)
+            .end((err,res) =>{
+                expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                expect(res.body).to.have.property('error');
+                done();
+            });
+        });
+    });
+
 });
