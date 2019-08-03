@@ -86,7 +86,7 @@ export default class BookingController {
 
     const myBookings = dbBookings.filter(booking => booking.email === connectedUserEmail);
     if (myBookings.length < 1) { return Helper.error(res, NOT_FOUND_CODE, HAVE_NO_BOOKINGS); }
-    // eslint-disable-next-line radix
+
     const toBeDeleted = myBookings.find(booking => parseInt(booking.bookingID, 10) === bookingId);
 
     if (!toBeDeleted) { return Helper.error(res, NOT_FOUND_CODE, BOOKING_NOT_FOUND); }
