@@ -263,3 +263,29 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
     });
 });
+
+describe('Users can filter trips',()=>{
+    describe('Users can filter trips by origin and destination',()=>{
+        it('Should return 200. Trip origin and destination were found',(done) =>{
+            request(app)
+            .get(`${routes.getAllTrips}?origin=Bukavu&destination=Kigali`)
+            .set('Authorization', userToken)
+            .end((err,res) =>{
+                expect(res.status).to.be.equal(SUCCESS_CODE);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+        });
+
+        it('Should return 404. Trip origin does not exist',(done) =>{
+            request(app)
+            .get(`${routes.getAllTrips}?origin=Kampala&destination=Goma`)
+            .set('Authorization', userToken)
+            .end((err,res) =>{
+                expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                expect(res.body).to.have.property('error');
+                done();
+            });
+        });
+    });
+});

@@ -104,9 +104,8 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                 .send(correctBooking)
                 .set("Authorization", userToken)
                 .end((err, res) => {
-                    // expect(res).to.have.status(INTERNAL_SERVER_ERROR_CODE);
-                    // expect(res.body).to.have.property('status').equal(INTERNAL_SERVER_ERROR_CODE);
-                    console.log(res.body);
+                    expect(res).to.have.status(INTERNAL_SERVER_ERROR_CODE);
+                    expect(res.body).to.have.property('status').equal(INTERNAL_SERVER_ERROR_CODE);
                     
                     done();
                 });
