@@ -296,4 +296,35 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                 });
         });
     });
+
+    describe('Base case: Users should get a specific booking', () => {
+        it('Should return 404. Booking not found', (done) => {
+            request(app)
+                .get('/api/v1/bookings/4')
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE)
+                    done();
+                });
+        });
+
+        it('Should delete a booking', (done) => {
+            dbBookings.push(bookingStore);
+            request(app)
+                .get('/api/v1/bookings/1')
+                .set('Authorization', userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    expect(res.body).to.have.property('data');
+                    console.log(dbBookings);
+                    
+                    done();
+                });
+        });
+    });
 });
