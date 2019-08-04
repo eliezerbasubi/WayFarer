@@ -321,8 +321,6 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                     expect(res.body).to.be.an('object');
                     expect(res.type).to.be.equal(JSON_TYPE);
                     expect(res.body).to.have.property('data');
-                    console.log(dbBookings);
-                    
                     done();
                 });
         });
