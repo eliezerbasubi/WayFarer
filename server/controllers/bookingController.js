@@ -75,6 +75,7 @@ export default class BookingController {
       if (userBookings.length < 1) { return Helper.error(res, NOT_FOUND_CODE, HAVE_NO_BOOKINGS); }
       return Helper.success(res, SUCCESS_CODE, userBookings, 'We Have Found Your Bookings');
     }
+
     return Helper.success(res, SUCCESS_CODE, dbBookings, 'We Have Found Your Bookings');
   }
 
@@ -98,5 +99,14 @@ export default class BookingController {
     dbBookings.splice(indexBookings, 1);
 
     return Helper.success(res, SUCCESS_CODE, toBeDeleted, 'Your Booking Was Deleted Successfully');
+  }
+
+  static getOneBooking(req, res) {
+    const bookingId = parseInt(req.params.booking_id, 10);
+    const booking = dbBookings.find(element => parseInt(element.bookingID, 10) === bookingId);
+    if (booking) {
+      return Helper.success(res, SUCCESS_CODE, booking, 'Success ! Booking Was Found');
+    }
+    return Helper.error(res, NOT_FOUND_CODE, 'We Could Not Find The Specified Booking');
   }
 }
