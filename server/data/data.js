@@ -100,7 +100,7 @@ export const adminBooking = {
 };
 
 export const bookingStore = {
-  bookingID: '1',
+  bookingID: 1,
   busLicenseNumber: 'OPBIEW4',
   tripId: '1',
   tripDate: '2019-08-12',

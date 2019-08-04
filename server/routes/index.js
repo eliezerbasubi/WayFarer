@@ -22,4 +22,5 @@ router.get('/trips/:trip_id', Validator.validateId, Permission.authorize, TripCo
 router.post('/bookings', Validator.validateBooking, Permission.authUsersOnly, BookingController.createBooking);
 router.get('/bookings', Permission.authorize, BookingController.viewBookings);
 router.delete('/bookings/:booking_id', Validator.validateId, Permission.authUsersOnly, BookingController.deleteBooking);
+router.get('/bookings/:booking_id', Validator.validateId, Permission.authUsersOnly, BookingController.getOneBooking);
 export default router;
