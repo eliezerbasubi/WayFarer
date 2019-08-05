@@ -36,46 +36,22 @@
                     any trip and travel safe, in comfort and like a boss.
                 </p>
             </div>
-            <div class="flex-right-card">
+            <div class="flex-right-card border-radius" id="login-form">
                 <h1 class="section-title">Login</h1>
 
                 <label for="email"><b>Email</b></label>
                 <input type="text" placeholder="Enter Email" name="email" id="email_log">
-                <p><span class="error error-email"></span></p>
+                <span class="error error-email"></span><br><br>
 
-                <label for="psw"><b>Password</b></label>
+                <label for="psw" id="label_pwd"><b>Password</b></label>
                 <input type="password" placeholder="Enter Password" name="psw" id="password_log">
-                <p><span class="error error-password"></span></p>
+                <span class="error error-password"></span>
             
-                <button type="submit" class="btn btn-secondary" onclick="new SignIn()">Login</button>
+                <button type="submit" class="btn btn-secondary" onclick="new SignIn()">Login</button><br><br>
+                <a href="passwordreset.html" class="section-title reset-link">Forget password ?</a>
             </div>
         </div>
     </section>
-
-    <footer class="footer">
-        <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
-
-        <div class="footer-icons">
-            <a href="#" class="footer-single-icon">
-                <i class="fab fa-facebook"></i>
-            </a>
-            <a href="#" class="footer-single-icon">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="#" class="footer-single-icon">
-                <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#" class="footer-single-icon">
-                <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="#" class="footer-single-icon">
-                <i class="fab fa-whatsapp"></i>
-            </a>
-        </div>
-        <div class="copyright align-center">
-            <p class="fg-white"> &copy; Eliezer Basubi</p>
-        </div>
-    </footer>
 </body>
 <script src="../js/signin.js"></script>
 
