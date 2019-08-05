@@ -5,11 +5,18 @@ node_js:
 env: 
   global: 
     — JWT_KEY=secret
+    - CC_TEST_REPORTER_ID=3b80b2b2ba330d5aca4986789e99ead16705c6c473385f341a5bfcb7d9c863e6
 cache:
   directories:
     - node_modules
 script:
   - npm test
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_success:
   - npm run coverage 
 notifications:
