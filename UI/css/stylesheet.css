@@ -109,91 +109,6 @@ a:active {
 .fg-destination {
     color: #0077b5;
 }
-
-/* Inputs */
-.flex-input-center {
-    flex: 0 0 calc(50% - 1rem);
-}
-
-.form-input-control {
-    border: 1px solid !important;
-    outline-width: 1px !important;
-}
-/* Update */
-.btn-cancel-reset{
-    border: 1px ridge #eeeeee !important;
-    color: #eeeeee !important;
-    background-color: #0077b5 !important;
-}
-input[type=text],
-input[type=email],
-input[type=password],
-input[type=date],
-input[type=time],
-input[type=phone],
-input[type=number] {
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 20px 0;
-    border: none;
-    outline: none;
-    border-bottom: 1px solid #000;
-    font-size: 1.2rem;
-    text-indent: 3px;
-}
-
-select {
-    width: 100%;
-    padding: 1rem 0.5rem;
-    font-size: 1.1rem;
-}
-
-textarea {
-    resize: none;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid #000;
-}
-
-
-.btn {
-    background-color: #000;
-    color: white;
-    padding: 16px 20px;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    font-size: 1rem;
-}
-
-.btn-primary {
-    width: 15em;
-    padding: .9em;
-    margin-top: .7em;
-    border-end-end-radius: 25%;
-    background: #000;
-    color: #fff;
-    border: 0;
-    font-size: 1em;
-    font: 100%/1.5 Tahoma, Helvetica, sans-serif;
-}
-
-.btn-secondary {
-    width: 100%;
-    font: 100%/1.5 Tahoma, Helvetica, sans-serif;
-    margin-top: .6em;
-}
-
-
-.form-input {
-    padding: 0.25rem 0;
-    margin: 1rem 0;
-    font-size: 1.2rem;
-    text-indent: 5px;
-    background: transparent;
-}
-
 .container {
     max-width: 98vw;
     margin: 2rem auto;
@@ -215,16 +130,6 @@ textarea {
 .row {
     display: flex;
     flex-direction: row;
-}
-/* Update */
-.reset-link{
-    text-align: center;
-}
-
-.bg-image {
-    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url("../assets/images/trip4.jpg") center/cover no-repeat fixed;
-    min-height: 380px;
-    position: relative;
 }
 
 .flex {
@@ -294,9 +199,14 @@ textarea {
 .box-shadowed {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
 }
-/* UPDATE */
-.hidden-responsive{
-    display: none !important;
+
+.flex-height {
+    min-height: 100vh;
+    padding: 3rem 0;
+}
+.section-title {
+    text-align: center;
+    text-transform: capitalize;
 }
 /*--- End Globals ---*/
 
@@ -410,182 +320,6 @@ header .navbar {
 }
 
 /*--- End Header --- */
-
-/* HOME PAGE SETUP */
-
-/*--- Start upcoming trips ---*/
-#upcomings .single-article {
-    padding: 2rem;
-}
-
-.flex-height {
-    min-height: 100vh;
-    padding: 3rem 0;
-}
-
-.section-title {
-    text-align: center;
-    text-transform: capitalize;
-}
-
-.section-title-name {
-    font-size: 4rem;
-    letter-spacing: 0.3rem;
-    font-weight: 700;
-}
-
-.single-article {
-    margin: 2rem auto;
-    text-align: center;
-    transition: all 0.5s ease-in;
-    padding: 2rem 0;
-}
-
-.single-article a {
-    margin-top: 5rem;
-}
-
-.single-article:hover {
-    background: #fff;
-    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1)
-}
-
-.single-article-header-img img {
-    width: 100%;
-    max-height: 196px;
-}
-
-.single-article-title {
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    letter-spacing: 0.2rem;
-}
-
-.single-article-text {
-    width: 80%;
-    margin: 0 auto;
-    text-align: left;
-    line-height: 1.5;
-    letter-spacing: 0.2rem;
-}
-
-@media screen and (min-width:768px) {
-    .container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
-
-    .single-article {
-        flex: 0 0 calc(50% - 0.5rem)
-    }
-}
-
-@media screen and (min-width:992px) {
-    .single-article {
-        flex: 0 0 calc(33.3333% - 0.3rem)
-    }
-}
-
-/*--- End upcoming trips ---*/
-
-/*--- Start Achievements*/
-.achievements {
-    min-height: 30vh;
-    padding: 3rem 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../assets/images/tn_trip8.jpg') center/cover no-repeat fixed;
-    color: #eeeeee;
-}
-
-
-.single-article-achievements {
-    text-align: center;
-    margin: 2rem 0;
-}
-
-.achievements-single-icon {
-    font-size: 3rem;
-}
-
-.single-achievements-text {
-    font-size: 2rem;
-    letter-spacing: 0.5rem;
-    margin: 0.5rem 0;
-}
-
-.single-achievements-title {
-    text-transform: uppercase;
-    letter-spacing: 0.25rem;
-}
-
-/*--- End Achievements*/
-
-/*--- Start gallery ---*/
-.gallery {
-    padding: 3rem 0;
-    background: #fff;
-}
-
-.gallery-container {
-    max-width: 90vw;
-    margin: 2rem auto;
-}
-
-.single-article-gallery {
-    margin: 0.5rem auto;
-    position: relative;
-}
-
-.gallery-img {
-    display: block;
-    width: 24rem;
-    border-radius: 0.25em;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.single-article-gallery::before {
-    content: '';
-    background: rgba(0, 0, 0, 0.5);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transform: scale(0);
-    transition: all 1s ease;
-}
-
-.single-article-gallery:hover::before {
-    transform: scale(1);
-}
-
-.single-gallery-icon {
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 2rem;
-    border: 5px solid #fff;
-    padding: 0 1rem;
-    transform: scale(0) translate(-50%, -50%);
-    opacity: 0;
-    transition: all 1.3s ease;
-}
-
-.single-gallery-icon:hover {
-    color: #eeeeee;
-    cursor: pointer;
-}
-
-.single-article-gallery:hover .single-gallery-icon {
-    opacity: 1;
-    transform: scale(1) translate(-50%, -50%);
-}
-
-/*--- End gallery ---*/
-
-/* END HOME PAGE SETUP */
 
 /* Box modal */
 .modal {
@@ -726,7 +460,6 @@ header .navbar {
 /* End sidebar */
 
 /* Start Snackbar */
-/* Snackbar style */
 #snackbar {
     visibility: hidden;
     min-width: 250px;
@@ -797,25 +530,6 @@ header .navbar {
 }
 
 /* End Snackbar */
-
-/* Start Contact */
-#contact {
-    padding: 3rem 0;
-}
-
-#contact-textarea {
-    width: 100%;
-}
-
-#btn-contact {
-    margin: 0 auto;
-    padding: 0.6rem 1.2rem;
-    margin-top: 2rem;
-    display: block;
-}
-
-/* End Contact */
-
 /*--- Start footer ---*/
 .footer {
     background: #000;
@@ -1026,11 +740,6 @@ header .navbar {
 }
 
 /* ******************************** */
-/* ******* end Book a seat  ***************/
-/* ********************************** */
-
-
-/* ******************************** */
 /* ******* Start Bookings  ***************/
 /* ********************************** */
 #bookings .col-md-2 {
@@ -1053,30 +762,9 @@ header .navbar {
     background-color: #fff;
 }
 
-/* ******************************** */
-/* ******* End Bookings  ***************/
-/* ********************************** */
-
 /******** *****************************
 **************END DASHBOARD ***********/
 
-/* UPDATE SIGNUP AND SIGNIN */
-#login-form span, #signup-form span, #reset-form span{
-    position: absolute;
-    margin-top: -1rem;
-}
-.border-radius{
-    border-radius: 10px;
-}
-#login-form button{
-    margin-top: 1.1rem;
-    background: #000;
-}
-
-/* NEW FEATURE, RESET PASSWORD */
-#reset-form .col-md-2{
-    margin: 0.6rem 0;
-}
 /* Media queries */
 @media screen and (min-width: 576px) {
     .container {
@@ -1090,15 +778,6 @@ header .navbar {
     }
 }
 
-@media screen and (min-width: 992px) {
-    .single-article-achievements {
-        flex: 0 0 calc(25% - 0.5rem);
-    }
-
-    .single-article-gallery {
-        flex: 0 0 calc(25%- 0.5rem);
-    }
-}
 @media screen and (max-width: 768px) {
     .responsive-margin-top{
         margin-top: 1rem;
@@ -1119,73 +798,20 @@ header .navbar {
         font-size: 2rem;
     }
 
-    .single-achievements-text,
-    .single-achievements-title {
-        font-size: 1rem;
-    }
-
-    .gallery-container {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    }
-
-    .single-article-gallery {
-        flex: 0 0 calc(50%- 0.5rem);
-    }
-
     .flex-input-center {
         flex-wrap: wrap;
         width: 100%;
     }
 
-    .gallery-img {
-        width: 20rem;
-    }
-
     .flex-description {
         flex-wrap: wrap;
     }
-
-    #specific_trip .flex-img-trip {
-        flex: 0 1 100%;
-    }
-
     .trip-details-fare{
         top: 50%;
         right: 6%;
         transition: 1s;
     }
-    /* UPDATE HOME NAV BAR */
-    #home-nav .navbar-list li{
-        display: inline-block;
-        padding: 1px;
-    }
 }
-
-@media screen and (max-width: 360px) {
-    .gallery-img {
-        width: 100%;
-    }
-}
-
-
-@media screen and (min-width: 768px) {
-    .gallery-container {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-    }
-
-    .single-article-gallery {
-        flex: 0 0 calc(50%- 0.5rem);
-    }
-
-    .gallery-img {
-        width: 20rem;
-    }
-}
-
 /* Side bar and modal*/
 @media screen and (max-width: 700px) {
     .modal-content {
@@ -1221,22 +847,15 @@ header .navbar {
         display: block;
     }
 }
-
-@media screen and (max-width: 387px){
-    /* UPDATE HOME NAV BAR */
-    .display-on-full{
-        display: none !important;
-    }
-    .hidden-responsive{
-        display: inline-block !important;
-    }
-}
-/* Gallery extended media queries. UPDATE */
-@media screen and (min-width: 2560px){
-    /* UPDATE HOME NAV BAR */
-    .gallery-container{
-        display: flex;
-        align-items: baseline;
+@media  screen and (max-width: 1024px){
+    .row{
         justify-content: center;
+        align-items: center;
+        flex: 0 0 calc(110% - 0.1rem);
+        height: 100vh;
+    }
+    .flex-right{
+        flex-grow: 1;
+       margin: 0;
     }
 }
