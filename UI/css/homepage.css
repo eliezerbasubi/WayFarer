@@ -398,3 +398,12 @@
         display: block;
     }
 }
+
+@media screen and (max-width: 387px){
+    .display-on-full{
+        display: none !important;
+    }
+    .hidden-responsive{
+        display: inline-block !important;
+    }
+}
