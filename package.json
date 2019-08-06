@@ -7,7 +7,7 @@
     "start": "babel-watch server.js",
     "test": "nyc  --reporter=text mocha --require babel-register server/tests/*.js  ",
     "test:watch": "mocha --watch",
-    "coverage": "nyc --reporter=lcov --reporter=text-lcov | coveralls"
+    "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test"
   },
   "repository": {
     "type": "git",
