@@ -1,15 +1,17 @@
-sudo: false
 
 language: node_js
-
 node_js:
-  - node
-env: 
-  global: 
-    — JWT_KEY=secret
+  - "stable"
 cache:
   directories:
-  - node_modules
+    - "node_modules"
+install:
+  - npm install
+
+env:
+  global:
+  - JWT_KEY=secret
+
 script:
   - npm test
 after_success:
