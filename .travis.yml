@@ -4,6 +4,9 @@ language: node_js
 
 node_js:
   - node
+env: 
+  global: 
+    — JWT_KEY=secret
 cache:
   directories:
   - node_modules
