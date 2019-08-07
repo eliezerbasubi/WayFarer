@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-watch server.js",
-    "test": "nyc  --reporter=text mocha --require @babel/register server/tests/*.js --exit --timeout 10000",
+    "test": "nyc  --reporter=text mocha --require babel-register server/tests/*.js --exit --timeout 10000",
     "test:watch": "mocha --watch",
     "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
     "coveralls-coverage": "coveralls < lcov.info",
@@ -24,6 +24,13 @@
   },
   "homepage": "https://github.com/eliezerbasubi/WayFarer#readme",
   "dependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "@babel/register": "^7.5.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "babel-watch": "^7.0.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "dotenv": "^8.0.0",
@@ -34,13 +41,6 @@
     "object.omit": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.0",
-    "@babel/core": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
-    "@babel/register": "^7.5.5",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "babel-watch": "^7.0.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "codeclimate-test-reporter": "^0.5.1",

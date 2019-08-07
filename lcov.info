@@ -1,5 +1,5 @@
 TN:
-SF:C:\xampp\htdocs\WayFarer/app.js
+SF:C:/xampp/htdocs/WayFarer/app.js
 FN:18,(anonymous_1)
 FN:40,(anonymous_2)
 FN:46,(anonymous_3)
@@ -43,7 +43,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\constants/feedback.js
+SF:C:/xampp/htdocs/WayFarer/server/constants/feedback.js
 FNF:0
 FNH:0
 DA:1,1
@@ -79,7 +79,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\constants/responseCodes.js
+SF:C:/xampp/htdocs/WayFarer/server/constants/responseCodes.js
 FNF:0
 FNH:0
 DA:1,1
@@ -98,7 +98,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\constants/responseMessages.js
+SF:C:/xampp/htdocs/WayFarer/server/constants/responseMessages.js
 FNF:0
 FNH:0
 DA:1,1
@@ -115,7 +115,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\controllers/bookingController.js
+SF:C:/xampp/htdocs/WayFarer/server/controllers/bookingController.js
 FN:20,(anonymous_1)
 FN:27,(anonymous_2)
 FN:34,(anonymous_3)
@@ -210,7 +210,7 @@ BRF:14
 BRH:13
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\controllers/tripController.js
+SF:C:/xampp/htdocs/WayFarer/server/controllers/tripController.js
 FN:15,(anonymous_1)
 FN:26,(anonymous_2)
 FN:48,(anonymous_3)
@@ -306,7 +306,7 @@ BRF:28
 BRH:28
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\controllers/userController.js
+SF:C:/xampp/htdocs/WayFarer/server/controllers/userController.js
 FN:35,(anonymous_1)
 FN:39,(anonymous_2)
 FN:79,(anonymous_3)
@@ -391,7 +391,7 @@ BRF:14
 BRH:13
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\data/data.js
+SF:C:/xampp/htdocs/WayFarer/server/data/data.js
 FNF:0
 FNH:0
 DA:1,1
@@ -418,7 +418,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\helpers/helper.js
+SF:C:/xampp/htdocs/WayFarer/server/helpers/helper.js
 FN:6,(anonymous_0)
 FN:14,(anonymous_1)
 FN:23,(anonymous_2)
@@ -454,7 +454,7 @@ BRF:2
 BRH:1
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\middlewares/permission.js
+SF:C:/xampp/htdocs/WayFarer/server/middlewares/permission.js
 FN:18,(anonymous_1)
 FN:27,(anonymous_2)
 FN:40,(anonymous_3)
@@ -529,7 +529,7 @@ BRF:15
 BRH:12
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\middlewares/validation.js
+SF:C:/xampp/htdocs/WayFarer/server/middlewares/validation.js
 FN:21,(anonymous_1)
 FN:40,(anonymous_2)
 FN:52,(anonymous_3)
@@ -633,7 +633,7 @@ BRF:30
 BRH:27
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\models/booking.js
+SF:C:/xampp/htdocs/WayFarer/server/models/booking.js
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -661,7 +661,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\models/trip.js
+SF:C:/xampp/htdocs/WayFarer/server/models/trip.js
 FN:3,(anonymous_0)
 FNF:1
 FNH:1
@@ -684,7 +684,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\models/user.js
+SF:C:/xampp/htdocs/WayFarer/server/models/user.js
 FN:6,(anonymous_0)
 FNF:1
 FNH:1
@@ -708,7 +708,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\routes/index.js
+SF:C:/xampp/htdocs/WayFarer/server/routes/index.js
 FNF:0
 FNH:0
 DA:1,1
@@ -735,7 +735,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\tests/appCore.spec.js
+SF:C:/xampp/htdocs/WayFarer/server/tests/appCore.spec.js
 FN:14,(anonymous_1)
 FN:15,(anonymous_2)
 FN:16,(anonymous_3)
@@ -777,7 +777,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\tests/test.spec.js
+SF:C:/xampp/htdocs/WayFarer/server/tests/test.spec.js
 FN:29,(anonymous_1)
 FN:31,(anonymous_2)
 FN:32,(anonymous_3)
@@ -949,7 +949,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\tests/test.trip.spec.js
+SF:C:/xampp/htdocs/WayFarer/server/tests/test.trip.spec.js
 FN:29,(anonymous_1)
 FN:30,(anonymous_2)
 FN:31,(anonymous_3)
@@ -1248,7 +1248,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:C:\xampp\htdocs\WayFarer\server\tests/testBooking.js
+SF:C:/xampp/htdocs/WayFarer/server/tests/testBooking.js
 FN:51,(anonymous_1)
 FN:52,(anonymous_2)
 FN:53,(anonymous_3)
