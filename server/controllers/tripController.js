@@ -6,25 +6,20 @@ import {
 } from '../constants/responseCodes';
 import {
   BUS_ALREADY_TAKEN,
-  NO_TRIP_AVAILABLE
+  NO_TRIP_AVAILABLE,
+  ID_NOT_FOUND
 } from '../constants/feedback';
 import Helper from '../helpers/helper';
-import { NOT_FOUND, BAD_REQUEST_MSG } from '../constants/responseMessages';
 
 export default class TripController {
   static createTrip(req, res) {
     const tripData = [];
     const { busLicenseNumber, tripDate } = req.body;
-
-    // let trip = [];
     let onSameDate = [];
-
-    // trip = dbTrip.find(item => item.tripId === req.body.trip_id);
-
-    // if (trip) { return Helper.error(res, RESOURCE_CONFLICT, TRIP_ID_EXISTS); }
 
     onSameDate = dbTrip.find(bus => bus.busLicenseNumber === busLicenseNumber
         && bus.tripDate === tripDate);
+
 
     if (onSameDate) { return Helper.error(res, RESOURCE_CONFLICT, BUS_ALREADY_TAKEN); }
 
@@ -46,16 +41,18 @@ export default class TripController {
   }
 
   static cancelTrip(req, res) {
-    if (dbTrip.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NOT_FOUND); }
-
     const queryParams = parseInt(req.params.trip_id, 10);
-    const cancelQuest = dbTrip.find(query => query.tripId === queryParams);
-    if (cancelQuest) {
-      cancelQuest.status = 'cancelled';
-      return Helper.success(res, SUCCESS_CODE, cancelQuest, cancelQuest.adminId);
-    }
+    const cancelQuest = dbTrip.find(query => parseInt(query.tripId, 10) === queryParams);
 
-    return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG, 'Trip cancelled successfully');
+    if (cancelQuest) {
+      if (cancelQuest.status === 'cancelled') {
+        return Helper.error(res, BAD_REQUEST_CODE, 'Trip Already Cancelled');
+      }
+
+      cancelQuest.status = 'cancelled';
+      return Helper.success(res, SUCCESS_CODE, cancelQuest, 'Trip cancelled successfully');
+    }
+    return Helper.error(res, NOT_FOUND_CODE, ID_NOT_FOUND);
   }
 
   static getAllTrips(req, res) {
@@ -63,7 +60,6 @@ export default class TripController {
 
     const { origin, destination } = req.query;
 
-    // Filter trips by destination and origin
     if (req.query.origin && req.query.destination) {
       const result = dbTrip.filter(trip => trip.origin.toLowerCase() === origin.toLowerCase()
       && trip.destination.toLowerCase() === destination.toLowerCase());
@@ -73,8 +69,8 @@ export default class TripController {
     }
 
     if (destination) {
-      // eslint-disable-next-line
-      const place = dbTrip.filter(trip => trip.destination.toLowerCase() === destination.toLowerCase());
+      const place = dbTrip.filter(trip => trip.destination.toLowerCase()
+      === destination.toLowerCase());
       if (place.length < 1) { return Helper.error(res, NOT_FOUND_CODE, 'Destination Not Found'); }
       return Helper.success(res, SUCCESS_CODE, place, `Find ${place.length} result(s) by destination ${destination}`);
     }
@@ -89,11 +85,10 @@ export default class TripController {
   }
 
   static viewSpecificTrip(req, res) {
-    if (dbTrip.length < 1) {
-      return Helper.error(res, NOT_FOUND_CODE, 'The Specified Trip was Not Found');
-    }
-
     const questTrip = dbTrip.find(quest => quest.tripId === parseInt(req.params.trip_id, 10));
-    return Helper.success(res, SUCCESS_CODE, questTrip, 'Trip Successfully Found');
+    if (questTrip) {
+      return Helper.success(res, SUCCESS_CODE, questTrip, 'We Have Found The Searched Trip');
+    }
+    return Helper.error(res, NOT_FOUND_CODE, 'The Specified Trip was Not Found');
   }
 }

@@ -4,7 +4,6 @@ import app from '../../app';
 import {
     JSON_TYPE,
     correctTrip,
-    noTokenTrip,
     userToken,
     adminToken,
     invalidToken,
@@ -15,7 +14,7 @@ import {
 import {
     routes
 } from '../data/data';
-import { TRIP_ID_EXISTS, INVALID_TOKEN, NOT_LOGGED_IN } from '../constants/feedback';
+import { TRIP_ID_EXISTS, INVALID_TOKEN, NOT_LOGGED_IN, ID_NOT_FOUND } from '../constants/feedback';
 import { FORBIDDEN_MSG, BAD_REQUEST_MSG } from '../constants/responseMessages';
 import { cache } from '../models/user';
 import { dbTrip } from '../models/trip';
@@ -112,7 +111,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
     });
 
     describe('Base case: Admin can cancel a trip => /api/v1/trips/:trip_id/cancel', () => {
-        it('Should validate admin token', (done) => {
+        it('Should return 200. Trip was cancelled successfully', (done) => {
             cache.map(user => { user.id = 1 });
             request(app)
                 .patch('/api/v1/trips/1/cancel')
@@ -124,21 +123,32 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
                     done();
                 });
         });
+        it('Should return 200. Trip already successfully', (done) => {
+            request(app)
+                .patch('/api/v1/trips/1/cancel')
+                .set('Authorization', adminToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(BAD_REQUEST_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res).to.have.headers;
+                    done();
+                });
+        });
+        it('Should return 404. Trip Was Not Found', (done) => {
+            request(app)
+                .patch('/api/v1/trips/2/cancel')
+                .set('Authorization', adminToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res).to.have.headers;
+                    done();
+                });
+        });
 
         it('Should reject invalid ID', (done) => {
             request(app)
                 .patch('/api/v1/trips/-1/cancel')
-                .set('Authorization', adminToken)
-                .end((err, res) => {
-                    expect(res).to.have.status(BAD_REQUEST_CODE);
-                    expect(res.body.error).to.be.equal(BAD_REQUEST_MSG);
-                    expect(res.body).to.have.property('status').equal(BAD_REQUEST_CODE)
-                    done();
-                });
-        });
-        it('Should reject Bad Requests', (done) => {
-            request(app)
-                .patch('/api/v1/trips/55/cancel')
                 .set('Authorization', adminToken)
                 .end((err, res) => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
@@ -157,21 +167,11 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
                     done();
                 });
         });
-        it('Should return 404. If trip table is empty', (done) => {
-            dbTrip.pop();
-            request(app)
-                .patch('/api/v1/trips/455/cancel')
-                .set('Authorization', adminToken)
-                .end((err, res) => {
-                    expect(res).to.have.status(NOT_FOUND_CODE);
-                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE);
-                    done();
-                });
-        });
     });
 
     describe('Base case: Both admin and users can view all trips => /api/v1/trips', () =>{
         it('Should return 404. If database(dbTrip) is empty', (done) => {
+            dbTrip.pop();
             request(app)
                 .get(routes.getAllTrips)
                 .set('Authorization', adminToken)
@@ -238,7 +238,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         it('Should return 200. For valid token and trip ID', (done) => {
             dbTrip.push(correctTrip)
             request(app)
-                .get(`${routes.getSpecificTrip}1`)
+                .get(`${routes.getSpecificTrip}2`)
                 .set('Authorization', adminToken)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
@@ -254,7 +254,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
                 .set('Authorization', invalidToken)
                 .end((err, res) => {
                     expect(res).to.have.status(UNAUTHORIZED_CODE);
-                    expect(res.body.error).to.be.equal('Token is not valid');
+                    expect(res.body.error).to.be.equal(INVALID_TOKEN);
                     expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
                     expect(res.type).to.be.equal(JSON_TYPE);
                     expect(res).to.have.headers;
@@ -289,7 +289,6 @@ describe('Users can filter trips',()=>{
         });
     });
 
-    // Filter by destination
     describe('Users can filter trip by destination',()=>{
         it('Should filter all trips with the given destination',(done) =>{
             request(app)
@@ -313,7 +312,7 @@ describe('Users can filter trips',()=>{
             });
         });
     });
-    // Filter by origin
+    
     describe('Users can filter trip by origin',()=>{
         it('Should filter all trips with the given origin',(done) =>{
             request(app)

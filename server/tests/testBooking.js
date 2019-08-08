@@ -37,9 +37,8 @@ import {
     dbBookings
 } from '../models/booking';
 import {
-   NOT_LOGGED_IN
+   NOT_LOGGED_IN, NO_BOOKINGS
 } from '../constants/feedback';
-import { GONE_MSG } from '../constants/responseMessages';
 
 chai.use(chaiHttp);
 
@@ -97,6 +96,22 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                 });
         });
 
+        it('Should return 422 If seat number is greater seating capacity', (done) => {
+            correctBooking.seatNumber = 45;
+            correctBooking.tripId = 3;
+            correctTrip.tripId = 3;
+            request(app)
+                .post(routes.bookings)
+                .send(correctBooking)
+                .set("Authorization", userToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNPROCESSABLE_ENTITY);
+                    expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
+                    
+                    done();
+                });
+        });
+
         it('Should return 500 If seat number is greater seating capacity', (done) => {
             correctBooking.seatNumber = 455;
             request(app)
@@ -113,6 +128,8 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
 
         it('Should validate trip ID and seat number', (done) => {
             correctBooking.tripId = -23;
+            correctBooking.tripId = 4;
+            correctTrip.tripId = 4;
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
@@ -129,8 +146,6 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
 
         it('Should return 404 If trip was cancelled', (done) => {
             correctBooking.seatNumber = 5;
-            correctBooking.tripId = 3;
-            correctTrip.tripId = 3;
             dbTrip.push(correctTrip);
             dbTrip.map(trip => { trip.status = "cancelled" });
             request(app)
@@ -161,8 +176,6 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                     done();
                 })
         });
-
-        // // User has logged in
         it('Should return 200 If user has logged in', (done) => {
             cache.push({
                 id: 1,
@@ -212,7 +225,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                 .end((err, res) => {
                     expect(res.status).to.be.equal(NOT_FOUND_CODE);
                     expect(res.body).to.be.an('object');
-                    expect(res.body.error).to.be.equal('No bookings yet');
+                    expect(res.body.error).to.be.equal(NO_BOOKINGS);
                     done();
                 });
         });

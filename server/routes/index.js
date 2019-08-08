@@ -1,26 +1,14 @@
 import express from 'express';
-import UserController from '../controllers/userController';
-import Validator from '../middlewares/validation';
-import TripController from '../controllers/tripController';
-import Permission from '../middlewares/permission';
-import BookingController from '../controllers/bookingController';
+import userRouter from './user.routes';
+import tripRouter from './trip.routes';
+import bookingRouter from './booking.routes';
 
 const router = express.Router();
 
-// #User routes
-router.post('/auth/signup', Validator.signup, UserController.signUp);
-router.post('/auth/signin', UserController.signIn);
-router.post('/auth/reset/:user_id', Validator.validatePassword, UserController.resetPassword);
+router.use(userRouter);
 
-// #Trip routes
-router.post('/trips', Validator.validateTrip, Permission.grantAccess, TripController.createTrip);
-router.patch('/trips/:trip_id/cancel', Validator.validateId, Permission.grantAccess, TripController.cancelTrip);
-router.get('/trips', Permission.authorize, TripController.getAllTrips);
-router.get('/trips/:trip_id', Validator.validateId, Permission.authorize, TripController.viewSpecificTrip);
+router.use(tripRouter);
 
-// #Booking routes
-router.post('/bookings', Validator.validateBooking, Permission.authUsersOnly, BookingController.createBooking);
-router.get('/bookings', Permission.authorize, BookingController.viewBookings);
-router.delete('/bookings/:booking_id', Validator.validateId, Permission.authUsersOnly, BookingController.deleteBooking);
-router.get('/bookings/:booking_id', Validator.validateId, Permission.authUsersOnly, BookingController.getOneBooking);
+router.use(bookingRouter);
+
 export default router;

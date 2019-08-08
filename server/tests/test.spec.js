@@ -16,7 +16,7 @@ import {
 import {
     routes
 } from '../data/data';
-import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND } from '../constants/feedback';
+import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD } from '../constants/feedback';
 import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
 import { userTable } from '../models/user';
 chai.use(chaiHttp);
@@ -119,11 +119,11 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
                 .post(routes.signin)
                 .send(preSaveLog)
                 .end((err, res) => {
-                    expect(res.status).to.equal(INTERNAL_SERVER_ERROR_CODE);
+                    expect(res.status).to.equal(UNAUTHORIZED_CODE);
                     expect(res.type).to.be.equal(JSON_TYPE);
                     expect(res.body).to.be.an('object');
-                    expect(res.body.error).to.be.equal(UNAUTHORIZED_ACCESS)
-                    expect(res.body).to.have.property('status').equal(INTERNAL_SERVER_ERROR_CODE)
+                    expect(res.body.error).to.be.equal(INCORRECT_PASSWORD)
+                    expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE)
                     done();
                 });
         });
