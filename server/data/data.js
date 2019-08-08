@@ -64,8 +64,8 @@ export const correctTrip = {
   busLicenseNumber: 'BO7865',
   origin: 'Bukavu',
   destination: 'Kigali',
-  tripDate: '2019-08-05',
-  arrivalDate: '2019-08-16',
+  tripDate: '2019-12-05',
+  arrivalDate: '2019-12-16',
   time: '17:30',
   fare: '120.5'
 };
@@ -76,8 +76,8 @@ export const noTokenTrip = {
   busLicenseNumber: 'BO7865',
   origin: 'Bukavu',
   destination: 'Kigali',
-  tripDate: '2019-08-05',
-  arrivalDate: '2019-08-16',
+  tripDate: '2019-12-05',
+  arrivalDate: '2019-12-16',
   time: '17:30',
   fare: '120.5'
 };
@@ -103,7 +103,7 @@ export const bookingStore = {
   bookingID: 1,
   busLicenseNumber: 'OPBIEW4',
   tripId: '1',
-  tripDate: '2019-08-12',
+  tripDate: '2019-12-12',
   tripTime: '13:30',
   tripName: 'Boot trip',
   fare: '45.9',
@@ -112,6 +112,6 @@ export const bookingStore = {
   lastName: 'Doe',
   email: 'johndoe@gmail.com',
   seatNumber: '34',
-  createdOn: '2019-08-15',
+  createdOn: '2019-12-15',
   status: 'valid'
 };

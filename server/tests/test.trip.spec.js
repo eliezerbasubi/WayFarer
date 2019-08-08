@@ -68,7 +68,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
 
         it('Should return 409. If trips bus is already taken', (done) => {
             correctTrip.tripId = 2;
-            correctTrip.arrivalDate = '2019-08-16';
+            correctTrip.arrivalDate = '2019-12-16';
             request(app)
                 .post(routes.createTrip)
                 .set("Authorization",adminToken)
@@ -82,7 +82,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
 
         it('Should not create trip if arrival date is before trip date', (done) => {
-            correctTrip.arrivalDate = "2019-08-2";
+            correctTrip.arrivalDate = "2019-12-2";
             request(app)
                 .post(routes.createTrip)
                 .set('Authorization', adminToken)
@@ -97,7 +97,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
 
         it('Should return 401 if admin is not signed in', (done) => {
             cache.map(user => { user.id = 2 });
-            correctTrip.arrivalDate = "2019-08-30"
+            correctTrip.arrivalDate = "2019-12-30"
             request(app)
                 .post(routes.createTrip)
                 .set('Authorization',adminToken)
