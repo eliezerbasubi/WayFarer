@@ -3,22 +3,17 @@ import chaiHttp from 'chai-http';
 import app from '../../app';
 
 import {
-    preSave,
     JSON_TYPE,
-    invalidToken,
     correctBooking,
-    adminBooking,
-    userToken,
     bookingStore,
-    adminToken,
-    correctTrip
+    correctTrip,
+    invalidToken
 } from '../data/data';
 import {
     SUCCESS_CODE,
     RESOURCE_CONFLICT,
     BAD_REQUEST_CODE,
     UNAUTHORIZED_CODE,
-    INTERNAL_SERVER_ERROR_CODE,
     NOT_FOUND_CODE,
     UNPROCESSABLE_ENTITY,
     CREATED_CODE,
@@ -39,6 +34,7 @@ import {
 import {
    NOT_LOGGED_IN, NO_BOOKINGS
 } from '../constants/feedback';
+import {adminTokenId, userTokenId} from './test.trip.spec'
 
 chai.use(chaiHttp);
 
@@ -55,7 +51,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(CREATED_CODE);
                     expect(res.body).to.have.property('status').equal(CREATED_CODE);
@@ -69,7 +65,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(RESOURCE_CONFLICT);
                     expect(res.body).to.have.property('status').equal(RESOURCE_CONFLICT);
@@ -85,7 +81,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(RESOURCE_CONFLICT);
                     expect(res.body).to.have.property('status').equal(RESOURCE_CONFLICT);
@@ -103,7 +99,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
-                .set("Authorization", userToken)
+                .set("Authorization", userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(UNPROCESSABLE_ENTITY);
                     expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
@@ -117,10 +113,10 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
-                .set("Authorization", userToken)
+                .set("Authorization", userTokenId)
                 .end((err, res) => {
-                    expect(res).to.have.status(INTERNAL_SERVER_ERROR_CODE);
-                    expect(res.body).to.have.property('status').equal(INTERNAL_SERVER_ERROR_CODE);
+                    expect(res).to.have.status(UNPROCESSABLE_ENTITY);
+                    expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
                     
                     done();
                 });
@@ -133,11 +129,11 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
-                    expect(res).to.have.status(INTERNAL_SERVER_ERROR_CODE);
+                    expect(res).to.have.status(UNPROCESSABLE_ENTITY);
                     expect(res.body.error).to.contain('fails');
-                    expect(res.body).to.have.property('status').equal(INTERNAL_SERVER_ERROR_CODE);
+                    expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
                     expect(res.type).to.be.equal(JSON_TYPE);
                     expect(res).to.have.headers;
                     done();
@@ -151,7 +147,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
-                .set("Authorization", userToken)
+                .set("Authorization", userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(GONE);
                     expect(res.body).to.have.property('status').equal(GONE);
@@ -166,7 +162,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             cache.map(user => { user.id = 2 });
             request(app)
                 .get(routes.bookings)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(UNAUTHORIZED_CODE);
                     expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
@@ -186,7 +182,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             });
             request(app)
                 .get(routes.bookings)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
                     expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
@@ -205,7 +201,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             dbBookings.push(correctBooking);
             request(app)
                 .get(routes.bookings)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res.status).to.be.equal(NOT_FOUND_CODE);
                     expect(res.body).to.be.an('object');
@@ -221,7 +217,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             }
             request(app)
                 .get(routes.bookings)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res.status).to.be.equal(NOT_FOUND_CODE);
                     expect(res.body).to.be.an('object');
@@ -239,7 +235,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             dbBookings.push(bookingStore)
             request(app)
                 .get(routes.bookings)
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
                     expect(res.body).to.be.an('object');
@@ -252,7 +248,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should not delete booking if user has no booking', (done) => {
             request(app)
                 .delete('/api/v1/bookings/1')
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
 
                 .end((err, res) => {
                     expect(res.status).to.be.equal(NOT_FOUND_CODE);
@@ -272,7 +268,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             dbBookings.push(bookingStore);
             request(app)
                 .delete('/api/v1/bookings/1')
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
                     expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
@@ -286,7 +282,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should return 404 If booking with wrong ID', (done) => {
             request(app)
                 .delete('/api/v1/bookings/10')
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(NOT_FOUND_CODE);
                     expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE);
@@ -299,7 +295,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should not delete booking with wrong ID', (done) => {
             request(app)
                 .delete('/api/v1/bookings/-1')
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
                     expect(res.body).to.have.property('status').equal(BAD_REQUEST_CODE);
@@ -314,7 +310,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should return 404. Booking not found', (done) => {
             request(app)
                 .get('/api/v1/bookings/4')
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res.status).to.be.equal(NOT_FOUND_CODE);
                     expect(res.body).to.be.an('object');
@@ -327,13 +323,26 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             dbBookings.push(bookingStore);
             request(app)
                 .get('/api/v1/bookings/1')
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
                     expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
                     expect(res.body).to.be.an('object');
                     expect(res.type).to.be.equal(JSON_TYPE);
                     expect(res.body).to.have.property('data');
+                    done();
+                });
+        });
+
+        it('Should return 401. Invalid Token Provided', (done) => {
+            dbBookings.push(bookingStore);
+            request(app)
+                .get('/api/v1/bookings/1')
+                .set('Authorization', invalidToken)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNAUTHORIZED_CODE);
+                    expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
+                    expect(res.body).to.be.an('object');
                     done();
                 });
         });

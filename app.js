@@ -6,7 +6,6 @@ import {
 } from './server/constants/responseMessages';
 import {
   SUCCESS_CODE,
-  INTERNAL_SERVER_ERROR_CODE,
   METHOD_NOT_FOUND
 } from './server/constants/responseCodes';
 import routes from './server/routes/index';
@@ -38,13 +37,13 @@ app.use(bordyParser.json());
 app.use('/api/v1', routes);
 
 app.use((req, res, next) => {
-  const error = new Error(METHOD_NOT_FOUND);
-  error.status = METHOD_NOT_FOUND_MSG;
+  const error = new Error(METHOD_NOT_FOUND_MSG);
+  error.status = METHOD_NOT_FOUND;
   next(error);
 });
 
 app.use((error, req, res, next) => {
-  res.status(error.status || INTERNAL_SERVER_ERROR_CODE);
+  res.status(error.status);
   res.json({
     status: error.status,
     error: error.message

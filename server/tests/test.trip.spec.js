@@ -1,36 +1,47 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import {
     JSON_TYPE,
     correctTrip,
     userToken,
     adminToken,
+    preSave,
     invalidToken,
 } from '../data/data';
 import {
-    CREATED_CODE, INTERNAL_SERVER_ERROR_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE
+    CREATED_CODE,
+    RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE, UNPROCESSABLE_ENTITY
 } from '../constants/responseCodes';
 import {
     routes
 } from '../data/data';
-import { TRIP_ID_EXISTS, INVALID_TOKEN, NOT_LOGGED_IN, ID_NOT_FOUND } from '../constants/feedback';
+import { INVALID_TOKEN, NOT_LOGGED_IN } from '../constants/feedback';
 import { FORBIDDEN_MSG, BAD_REQUEST_MSG } from '../constants/responseMessages';
 import { cache } from '../models/user';
 import { dbTrip } from '../models/trip';
 chai.use(chaiHttp);
+dotenv.config();
 
 const {
     expect,
     request
 } = chai;
 
+export const adminTokenId = jwt.sign({ email: preSave.email, id: 1, isAdmin: preSave.isAdmin },
+    process.env.JWT_KEY, { expiresIn: '10min' });
+
+export const userTokenId = jwt.sign({ email: "user@gmail.com", id: 1, isAdmin: false },
+    process.env.JWT_KEY, { expiresIn: '10min' });
+
 describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
     describe('Base case: Admin can create a trip', () => {
        it('Should return 200. If all fields are provided', (done) => {
         request(app)
             .post(routes.createTrip)
-            .set("Authorization",adminToken)
+            .set("Authorization",adminTokenId)
             .send(correctTrip)
             .end((err, res) => {
                 expect(res).to.have.status(CREATED_CODE);
@@ -55,7 +66,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         it('Should return 403. Restrict access to unauthorized users.', (done) => {
             request(app)
                 .post(routes.createTrip)
-                .set("Authorization",userToken)
+                .set("Authorization",userTokenId)
                 .send(correctTrip)
                 .end((err, res) => {
                     expect(res).to.have.status(FORBIDDEN_CODE)
@@ -70,7 +81,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             correctTrip.arrivalDate = '2019-12-16';
             request(app)
                 .post(routes.createTrip)
-                .set("Authorization",adminToken)
+                .set("Authorization",adminTokenId)
                 .send(correctTrip)
                 .end((err, res) => {
                     expect(res).to.have.status(RESOURCE_CONFLICT);
@@ -84,12 +95,12 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             correctTrip.arrivalDate = "2019-12-2";
             request(app)
                 .post(routes.createTrip)
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .send(correctTrip)
                 .end((err, res) => {
-                    expect(res).to.have.status(INTERNAL_SERVER_ERROR_CODE)
+                    expect(res).to.have.status(UNPROCESSABLE_ENTITY)
                     expect(res.body.error).to.contain('arrivalDate fails');
-                    expect(res.body.status).to.be.equal(INTERNAL_SERVER_ERROR_CODE)
+                    expect(res.body.status).to.be.equal(UNPROCESSABLE_ENTITY)
                     done();
                 });
         });
@@ -99,7 +110,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             correctTrip.arrivalDate = "2019-12-30"
             request(app)
                 .post(routes.createTrip)
-                .set('Authorization',adminToken)
+                .set('Authorization',adminTokenId)
                 .send(correctTrip)
                 .end((err, res) => {
                     expect(res).to.have.status(UNAUTHORIZED_CODE);
@@ -115,7 +126,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             cache.map(user => { user.id = 1 });
             request(app)
                 .patch('/api/v1/trips/1/cancel')
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
                     expect(res.body).to.be.an('object');
@@ -126,7 +137,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         it('Should return 200. Trip already successfully', (done) => {
             request(app)
                 .patch('/api/v1/trips/1/cancel')
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
                     expect(res.body).to.be.an('object');
@@ -137,7 +148,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         it('Should return 404. Trip Was Not Found', (done) => {
             request(app)
                 .patch('/api/v1/trips/2/cancel')
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(NOT_FOUND_CODE);
                     expect(res.body).to.be.an('object');
@@ -149,7 +160,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         it('Should reject invalid ID', (done) => {
             request(app)
                 .patch('/api/v1/trips/-1/cancel')
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
                     expect(res.body.error).to.be.equal(BAD_REQUEST_MSG);
@@ -160,7 +171,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         it('Should return 401. If the person is not an admin', (done) => {
             request(app)
                 .patch('/api/v1/trips/455/cancel')
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(FORBIDDEN_CODE);
                     expect(res.body).to.have.property('status').equal(FORBIDDEN_CODE);
@@ -174,7 +185,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             dbTrip.pop();
             request(app)
                 .get(routes.getAllTrips)
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(NOT_FOUND_CODE);
                     expect(res.body).to.be.an('object');
@@ -199,7 +210,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             cache.map(user => { user.id = 2 });
             request(app)
                 .get(routes.getAllTrips)
-                .set('Authorization', userToken)
+                .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(UNAUTHORIZED_CODE);
                     expect(res.body).to.be.an('object');
@@ -213,7 +224,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             dbTrip.push(correctTrip);
             request(app)
                 .get(routes.getAllTrips)
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
                     expect(res.body).to.be.an('object');
@@ -227,7 +238,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             dbTrip.pop();
             request(app)
                 .get(`${routes.getSpecificTrip}1`)
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(NOT_FOUND_CODE);
                     expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE)
@@ -239,7 +250,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
             dbTrip.push(correctTrip)
             request(app)
                 .get(`${routes.getSpecificTrip}2`)
-                .set('Authorization', adminToken)
+                .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
                     expect(res.body).to.be.an('object');
@@ -269,7 +280,7 @@ describe('Users can filter trips',()=>{
         it('Should return 200. Trip origin and destination were found',(done) =>{
             request(app)
             .get(`${routes.getAllTrips}?origin=Bukavu&destination=Kigali`)
-            .set('Authorization', userToken)
+            .set('Authorization', userTokenId)
             .end((err,res) =>{
                 expect(res.status).to.be.equal(SUCCESS_CODE);
                 expect(res.body).to.be.an('object');
@@ -280,7 +291,7 @@ describe('Users can filter trips',()=>{
         it('Should return 404. Trip origin does not exist',(done) =>{
             request(app)
             .get(`${routes.getAllTrips}?origin=Kampala&destination=Goma`)
-            .set('Authorization', userToken)
+            .set('Authorization', userTokenId)
             .end((err,res) =>{
                 expect(res.status).to.be.equal(NOT_FOUND_CODE);
                 expect(res.body).to.have.property('error');
@@ -293,7 +304,7 @@ describe('Users can filter trips',()=>{
         it('Should filter all trips with the given destination',(done) =>{
             request(app)
             .get(`${routes.getAllTrips}?destination=Kigali`)
-            .set('Authorization', userToken)
+            .set('Authorization', userTokenId)
             .end((err,res) =>{
                 expect(res.status).to.be.equal(SUCCESS_CODE);
                 expect(res.body).to.be.an('object');
@@ -304,7 +315,7 @@ describe('Users can filter trips',()=>{
         it('Should not filter if destination does not exist',(done) =>{
             request(app)
             .get(`${routes.getAllTrips}?destination=Goma`)
-            .set('Authorization', userToken)
+            .set('Authorization', userTokenId)
             .end((err,res) =>{
                 expect(res.status).to.be.equal(NOT_FOUND_CODE);
                 expect(res.body).to.have.property('error');
@@ -312,12 +323,12 @@ describe('Users can filter trips',()=>{
             });
         });
     });
-    
+
     describe('Users can filter trip by origin',()=>{
         it('Should filter all trips with the given origin',(done) =>{
             request(app)
             .get(`${routes.getAllTrips}?origin=Bukavu`)
-            .set('Authorization', userToken)
+            .set('Authorization', userTokenId)
             .end((err,res) =>{
                 expect(res.status).to.be.equal(SUCCESS_CODE);
                 expect(res.body).to.be.an('object');
@@ -328,7 +339,7 @@ describe('Users can filter trips',()=>{
         it('Should not filter if origin does not exist',(done) =>{
             request(app)
             .get(`${routes.getAllTrips}?origin=Goma`)
-            .set('Authorization', userToken)
+            .set('Authorization', userTokenId)
             .end((err,res) =>{
                 expect(res.status).to.be.equal(NOT_FOUND_CODE);
                 expect(res.body).to.have.property('error').to.equal('Origin Not Found');

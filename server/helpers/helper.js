@@ -1,6 +1,7 @@
 import {
-  INTERNAL_SERVER_ERROR_CODE
+  UNPROCESSABLE_ENTITY
 } from '../constants/responseCodes';
+import { cache } from '../models/user';
 
 export default class Helper {
   static error(res, statusCode, error) {
@@ -22,10 +23,10 @@ export default class Helper {
 
   static joiError(res, error) {
     const body = {
-      status: INTERNAL_SERVER_ERROR_CODE,
+      status: UNPROCESSABLE_ENTITY,
       error: error.message.replace(/[^a-zA-Z0-9_.: ]/g, '')
     };
-    return res.status(INTERNAL_SERVER_ERROR_CODE).json(body);
+    return res.status(UNPROCESSABLE_ENTITY).json(body);
   }
 
   static today() {
@@ -41,5 +42,11 @@ export default class Helper {
   static slice(token) {
     if (token.startsWith('Bearer ')) return token.slice(7, token.length);
     return token;
+  }
+
+  static currentUserStatus() {
+    let isCurrentAdmin = true;
+    cache.forEach((user) => { isCurrentAdmin = user.isAdmin; });
+    return isCurrentAdmin;
   }
 }

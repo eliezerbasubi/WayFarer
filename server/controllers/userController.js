@@ -16,7 +16,8 @@ import {
   CREATED_CODE,
   INTERNAL_SERVER_ERROR_CODE,
   UNAUTHORIZED_CODE,
-  SUCCESS_CODE
+  SUCCESS_CODE,
+  NOT_FOUND_CODE
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
 import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';

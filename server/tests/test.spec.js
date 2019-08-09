@@ -11,7 +11,7 @@ import {
     changePassword,
 } from '../data/data';
 import {
-    CREATED_CODE, INTERNAL_SERVER_ERROR_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE
+    CREATED_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, UNPROCESSABLE_ENTITY
 } from '../constants/responseCodes';
 import {
     routes
@@ -20,7 +20,6 @@ import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USE
 import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
 import { userTable } from '../models/user';
 chai.use(chaiHttp);
-
 const {
     expect,
     request
@@ -47,7 +46,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
                 .post(routes.signup)
                 .send(faker)
                 .end((err, res) => {
-                    expect(res).to.have.status(INTERNAL_SERVER_ERROR_CODE);
+                    expect(res).to.have.status(UNPROCESSABLE_ENTITY);
                     done();
                 });
         });
@@ -69,7 +68,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
                 .post(routes.signup)
                 .send(explicitData)
                 .end((err, res) => {
-                    expect(res).to.have.status(INTERNAL_SERVER_ERROR_CODE);
+                    expect(res).to.have.status(UNPROCESSABLE_ENTITY);
                     expect(res.type).to.be.equal(JSON_TYPE);
                     expect(res.body.error).to.contain('is not allowed');
                     done();
@@ -182,8 +181,8 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
             request(app)
             .post('/api/v1/auth/reset/1')
             .send(changePassword).end((err,res) =>{
-                expect(res.status).to.equal(INTERNAL_SERVER_ERROR_CODE);
-                expect(res.body).to.have.property('status').equal(INTERNAL_SERVER_ERROR_CODE);
+                expect(res.status).to.equal(UNPROCESSABLE_ENTITY);
+                expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
                 done();
             });
         });
