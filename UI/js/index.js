@@ -3,24 +3,11 @@
     Created on : 7 June 2019
 */
 
-/**
- * This function returns a property with the provided selector(id or class)
- * @param {String} selector
- */
 const $ = (selector) => document.querySelector(selector);
 
-/**
- * This function returns all properties with the provided id or class
- * @param {String} selector
- */
 const $$ = (selector) => document.querySelectorAll(selector);
 
-/**
- * This function display snackbar
- * @param {String} snackContent
- */
 const showSnackBar = (snackContent) => {
-  // Show snackbar for 3s
   const displaySnack = $('#snackbar');
   displaySnack.textContent = snackContent;
   displaySnack.className = 'show';
@@ -29,8 +16,6 @@ const showSnackBar = (snackContent) => {
   }, 3000);
 };
 
-
-/** Validator Class  */
 class Validator {
   validate(inputType, value) {
     if (inputType == undefined || value == undefined) {
