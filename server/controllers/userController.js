@@ -16,7 +16,8 @@ import {
   CREATED_CODE,
   INTERNAL_SERVER_ERROR_CODE,
   UNAUTHORIZED_CODE,
-  SUCCESS_CODE
+  SUCCESS_CODE,
+  NOT_FOUND_CODE
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
 import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
@@ -105,5 +106,14 @@ export default class UserController {
       return Helper.error(res, UNAUTHORIZED_CODE, PASSWORD_DOESNT_MATCH);
     }
     return Helper.error(res, UNAUTHORIZED_CODE, USER_ID_NOT_FOUND);
+  }
+
+  static viewAllUsers(req, res) {
+    const users = userTable.filter(user => Boolean(user.isAdmin) === false);
+
+    if (users.length > 0) {
+      return Helper.success(res, SUCCESS_CODE, users, 'Here is the list of users');
+    }
+    return Helper.error(res, NOT_FOUND_CODE, 'We Cannot Find Any User Now');
   }
 }
