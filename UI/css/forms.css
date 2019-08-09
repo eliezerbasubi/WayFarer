@@ -37,7 +37,9 @@ textarea {
     border: none;
     border-bottom: 1px solid #000;
 }
-
+#contact-textarea {
+    width: 100%;
+}
 .btn {
     background-color: #000;
     color: white;
@@ -95,8 +97,18 @@ textarea {
 #reset-form .col-md-2{
     margin: 0.6rem 0;
 }
-
+.flex-height {
+    min-height: 100vh;
+    padding: 3rem 0;
+}
 @media screen and (max-width : 768px){
+    .responsive-margin-top{
+        margin-top: 1rem;
+    }
+    .flex-right-card{
+        margin: -4rem 1rem 1rem;
+        justify-items: center;
+    }
     #reset-cover{
         flex: 0 0 calc(96% - 1rem);
     }
