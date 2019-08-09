@@ -12,22 +12,16 @@ import { dbBookings } from '../models/booking';
 import { cache } from '../models/user';
 
 export default class Validator {
-  /**
-   * This function validates user credentials while signing up.
-   * @param {*} request -Request to be executed or performed
-   * @param {*} response -Response to be returned
-   * @param {*} next -Skip process if satifies.
-   */
   static signup(request, response, next) {
     const schema = Joi.object().keys({
-      email: Joi.string().email().required(),
+      email: Joi.string().email({ minDomainAtoms: 2 }).required(),
       firstName: Joi.string().min(3).max(25).required(),
       lastName: Joi.string().min(3).max(25).required(),
       password: Joi.string().min(6).max(50).required(),
       phoneNumber: Joi.number().positive().required(),
       city: Joi.string().min(5).max(30).required(),
       country: Joi.string().min(5).max(30).optional(),
-      isAdmin: Joi.bool().valid(true, false).required()
+      isAdmin: Joi.boolean().strict().valid(true, false).required()
     });
 
     const { error } = Joi.validate(request.body, schema);
@@ -43,12 +37,6 @@ export default class Validator {
     return Helper.joiError(res, error);
   }
 
-  /**
-   * This function validates trip inputs
-   * @param {*} request
-   * @param {*} response
-   * @param {*} next
-   */
   static validateTrip(request, response, next) {
     const schema = Joi.object().keys({
       tripName: Joi.string().min(3).max(60).required(),
@@ -60,7 +48,7 @@ export default class Validator {
       destination: Joi.string().min(3).max(30).required(),
       tripDate: Joi.date().iso().min(Helper.today()).required(),
       arrivalDate: Joi.date().iso().min(Joi.ref('tripDate')).required(),
-      time: Joi.string().regex(/^([0-9]{2}):([0-9]{2})$/),
+      time: Joi.string().regex(/^(?:[01]\d|2[0-3]):(?:[0-5]\d)$/).required(),
       fare: Joi.number().min(3).max(1000).positive()
         .precision(2)
         .required()
@@ -75,7 +63,7 @@ export default class Validator {
       tripDate: request.body.tripDate,
       arrivalDate: request.body.arrivalDate,
       time: request.body.time,
-      fare: request.body.fare
+      fare: parseFloat(request.body.fare)
     };
 
     const { error } = Joi.validate(body, schema);
@@ -101,9 +89,11 @@ export default class Validator {
     const bookTripID = req.body.tripId;
     const bookSeatNumber = req.body.seatNumber;
     const schema = Joi.object().keys({
-      tripId: Joi.number().min(1).max(10000).positive()
+      tripId: Joi.number().strict().min(1).max(10000)
+        .positive()
         .required(),
-      seatNumber: Joi.number().min(1).max(60).positive()
+      seatNumber: Joi.number().strict().min(1).max(60)
+        .positive()
         .required()
     });
 
@@ -136,8 +126,7 @@ export default class Validator {
 
     const hasAtrip = dbTrip.find(atrip => atrip.tripId === parseInt(bookTripID, 10));
     if (hasAtrip) {
-      // eslint-disable-next-line radix
-      if (parseInt(hasAtrip.seatingCapacity) < parseInt(bookSeatNumber)) {
+      if (parseInt(hasAtrip.seatingCapacity, 10) < parseInt(bookSeatNumber, 10)) {
         return Helper.error(res, UNPROCESSABLE_ENTITY, UNPROCESSABLE_ENTITY_MSG);
       }
     }

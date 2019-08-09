@@ -21,7 +21,7 @@ export const explicitData = {
 };
 
 export const faker = {
-  notFound: false
+  faker: false
 };
 export const preSaveLog = {
   email: 'eliezer.basubi30@gmail.com',
@@ -67,7 +67,8 @@ export const correctTrip = {
   tripDate: '2019-12-05',
   arrivalDate: '2019-12-16',
   time: '17:30',
-  fare: '120.5'
+  fare: '120.5',
+  status: 'active'
 };
 
 export const noTokenTrip = {
@@ -81,22 +82,11 @@ export const noTokenTrip = {
   time: '17:30',
   fare: '120.5'
 };
-
-export const adminToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVsaWV6ZXIuYmFzdWJpMzBAZ21haWwuY29tIiwiaWQiOjEsImlzQWRtaW4iOnRydWUsImlhdCI6MTU2MzU0MDU3MywiZXhwIjoxNTY2MTMyNTczfQ.E0Y4oabrMXERqQPG5qLoemK7Vv1iK_lOpn3PMPNgSwo';
-
-export const userToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVsaWV6ZXIuYmFzdWJpMzBAZ21haWwuY29tIiwiaWQiOjEsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE1NjQwNzI0NDIsImV4cCI6MTU2NjY2NDQ0Mn0.pnO2EoWg0gBbkAIqVuISNlEyEGhbQiIPWF1aonu-sPQ';
-
-export const invalidToken = 'Bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVsaWV6ZXIuYmFzdWJpQGdtYWlsLmNvbSIsImlkIjoyLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNTYzNTQwNjYzLCJleHAiOjE1NjYxMzI2NjN9.n4aicJYMqwrp0HgGeRgBifb-1ycDGKRID7rKIxrcAHk';
+export const invalidToken = 'Bearer yJh';
 
 export const correctBooking = {
   tripId: 1,
   seatNumber: 23
-};
-
-export const adminBooking = {
-  token: adminToken,
-  trip_id: '20',
-  seat_number: '23'
 };
 
 export const bookingStore = {

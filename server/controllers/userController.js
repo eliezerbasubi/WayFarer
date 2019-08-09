@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import omit from 'object.omit';
 import {
   EMAIL_ALREADY_EXIST, RESET_SUCCESSFUL, OLD_PASSWORD_NOT_MATCH,
-  PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND
+  PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD
 } from '../constants/feedback';
 import {
   userTable,
@@ -24,14 +24,6 @@ import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
 dotenv.config();
 
 export default class UserController {
-  /**
-   * This function handles user signup data and hashes the password.
-   * For security reasons we assign user token to be expired in 1 hour.
-   * We use email, id and user status(admin or user) to build a token
-   * @param {*} request
-   * @param {*} response
-   * @param {*} next
-   */
   static async signUp(req, res) {
     const {
       firstName, lastName, email, phoneNumber, password, country, city, isAdmin
@@ -44,14 +36,8 @@ export default class UserController {
       const hashedPass = await bcrypt.hash(password, saltedPassword);
 
       const user = [];
-      const tokenId = jwt.sign({
-        email,
-        id: userTable.length + 1,
-        isAdmin
-      },
-      process.env.JWT_KEY, {
-        expiresIn: '24h'
-      });
+      const tokenId = jwt.sign({ email, id: userTable.length + 1, isAdmin },
+        process.env.JWT_KEY, { expiresIn: '24h' });
 
       user.push(new User({
         token: tokenId,
@@ -66,29 +52,18 @@ export default class UserController {
         isAdmin
       }));
       userTable.push(...user);
-      return Helper.success(res, CREATED_CODE, omit(Object.assign({ token: tokenId }, req.body), ['password', 'isAdmin']), 'Account successfully created');
+      return Helper.success(res, CREATED_CODE, omit(Object.assign(req.body), ['password', 'isAdmin']), 'Account successfully created');
     } catch (error) { return Helper.error(res, INTERNAL_SERVER_ERROR_CODE, error); }
   }
 
-  /**
-   * This function logs user in the system.
-   * @param {*} request
-   * @param {*} response
-   * @param {*} next
-   */
   static async signIn(request, response) {
     const user = userTable.find(users => users.email === request.body.email);
     if (user) {
       return bcrypt.compare(request.body.password, user.password, (err, result) => {
         if (err) { return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS); }
         if (result) {
-          const tokenId = jwt.sign({
-            email: user.email,
-            id: user.id,
-            isAdmin: user.isAdmin
-          }, process.env.JWT_KEY, {
-            expiresIn: '24h'
-          });
+          const tokenId = jwt.sign({ email: user.email, id: user.id, isAdmin: user.isAdmin },
+            process.env.JWT_KEY, { expiresIn: '24h' });
           cache.push({
             token: tokenId,
             id: user.id,
@@ -100,7 +75,7 @@ export default class UserController {
           user.token = tokenId;
           return Helper.success(response, SUCCESS_CODE, omit(Object.assign(...cache), 'isAdmin'), 'Welcome to Wayfarer');
         }
-        return Helper.error(response, INTERNAL_SERVER_ERROR_CODE, UNAUTHORIZED_ACCESS);
+        return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
       });
     }
     return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS);
@@ -108,8 +83,7 @@ export default class UserController {
 
   static async resetPassword(req, res) {
     const userId = req.params.user_id;
-    // eslint-disable-next-line radix
-    const user = userTable.find(info => info.id === parseInt(userId));
+    const user = userTable.find(info => info.id === parseInt(userId, 10));
     if (user) {
       const userOldPwd = user.password;
       if (req.body.new_password === req.body.confirm_password) {

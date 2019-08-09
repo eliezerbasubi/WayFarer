@@ -8,3 +8,4 @@ export const UNAUTHORIZED_CODE = 401;
 export const RESOURCE_CONFLICT = 409;
 export const UNPROCESSABLE_ENTITY = 422;
 export const GONE = 410;
+export const METHOD_NOT_FOUND = 405;
