@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up | Flash WayFarer</title>
+    <link rel="shortcut icon" href="../assets/images/waytrip.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/stylesheet.css">
+    <link rel="stylesheet" href="../css/forms.css">
+    <script src="../js/all.js"></script>
+    <script src="../js/index.js"></script>
+</head>
+
+<body>
+    <header>
+        <!-- Start Navigation  bar -->
+        <div class="navbar">
+            <h1 class="logo" id="logo"><a href="../index.html">WayFarer<span> Trips</span></a></h1>
+            <ul class="navbar-list">
+                <li class="current"><a href="../index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="">Signup</a></li>
+            </ul>
+        </div>
+        <!-- End Navigation bar -->
+    </header>
+    <section class="flex-height bg-image empty-top">
+        <div class="row flex-justify-content">
+            <div class="flex-right">
+                <h1 class="section-title pad-responsive" >Build your own path</h1>
+                <p class="letter-spacing">By having an account you to create your own path to the beautiful trips of all the time. Make it
+                    simple and stunning
+                    is the key to a successful path. WayFarer gives you the opportunity to make your journey simple by
+                    booking a seat on
+                    any trip and travel safe, in comfort and like a boss.</p>
+            </div>
+            <form action="" class="flex-right-card flex-medium border-radius" id="signup-form">
+                <h1 class="section-title">Signup</h1>
+                <div class="col-md-2">
+                    <div class="flex-input-center">
+                        <label for="firstName"><b>Firstname</b></label>
+                        <input type="text" placeholder="Enter your firstname" class="form-input flex-input-center"
+                            id="firstName">
+                        <p><span class="error error-firstname"></span></p>
+                    </div>
+                    <div class="flex-input-center">
+                        <label for="lastName" class="flex-input-center"><b>Lastname</b></label>
+                        <input type="text" placeholder="Enter your lastname" class="form-input flex-input-center"
+                            id="lastName">
+                        <p><span class="error error-lastname"></span></p>
+                    </div>
+                </div>
+
+                <!-- email -->
+                <label for="email"><b>Email</b></label>
+                <input type="text" placeholder="Enter Email" name="email" id="email">
+                <p><span class="error error-email"></span></p><br>
+
+                <!-- Phone -->
+                <label for="phone"><b>Phone</b></label>
+                <input type="phone" placeholder="Enter phone number" name="phone" id="phone">
+                <p><span class="error error-phone"></span></p>
+
+                <!-- country -->
+                <div class="col-md-2">
+                    <div class="flex-input-center">
+                        <label for="user_country"><b>Country</b></label>
+                        <select name="country" id="user_country">
+                            <option value="" selected disabled>Select country where you live</option>
+                            <option value="">Congo</option>
+                            <option value="">Rwanda</option>
+                            <option value="">Kenya</option>
+                            <option value="">Uganda</option>
+                            <option value="">Tanzania</option>
+                        </select>
+                    </div>
+                    <div class="flex-input-center responsive-margin-top">
+                        <label for="user_city"><b>City</b></label>
+                        <select name="user_city" id="user_city" >
+                            <option value="" selected disabled>Select city where you stay</option>
+                            <option value="">Bukavu</option>
+                            <option value="">Kigali</option>
+                            <option value="">Kampala</option>
+                            <option value="">Nairobi</option>
+                            <option value="">Dar-es-salem</option>
+                            <option value="">Kinshasa</option>
+                            <option value="">Gisenyi</option>
+                            <option value="">Goma</option>
+                        </select>
+                        <p><span class="error error-city"></span></p>
+                    </div>
+                </div>
+
+                <!-- password -->
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="confirm_pwd" id="password">
+                <p><span class="error error-password"></span></p><br>
+
+                <!-- confirm password -->
+                <label for="confirmPassword"><b>Confirm Password</b></label>
+                <input type="password" placeholder="Confirm Password" name="pwd" id="confirmPassword">
+                <p><span class="error error-confirmPassword"></span></p><br>
+
+                <button type="button" class="btn btn-secondary" onclick="new SignUp();">Signup</button>
+            </form>
+        </div>
+    </section>
+</body>
+<script src="../js/signup.js"></script>
+
+</html>

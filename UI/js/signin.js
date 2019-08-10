@@ -3,8 +3,7 @@ class SignIn extends Validator {
         super();
         this.allow();
     }
-
-    // Open dashboard page
+    
     intent() {
         const adminDefaultEmail = "admin1234@gmail.com";
         const input_email = $('#email_log').value;

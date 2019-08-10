@@ -43,8 +43,6 @@ class HomePage {
     $('#btn-create-account').addEventListener('click', () => {
       document.location.href = 'html/signup.html';
     });
-
-    // view details. send to login page
     const btn_details = $$('.btn_details');
     btn_details.forEach((btn) => {
       btn.addEventListener('click', () => {

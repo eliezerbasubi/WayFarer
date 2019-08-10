@@ -10,7 +10,6 @@ class SignUp extends Validator {
   }
 
   allowSignUp() {
-    // Errors
     const errorFname = $('.error-firstname');
     const errorLname = $('.error-lastname');
     const errorEmail = $('.error-email');
@@ -19,7 +18,6 @@ class SignUp extends Validator {
     const errorConPwd = $('.error-confirmPassword');
     const errorCity = $('.error-city');
 
-    // Values
     const firstName = $('#firstName').value;
     const lastName = $('#lastName').value;
     const email = $('#email').value;

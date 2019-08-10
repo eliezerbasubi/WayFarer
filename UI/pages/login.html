@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login | Flash WayFarer</title>
+    <link rel="shortcut icon" href="../assets/images/waytrip.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/stylesheet.css">
+    <link rel="stylesheet" href="../css/forms.css">
+    <script src="../js/index.js"></script>
+    <script src="../js/all.js"></script>
+</head>
+
+<body>
+    <header>
+        <!-- Start Navigation  bar -->
+        <div class="navbar">
+            <h1 class="logo" id="logo"><a href="../index.html">WayFarer<span> Trips</span></a></h1>
+            <ul class="navbar-list">
+                <li class="current"><a href="../index.html">Home</a></li>
+                <li><a href="">Login</a></li>
+                <li><a href="signup.html">Signup</a></li>
+            </ul>
+        </div>
+        <!-- End Navigation bar -->
+    </header>
+    <section class="flex-height bg-image empty-top">
+        <div class="row flex-justify-content">
+            <div class="flex-right">
+                <h1 class="section-title">Access your own path</h1>
+                <p>By having an account you to create your own path to the beautiful trips of all the time. Make it
+                    simple and stunning
+                    is the key to a successful path. WayFarer gives you the opportunity to make your journey simple by
+                    booking a seat on
+                    any trip and travel safe, in comfort and like a boss.
+                </p>
+            </div>
+            <div class="flex-right-card border-radius" id="login-form">
+                <h1 class="section-title">Login</h1>
+
+                <label for="email"><b>Email</b></label>
+                <input type="text" placeholder="Enter Email" name="email" id="email_log">
+                <span class="error error-email"></span><br><br>
+
+                <label for="psw" id="label_pwd"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" id="password_log">
+                <span class="error error-password"></span>
+            
+                <button type="submit" class="btn btn-secondary" onclick="new SignIn()">Login</button><br><br>
+                <a href="passwordreset.html" class="section-title reset-link">Forget password ?</a>
+            </div>
+        </div>
+    </section>
+</body>
+<script src="../js/signin.js"></script>
+
+</html>

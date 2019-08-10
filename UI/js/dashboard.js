@@ -54,8 +54,6 @@ class Dashboard {
       $$('.username').forEach((username) => {
         username.textContent = 'Jon Doe';
       });
-
-      // Append default user name in bookings
       $$('.username').forEach((username) => {
         username.textContent = 'Jon Doe';
       });
@@ -127,15 +125,6 @@ class Dashboard {
   }
 }
 
-
-/**
- * Specific Trip HTML page
- * This class builds a bus map. How seats are arranged in a bus.
- * @constructor
- * @param {Integer} capacity
- * @param {String} selector
- * @function builder
- */
 class BusMapBuilder {
   constructor(capacity, selector) {
     this.capacity = capacity;
@@ -157,20 +146,16 @@ class BusMapBuilder {
       seat.setAttribute('data-trip-seat', '');
       bus_maps.appendChild(seat);
 
-      // Split seats into a grouping of four
       if (i % 4 === 3) {
         bus_maps.appendChild(spacer);
       }
 
-      // Split seats into two columns
       if (i % 2 === 1) {
         seat.className = 'odd';
       }
 
-      // Show booked seats. For example 10 first seats are booked
       if (i < 10) { seat.id = 'booked'; }
 
-      // Disable click on booked seats
       if (seat.id === 'booked') {
         seat.setAttribute('disabled', 'true');
         seat.style.cursor = 'not-allowed';
@@ -184,7 +169,7 @@ class BusMapBuilder {
 
     book_seats.forEach((item, index) => {
       item.addEventListener('click', () => {
-        seatNumber.value = index + 1; // Set seat number in input
+        seatNumber.value = index + 1; 
       });
     });
   }
