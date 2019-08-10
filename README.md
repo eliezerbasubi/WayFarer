@@ -75,7 +75,7 @@ The API on heroku https://wayfarer-trip-eliezerbasubi.herokuapp.com
 |-------------|----------|-------------|---------|
 | POST        |auth/signup| true        |Create user account |
 | POST        |auth/signin|  true       | Logs user In  |
-| POST        |auth/reset/:user_id|  false    |  Update user password|
+| PATCH       |auth/reset/:user_id|  false    |  Update user password|
 
 ### Trip Endpoints => /api/v1/
 | HTTP Method | Endpoint | Public Access| Action |
@@ -108,12 +108,12 @@ DELETE      |bookings/1|  false    |  Delete a booking |
 |          | Pivotal Tracker |
 
 # Author
-..*Eliezer Basubi Wikulukya
+* Eliezer Basubi Wikulukya
 
 # License
 This project is Licensed under MIT.
 
 # Acknowlegments
-...My thanks goes to:
-...my family 
-...Learning Facilitor and Team Members.
+* My thanks goes to:
+* My Family
+* My Learning Facilitator and Peers.
