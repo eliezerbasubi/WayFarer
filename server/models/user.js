@@ -6,24 +6,24 @@ export class User {
   constructor({
     id,
     token,
-    firstName,
-    lastName,
+    first_name,
+    last_name,
     email,
     password,
-    phoneNumber,
+    phone_number,
     country,
     city,
-    isAdmin
+    is_admin
   }) {
     this.token = token;
     this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.first_name = first_name;
+    this.last_name = last_name;
     this.email = email;
     this.password = password;
-    this.phoneNumber = phoneNumber;
+    this.phone_number = phone_number;
     this.country = country;
     this.city = city;
-    this.isAdmin = isAdmin;
+    this.is_admin = is_admin;
   }
 }

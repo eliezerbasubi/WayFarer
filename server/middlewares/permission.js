@@ -21,7 +21,7 @@ export default class Permission {
     try {
       const verified = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
       const {
-        isAdmin,
+        is_admin,
         id
       } = verified;
       cache.forEach((item) => {
@@ -29,7 +29,7 @@ export default class Permission {
       });
       if (currentUserID !== id) { return Helper.error(response, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
 
-      if (!isAdmin) { return Helper.error(response, FORBIDDEN_CODE, FORBIDDEN_MSG); }
+      if (!is_admin) { return Helper.error(response, FORBIDDEN_CODE, FORBIDDEN_MSG); }
 
       return next();
     } catch (error) {
@@ -55,17 +55,17 @@ export default class Permission {
   }
 
   static authUsersOnly(request, response, next) {
-    const token = request.headers.authorization || request.headers.token;
+    const token = request.headers.authorization;
     let currentUserID = '';
     try {
       cache.forEach((item) => {
         currentUserID = item.id;
       });
-      const { isAdmin, id } = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
+      const { is_admin, id } = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
 
       if (currentUserID !== id) { return Helper.error(response, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
 
-      if (isAdmin) { return Helper.error(response, UNAUTHORIZED_CODE, ACCESS_USERS_ONLY); }
+      if (is_admin) { return Helper.error(response, UNAUTHORIZED_CODE, ACCESS_USERS_ONLY); }
 
       return next();
     } catch (error) { return Helper.error(response, UNAUTHORIZED_CODE, INVALID_TOKEN); }

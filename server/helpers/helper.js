@@ -46,7 +46,7 @@ export default class Helper {
 
   static currentUserStatus() {
     let isCurrentAdmin = true;
-    cache.forEach((user) => { isCurrentAdmin = user.isAdmin; });
+    cache.forEach((user) => { isCurrentAdmin = user.is_admin; });
     return isCurrentAdmin;
   }
 }

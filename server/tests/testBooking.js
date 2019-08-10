@@ -34,7 +34,7 @@ import {
 import {
    NOT_LOGGED_IN, NO_BOOKINGS
 } from '../constants/feedback';
-import {adminTokenId, userTokenId} from './test.trip.spec'
+import {adminTokenId, userTokenId} from './test.spec'
 
 chai.use(chaiHttp);
 
@@ -46,8 +46,8 @@ const {
 describe('Test case: Booking endpoint /api/v1/bookings', () => {
     describe('Base case: User can book a seat on a trip', () => {
         it('Should return 200. User booked seat successfully', (done) => {
-            correctBooking.seatNumber = 2;
-            correctBooking.tripId = 2 ;
+            correctBooking.seat_number = 2;
+            correctBooking.trip_id = 2 ;
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
@@ -77,7 +77,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         });
 
         it('Should return 409 If user tries to book more than one', (done) => {
-            correctBooking.seatNumber = 5
+            correctBooking.seat_number = 5
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
@@ -92,24 +92,22 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
                 });
         });
 
-        it('Should return 422 If seat number is greater seating capacity', (done) => {
-            correctBooking.seatNumber = 45;
-            correctBooking.tripId = 3;
-            correctTrip.tripId = 3;
+        it('Should return 404. Trip was not found', (done) => {
+            correctBooking.trip_id = 20;
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
                 .set("Authorization", userTokenId)
                 .end((err, res) => {
-                    expect(res).to.have.status(UNPROCESSABLE_ENTITY);
-                    expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
-                    
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.have.property('status').equal(NOT_FOUND_CODE);
+                    expect(res.body.error).to.contain('We could not find a trip with the specified ID');
                     done();
                 });
         });
 
         it('Should return 500 If seat number is greater seating capacity', (done) => {
-            correctBooking.seatNumber = 455;
+            correctBooking.seat_number = 455;
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
@@ -123,9 +121,9 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         });
 
         it('Should validate trip ID and seat number', (done) => {
-            correctBooking.tripId = -23;
-            correctBooking.tripId = 4;
-            correctTrip.tripId = 4;
+            correctBooking.trip_id = -23;
+            correctBooking.trip_id = 4;
+            correctTrip.trip_id = 4;
             request(app)
                 .post(routes.bookings)
                 .send(correctBooking)
@@ -141,7 +139,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         });
 
         it('Should return 404 If trip was cancelled', (done) => {
-            correctBooking.seatNumber = 5;
+            correctBooking.seat_number = 5;
             dbTrip.push(correctTrip);
             dbTrip.map(trip => { trip.status = "cancelled" });
             request(app)
@@ -175,10 +173,10 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should return 200 If user has logged in', (done) => {
             cache.push({
                 id: 1,
-                firstName: 'Eliezer',
-                lastName: 'Basubi',
+                first_name: 'Eliezer',
+                last_name: 'Basubi',
                 email: 'eliezer.basubi30@gmail.com',
-                isAdmin: false
+                is_admin: false
             });
             request(app)
                 .get(routes.bookings)
@@ -230,7 +228,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
     describe('Base case: Admin can view all bookings', () => {
         it('Should display all bookings if user is an admin', (done) => {
             cache.map(item => {
-                item.isAdmin = true
+                item.is_admin = true
             });
             dbBookings.push(bookingStore)
             request(app)
@@ -262,7 +260,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should delete a booking', (done) => {
             cache.map(item => {
                 item.email = 'eliezer.basubi30@gmail.com';
-                item.isAdmin = false;
+                item.is_admin = false;
             });
             bookingStore.email = 'eliezer.basubi30@gmail.com';
             dbBookings.push(bookingStore);
