@@ -1,16 +1,13 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import {
     JSON_TYPE,
     correctTrip,
-    userToken,
-    adminToken,
-    preSave,
     invalidToken,
 } from '../data/data';
+import { userTokenId, adminTokenId } from './test.spec'
 import {
     CREATED_CODE,
     RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, FORBIDDEN_CODE, BAD_REQUEST_CODE, NOT_FOUND_CODE, UNPROCESSABLE_ENTITY
@@ -29,12 +26,6 @@ const {
     expect,
     request
 } = chai;
-
-export const adminTokenId = jwt.sign({ email: preSave.email, id: 1, isAdmin: preSave.isAdmin },
-    process.env.JWT_KEY, { expiresIn: '10min' });
-
-export const userTokenId = jwt.sign({ email: "user@gmail.com", id: 1, isAdmin: false },
-    process.env.JWT_KEY, { expiresIn: '10min' });
 
 describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
     describe('Base case: Admin can create a trip', () => {
@@ -77,8 +68,8 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
 
         it('Should return 409. If trips bus is already taken', (done) => {
-            correctTrip.tripId = 2;
-            correctTrip.arrivalDate = '2019-12-16';
+            correctTrip.trip_id = 2;
+            correctTrip.arrival_date = '2019-12-16';
             request(app)
                 .post(routes.createTrip)
                 .set("Authorization",adminTokenId)
@@ -92,14 +83,14 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
 
         it('Should not create trip if arrival date is before trip date', (done) => {
-            correctTrip.arrivalDate = "2019-12-2";
+            correctTrip.arrival_date = "2019-12-2";
             request(app)
                 .post(routes.createTrip)
                 .set('Authorization', adminTokenId)
                 .send(correctTrip)
                 .end((err, res) => {
                     expect(res).to.have.status(UNPROCESSABLE_ENTITY)
-                    expect(res.body.error).to.contain('arrivalDate fails');
+                    expect(res.body.error).to.contain('arrival_date fails');
                     expect(res.body.status).to.be.equal(UNPROCESSABLE_ENTITY)
                     done();
                 });
@@ -107,7 +98,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
 
         it('Should return 401 if admin is not signed in', (done) => {
             cache.map(user => { user.id = 2 });
-            correctTrip.arrivalDate = "2019-12-30"
+            correctTrip.arrival_date = "2019-12-30"
             request(app)
                 .post(routes.createTrip)
                 .set('Authorization',adminTokenId)

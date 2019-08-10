@@ -14,26 +14,26 @@ import Helper from '../helpers/helper';
 export default class TripController {
   static createTrip(req, res) {
     const tripData = [];
-    const { busLicenseNumber, tripDate } = req.body;
+    const { bus_license_number, trip_date } = req.body;
     let onSameDate = [];
 
-    onSameDate = dbTrip.find(bus => bus.busLicenseNumber === busLicenseNumber
-        && bus.tripDate === tripDate);
+    onSameDate = dbTrip.find(bus => bus.bus_license_number === bus_license_number
+        && bus.trip_date === trip_date);
 
 
     if (onSameDate) { return Helper.error(res, RESOURCE_CONFLICT, BUS_ALREADY_TAKEN); }
 
     tripData.push(new Trip({
       id: dbTrip.length + 1,
-      tripName: req.body.tripName,
-      seatingCapacity: req.body.seatingCapacity,
-      busLicenseNumber: req.body.busLicenseNumber,
+      trip_name: req.body.trip_name,
+      seating_capacity: req.body.seating_capacity,
+      bus_license_number: req.body.bus_license_number,
       origin: req.body.origin,
       destination: req.body.destination,
-      tripDate: req.body.tripDate,
+      trip_date: req.body.trip_date,
       time: req.body.time,
       fare: req.body.fare,
-      arrivalDate: req.body.arrivalDate,
+      arrival_date: req.body.arrival_date,
       status: 'active'
     }));
     dbTrip.push(...tripData);
@@ -42,7 +42,7 @@ export default class TripController {
 
   static cancelTrip(req, res) {
     const queryParams = parseInt(req.params.trip_id, 10);
-    const cancelQuest = dbTrip.find(query => parseInt(query.tripId, 10) === queryParams);
+    const cancelQuest = dbTrip.find(query => parseInt(query.trip_id, 10) === queryParams);
 
     if (cancelQuest) {
       if (cancelQuest.status === 'cancelled') {
@@ -91,7 +91,7 @@ export default class TripController {
   static viewSpecificTrip(req, res) {
     const isAdmin = Helper.currentUserStatus();
     const disponible = !isAdmin ? dbTrip.filter(trip => trip.status === 'active') : dbTrip;
-    const questTrip = disponible.find(quest => quest.tripId === parseInt(req.params.trip_id, 10));
+    const questTrip = disponible.find(quest => quest.trip_id === parseInt(req.params.trip_id, 10));
     if (questTrip) {
       return Helper.success(res, SUCCESS_CODE, questTrip, 'We Have Found The Searched Trip');
     }

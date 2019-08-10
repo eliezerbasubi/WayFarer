@@ -22,29 +22,30 @@ export default class BookingController {
     let userDetails = [];
     const bookingData = [];
     const displayMyBookings = [];
-    const bookingTripId = req.body.tripId;
+    const bookingTripId = req.body.trip_id;
 
-    tripInfo = dbTrip.find(trip => parseInt(trip.tripId, 10) === parseInt(bookingTripId, 10));
+    tripInfo = dbTrip.find(trip => parseInt(trip.trip_id, 10) === parseInt(bookingTripId, 10));
 
     if (tripInfo) {
       const {
-        tripName, tripDate, time, fare, busLicenseNumber
+        trip_name, trip_date, time, fare, bus_license_number
       } = tripInfo;
 
       cache.forEach((item) => { userDetails = item; });
-
+      let id = 1;
+      dbBookings.forEach((db) => { id = db.booking_id + 1; });
       bookingData.push(new Booking({
-        bookingId: dbBookings.length + 1,
-        tripId: bookingTripId,
-        userId: userDetails.id,
-        tripName,
-        tripDate,
-        tripTime: time,
+        booking_id: id,
+        trip_id: bookingTripId,
+        user_id: userDetails.id,
+        trip_name,
+        trip_date,
+        trip_time: time,
         fare,
-        busLicenseNumber,
-        seatNumber: req.body.seatNumber,
-        firstName: userDetails.firstName,
-        lastName: userDetails.lastName,
+        bus_license_number,
+        seat_number: req.body.seat_number,
+        first_name: userDetails.first_name,
+        last_name: userDetails.last_name,
         email: userDetails.email,
         createdOn: Helper.today(),
         status: 'valid'
@@ -64,7 +65,7 @@ export default class BookingController {
     let connectedUserEmail;
 
     cache.forEach((item) => {
-      connectedUserStatus = item.isAdmin;
+      connectedUserStatus = item.is_admin;
       connectedUserEmail = item.email;
     });
 
@@ -88,7 +89,7 @@ export default class BookingController {
     const myBookings = dbBookings.filter(booking => booking.email === connectedUserEmail);
     if (myBookings.length < 1) { return Helper.error(res, NOT_FOUND_CODE, HAVE_NO_BOOKINGS); }
 
-    const toBeDeleted = myBookings.find(booking => parseInt(booking.bookingID, 10) === bookingId);
+    const toBeDeleted = myBookings.find(booking => parseInt(booking.booking_id, 10) === bookingId);
 
     if (!toBeDeleted) { return Helper.error(res, NOT_FOUND_CODE, BOOKING_NOT_FOUND); }
 
@@ -103,7 +104,7 @@ export default class BookingController {
 
   static getOneBooking(req, res) {
     const bookingId = parseInt(req.params.booking_id, 10);
-    const booking = dbBookings.find(element => parseInt(element.bookingID, 10) === bookingId);
+    const booking = dbBookings.find(element => parseInt(element.booking_id, 10) === bookingId);
     if (booking) {
       return Helper.success(res, SUCCESS_CODE, booking, 'Success ! Booking Was Found');
     }

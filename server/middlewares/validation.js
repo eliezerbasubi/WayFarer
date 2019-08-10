@@ -15,13 +15,13 @@ export default class Validator {
   static signup(request, response, next) {
     const schema = Joi.object().keys({
       email: Joi.string().email({ minDomainAtoms: 2 }).required(),
-      firstName: Joi.string().min(3).max(25).required(),
-      lastName: Joi.string().min(3).max(25).required(),
+      first_name: Joi.string().min(3).max(25).required(),
+      last_name: Joi.string().min(3).max(25).required(),
       password: Joi.string().min(6).max(50).required(),
-      phoneNumber: Joi.number().positive().required(),
+      phone_number: Joi.number().positive().required(),
       city: Joi.string().min(5).max(30).required(),
       country: Joi.string().min(5).max(30).optional(),
-      isAdmin: Joi.boolean().strict().valid(true, false).required()
+      is_admin: Joi.boolean().strict().valid(true, false).required()
     });
 
     const { error } = Joi.validate(request.body, schema);
@@ -39,15 +39,15 @@ export default class Validator {
 
   static validateTrip(request, response, next) {
     const schema = Joi.object().keys({
-      tripName: Joi.string().min(3).max(60).required(),
-      seatingCapacity: Joi.number().integer().positive().min(10)
+      trip_name: Joi.string().min(3).max(60).required(),
+      seating_capacity: Joi.number().integer().positive().min(10)
         .max(50)
         .required(),
-      busLicenseNumber: Joi.string().regex(/[a-zA-Z0-9]/).required(),
+      bus_license_number: Joi.string().regex(/[a-zA-Z0-9]/).required(),
       origin: Joi.string().min(3).max(30).required(),
       destination: Joi.string().min(3).max(30).required(),
-      tripDate: Joi.date().iso().min(Helper.today()).required(),
-      arrivalDate: Joi.date().iso().min(Joi.ref('tripDate')).required(),
+      trip_date: Joi.date().iso().min(Helper.today()).required(),
+      arrival_date: Joi.date().iso().min(Joi.ref('trip_date')).required(),
       time: Joi.string().regex(/^(?:[01]\d|2[0-3]):(?:[0-5]\d)$/).required(),
       fare: Joi.number().min(3).max(1000).positive()
         .precision(2)
@@ -55,13 +55,13 @@ export default class Validator {
     });
 
     const body = {
-      tripName: request.body.tripName,
-      seatingCapacity: request.body.seatingCapacity,
-      busLicenseNumber: request.body.busLicenseNumber,
+      trip_name: request.body.trip_name,
+      seating_capacity: request.body.seating_capacity,
+      bus_license_number: request.body.bus_license_number,
       origin: request.body.origin,
       destination: request.body.destination,
-      tripDate: request.body.tripDate,
-      arrivalDate: request.body.arrivalDate,
+      trip_date: request.body.trip_date,
+      arrival_date: request.body.arrival_date,
       time: request.body.time,
       fare: parseFloat(request.body.fare)
     };
@@ -86,20 +86,20 @@ export default class Validator {
   }
 
   static validateBooking(req, res, next) {
-    const bookTripID = req.body.tripId;
-    const bookSeatNumber = req.body.seatNumber;
+    const bookTripID = req.body.trip_id;
+    const bookSeatNumber = req.body.seat_number;
     const schema = Joi.object().keys({
-      tripId: Joi.number().strict().min(1).max(10000)
+      trip_id: Joi.number().strict().min(1).max(10000)
         .positive()
         .required(),
-      seatNumber: Joi.number().strict().min(1).max(60)
+      seat_number: Joi.number().strict().min(1).max(60)
         .positive()
         .required()
     });
 
     const bookingHeaders = {
-      tripId: bookTripID,
-      seatNumber: bookSeatNumber
+      trip_id: bookTripID,
+      seat_number: bookSeatNumber
     };
 
     const { error } = Joi.validate(bookingHeaders, schema);
@@ -108,23 +108,23 @@ export default class Validator {
 
     if (cache.length < 1) { return Helper.error(res, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
 
-    const isBooked = dbBookings.find(booking => booking.tripId === parseInt(bookTripID, 10)
-      && booking.seatNumber === bookSeatNumber);
+    const isBooked = dbBookings.find(booking => booking.trip_id === parseInt(bookTripID, 10)
+      && booking.seat_number === bookSeatNumber);
     if (isBooked) { return Helper.error(res, RESOURCE_CONFLICT, SEAT_ALREADY_TAKEN); }
 
     let userEmail = '';
     cache.forEach((element) => { userEmail = element.email; });
 
     const hasBooked = dbBookings.find(booking => booking.email === userEmail
-      && booking.tripId === bookTripID);
+      && booking.trip_id === bookTripID);
     if (hasBooked) { return Helper.error(res, RESOURCE_CONFLICT, MAXIMUM_BOOKINGS); }
 
-    const isCancelled = dbTrip.find(trip => trip.tripId === parseInt(bookTripID, 10)
+    const isCancelled = dbTrip.find(trip => trip.trip_id === parseInt(bookTripID, 10)
       && trip.status === 'cancelled');
 
     if (isCancelled) { return Helper.error(res, GONE, GONE_MSG); }
 
-    const hasAtrip = dbTrip.find(atrip => atrip.tripId === parseInt(bookTripID, 10));
+    const hasAtrip = dbTrip.find(atrip => atrip.trip_id === parseInt(bookTripID, 10));
     if (hasAtrip) {
       if (parseInt(hasAtrip.seatingCapacity, 10) < parseInt(bookSeatNumber, 10)) {
         return Helper.error(res, UNPROCESSABLE_ENTITY, UNPROCESSABLE_ENTITY_MSG);
