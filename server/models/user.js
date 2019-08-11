@@ -2,6 +2,7 @@ import { creator, pool } from './index';
 import { RESOURCE_CONFLICT } from '../constants/responseCodes';
 import { EMAIL_ALREADY_EXIST } from '../constants/feedback';
 
+export const currentUser = [];
 export default class UserQuery {
   static async insert(values) {
     try {
@@ -21,6 +22,15 @@ export default class UserQuery {
       return result;
     } catch (e) {
       return { error: { status: 500, message: e, err: e } };
+    }
+  }
+
+  static async read(values) {
+    try {
+      const result = pool.query('SELECT * FROM users WHERE email=$1', values);
+      return result;
+    } catch (error) {
+      return { error: { status: 500, message: 'Unable to select user table' } };
     }
   }
 }

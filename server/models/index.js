@@ -9,10 +9,7 @@ const dropIntest = {
       const res = await pool.query('DROP TABLE IF EXISTS users');
       return res;
     } catch (e) {
-      return {
-        error: true,
-        res: 'Unable to drop table'
-      };
+      return { error: true, res: 'Unable to drop table' };
     }
   }
 };
@@ -26,10 +23,7 @@ const creator = {
       const res = await pool.query(query);
       return res;
     } catch (e) {
-      return {
-        error: true,
-        res: 'Users table not created'
-      };
+      return { error: true, res: 'Users table not created' };
     }
   }
 };

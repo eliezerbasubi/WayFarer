@@ -21,7 +21,7 @@ export default class Validator {
       phone_number: Joi.number().positive().required(),
       city: Joi.string().min(5).max(30).required(),
       country: Joi.string().min(5).max(30).optional(),
-      is_admin: Joi.boolean().strict().valid(true, false).required()
+      is_admin: Joi.boolean().strict().valid(true, false).optional()
     });
 
     const { error } = Joi.validate(request.body, schema);

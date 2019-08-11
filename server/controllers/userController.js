@@ -6,7 +6,7 @@ import {
   EMAIL_ALREADY_EXIST, RESET_SUCCESSFUL, OLD_PASSWORD_NOT_MATCH,
   PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD
 } from '../constants/feedback';
-import UserQuery from '../models/user';
+import UserQuery, { currentUser } from '../models/user';
 import {
   RESOURCE_CONFLICT,
   CREATED_CODE,
@@ -57,28 +57,31 @@ export default class UserController {
   }
 
   static async signIn(request, response) {
-    // const user = userTable.find(users => users.email === request.body.email);
-    // if (user) {
-    //   return bcrypt.compare(request.body.password, user.password, (err, result) => {
-    //     if (err) { return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS); }
-    //     if (result) {
-    //       const tokenId = jwt.sign({ email: user.email, id: user.id, is_admin: user.is_admin },
-    //         process.env.JWT_KEY, { expiresIn: '24h' });
-    //       cache.push({
-    //         token: tokenId,
-    //         id: user.id,
-    //         first_name: user.first_name,
-    //         last_name: user.last_name,
-    //         email: user.email,
-    //         is_admin: user.is_admin
-    //       });
-    //       user.token = tokenId;
-    //       return Helper.success(response, SUCCESS_CODE, omit(Object.assign(...cache), 'is_admin'), 'Welcome to Wayfarer');
-    //     }
-    //     return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
-    //   });
-    // }
-    // return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS);
+    const values = [
+      request.body.email
+    ];
+    const result = await UserQuery.read(values);
+
+    if (result.rowCount <= 0) {
+      return response.status(401).json({ status: 401, error: UNAUTHORIZED_ACCESS });
+    }
+    return bcrypt.compare(request.body.password, result.rows[0].password, (err, resultat) => {
+      if (err) { return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS); }
+      if (resultat) {
+        const { id, email, isadmin } = result.rows[0];
+        const tokenId = jwt.sign({ email, id, is_admin: isadmin }, process.env.JWT_KEY, { expiresIn: '24h' });
+        currentUser.push({
+          token: tokenId,
+          id,
+          firstname: result.rows[0].firstname,
+          lastname: result.rows[0].lastname,
+          email,
+          phone_number: result.rows[0].firstname
+        });
+        return Helper.success(response, SUCCESS_CODE, ...currentUser, 'Welcome to Wayfarer');
+      }
+      return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
+    });
   }
 
   static async resetPassword(req, res) {
