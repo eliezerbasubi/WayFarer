@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.use(userRouter);
 
-router.use(tripRouter);
+// router.use(tripRouter);
 
-router.use(bookingRouter);
+// router.use(bookingRouter);
 
 export default router;
