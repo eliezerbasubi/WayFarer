@@ -5,9 +5,8 @@ const pool = new Pool({ connectionString: DB_URL });
 
 const dropIntest = {
   dropUserTable: async () => {
-    const query = 'DROP TABLE IF EXISTS users';
     try {
-      const res = await pool.query(query);
+      const res = await pool.query('DROP TABLE IF EXISTS users');
       return res;
     } catch (e) {
       return {
