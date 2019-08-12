@@ -33,4 +33,20 @@ export default class UserQuery {
       return { error: { status: 500, message: 'Unable to select user table' } };
     }
   }
+
+  static async findOne(id) {
+    try {
+      return pool.query('SELECT * FROM users WHERE id=$1', [id]);
+    } catch (error) {
+      return { error: { status: 500, message: 'Unable to find one user' } };
+    }
+  }
+
+  static async update(values) {
+    try {
+      return pool.query('UPDATE users SET password = $1 WHERE id=$2', values);
+    } catch (error) {
+      return { error: { status: 500, message: 'Unable to update user table' } };
+    }
+  }
 }

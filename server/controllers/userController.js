@@ -78,14 +78,36 @@ export default class UserController {
           email,
           phone_number: result.rows[0].firstname
         });
-        return Helper.success(response, SUCCESS_CODE, ...currentUser, 'Welcome to Wayfarer');
+        return Helper.success(response, SUCCESS_CODE, Object.assign(...currentUser), 'Welcome to Wayfarer');
       }
       return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
     });
   }
 
   static async resetPassword(req, res) {
-    // const userId = req.params.user_id;
+    const userId = req.params.user_id;
+    const { new_password, old_password, confirm_password } = req.body;
+    try {
+      const user = await UserQuery.findOne(userId);
+      const { password } = user.rows[0];
+      const compared = await bcrypt.compare(old_password, password);
+      if (!compared) {
+        return res.status(UNAUTHORIZED_CODE).json({
+          status: UNAUTHORIZED_CODE,
+          error: OLD_PASSWORD_NOT_MATCH
+        });
+      }
+      if (new_password !== confirm_password) {
+        return Helper.error(res, UNAUTHORIZED_CODE, PASSWORD_DOESNT_MATCH);
+      }
+      const salt = await bcrypt.genSalt(10);
+      const hashednewPassword = await bcrypt.hash(confirm_password, salt);
+      await UserQuery.update([hashednewPassword, userId]);
+      return res.status(SUCCESS_CODE).json({ status: SUCCESS_CODE, message: RESET_SUCCESSFUL });
+    } catch (error) {
+      return Helper.error(res, UNAUTHORIZED_CODE, USER_ID_NOT_FOUND);
+    }
+
     // const user = userTable.find(info => info.id === parseInt(userId, 10));
     // if (user) {
     //   const userOldPwd = user.password;
