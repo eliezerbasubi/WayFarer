@@ -49,4 +49,8 @@ export default class UserQuery {
       return { error: { status: 500, message: 'Unable to update user table' } };
     }
   }
+
+  static async findAll() {
+    return pool.query('SELECT * FROM users WHERE isadmin =$1', [false]);
+  }
 }

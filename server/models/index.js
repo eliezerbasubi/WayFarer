@@ -11,6 +11,15 @@ const dropIntest = {
     } catch (e) {
       return { error: true, res: 'Unable to drop table' };
     }
+  },
+
+  truncateUserTable: async () => {
+    try {
+      const result = pool.query('TRUNCATE TABLE users');
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 };
 

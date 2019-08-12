@@ -39,10 +39,10 @@ export default class Helper {
   //   return now;
   // }
 
-  // static slice(token) {
-  //   if (token.startsWith('Bearer ')) return token.slice(7, token.length);
-  //   return token;
-  // }
+  static slice(token) {
+    if (token.startsWith('Bearer ')) return token.slice(7, token.length);
+    return token;
+  }
 
   // static currentUserStatus() {
   //   let isCurrentAdmin = true;
