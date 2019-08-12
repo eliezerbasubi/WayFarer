@@ -200,28 +200,42 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         });
     });
 
-    // describe('Admin can view all users',()=>{
-    //     it('Should return 404. Users not found',(done) => {
-    //         request(app)
-    //         .get('/api/v1/users')
-    //         .set('Authorization', adminTokenId)
-    //         .end((err,res) => {
-    //             expect(res.status).to.be.equal(NOT_FOUND_CODE)
-    //             done();
-    //         })
-    //     });
-    //     it('Should return 200. Find all users',(done) => {
-    //         userTable.map((user) => { user.is_admin = false})
-    //         request(app)
-    //         .get('/api/v1/users')
-    //         .set('Authorization', adminTokenId)
-    //         .end((err,res) => {
-    //             expect(res.status).to.be.equal(SUCCESS_CODE);
-    //             expect(res.body.data).to.be.an('array');
-    //             expect(res.body.message).to.be.a("string")
-    //             done();
-    //         })
-    //     });
-    // });
+    describe('Admin can view all users',()=>{
+        it('Should return 404. Users not found',(done) => {
+            dropIntest.truncateUserTable();
+            request(app)
+            .get('/api/v1/users')
+            .set('Authorization', adminTokenId)
+            .end((err,res) => {
+                expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                done();
+            })
+        });
+        it('Should return 201. Account was successfully created', (done) => {
+            request(app)
+                .post(routes.signup)
+                .send(preSave)
+                .set('Accept', JSON_TYPE)
+                .end((err, res) => {
+                    expect(res).to.have.status(CREATED_CODE);
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    expect(res.body).to.have.property('message');
+                    expect(res.body).to.be.an('object');
+                    
+                    done();
+                });
+        });
+        it('Should return 200. Find all users',(done) => {
+            request(app)
+            .get('/api/v1/users')
+            .set('Authorization', adminTokenId)
+            .end((err,res) => {
+                expect(res.status).to.be.equal(SUCCESS_CODE);
+                expect(res.body.data).to.be.an('array');
+                expect(res.body.message).to.be.a("string")
+                done();
+            })
+        });
+    });
 });
 
