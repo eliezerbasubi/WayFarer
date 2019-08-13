@@ -43,7 +43,7 @@ const {
     request
 } = chai;
 
-describe('Test case: Booking endpoint /api/v1/bookings', () => {
+describe('Test case: Booking endpoint /api/v2/bookings', () => {
     describe('Base case: User can book a seat on a trip', () => {
         it('Should return 200. User booked seat successfully', (done) => {
             correctBooking.seat_number = 2;
@@ -245,7 +245,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
     describe('Base case: Users can delete their booking', () => {
         it('Should not delete booking if user has no booking', (done) => {
             request(app)
-                .delete('/api/v1/bookings/1')
+                .delete('/api/v2/bookings/1')
                 .set('Authorization', userTokenId)
 
                 .end((err, res) => {
@@ -265,7 +265,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
             bookingStore.email = 'eliezer.basubi30@gmail.com';
             dbBookings.push(bookingStore);
             request(app)
-                .delete('/api/v1/bookings/1')
+                .delete('/api/v2/bookings/1')
                 .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
@@ -279,7 +279,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
 
         it('Should return 404 If booking with wrong ID', (done) => {
             request(app)
-                .delete('/api/v1/bookings/10')
+                .delete('/api/v2/bookings/10')
                 .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(NOT_FOUND_CODE);
@@ -292,7 +292,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
 
         it('Should not delete booking with wrong ID', (done) => {
             request(app)
-                .delete('/api/v1/bookings/-1')
+                .delete('/api/v2/bookings/-1')
                 .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
@@ -307,7 +307,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
     describe('Base case: Users should get a specific booking', () => {
         it('Should return 404. Booking not found', (done) => {
             request(app)
-                .get('/api/v1/bookings/4')
+                .get('/api/v2/bookings/4')
                 .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res.status).to.be.equal(NOT_FOUND_CODE);
@@ -320,7 +320,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should delete a booking', (done) => {
             dbBookings.push(bookingStore);
             request(app)
-                .get('/api/v1/bookings/1')
+                .get('/api/v2/bookings/1')
                 .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
@@ -335,7 +335,7 @@ describe('Test case: Booking endpoint /api/v1/bookings', () => {
         it('Should return 401. Invalid Token Provided', (done) => {
             dbBookings.push(bookingStore);
             request(app)
-                .get('/api/v1/bookings/1')
+                .get('/api/v2/bookings/1')
                 .set('Authorization', invalidToken)
                 .end((err, res) => {
                     expect(res).to.have.status(UNAUTHORIZED_CODE);
