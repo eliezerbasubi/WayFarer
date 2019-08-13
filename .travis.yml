@@ -7,10 +7,15 @@ cache:
     - "node_modules"
 install:
   - npm install
+services:
+  - postgresql
 
 env:
   global:
   - JWT_KEY=secret
+
+before_script:
+  - psql -c 'create database wayfarer_test;' -U postgres
 
 script:
   - npm test
