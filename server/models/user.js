@@ -1,15 +1,13 @@
-import { creator, pool } from './index';
+import { pool, creator } from './index';
 import { RESOURCE_CONFLICT } from '../constants/responseCodes';
 import { EMAIL_ALREADY_EXIST } from '../constants/feedback';
 
 export const currentUser = [];
+
 export default class UserQuery {
   static async insert(values) {
     try {
-      const def = await creator.usersTable();
-      if (def.error) {
-        return { error: { status: 500, message: def.res } };
-      }
+      await creator.createTable('CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, firstname VARCHAR(250) NOT NULL, lastname VARCHAR(250), email VARCHAR(250) NOT NULL UNIQUE,password VARCHAR(250) NOT NULL, phone VARCHAR(15) NOT NULL, country VARCHAR(50), city VARCHAR(50) NOT NULL, isAdmin BOOLEAN DEFAULT false);');
 
       const exist = await pool.query('SELECT * FROM users WHERE email = $1', [values[2]]);
       if (exist.rowCount > 0) {
@@ -26,31 +24,18 @@ export default class UserQuery {
   }
 
   static async read(values) {
-    try {
-      const result = pool.query('SELECT * FROM users WHERE email=$1', values);
-      return result;
-    } catch (error) {
-      return { error: { status: 500, message: 'Unable to select user table' } };
-    }
+    return pool.query('SELECT * FROM users WHERE email=$1', values);
   }
 
   static async findOne(id) {
-    try {
-      return pool.query('SELECT * FROM users WHERE id=$1', [id]);
-    } catch (error) {
-      return { error: { status: 500, message: 'Unable to find one user' } };
-    }
+    return pool.query('SELECT * FROM users WHERE id=$1', [id]);
   }
 
   static async update(values) {
-    try {
-      return pool.query('UPDATE users SET password = $1 WHERE id=$2', values);
-    } catch (error) {
-      return { error: { status: 500, message: 'Unable to update user table' } };
-    }
+    return pool.query('UPDATE users SET password = $1 WHERE id=$2', values);
   }
 
   static async findAll() {
-    return pool.query('SELECT * FROM users WHERE isadmin =$1', [false]);
+    return pool.query('SELECT * FROM users WHERE isadmin =$1 ORDER BY id ASC', [false]);
   }
 }

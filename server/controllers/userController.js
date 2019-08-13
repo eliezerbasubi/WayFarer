@@ -1,3 +1,4 @@
+
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -34,10 +35,7 @@ export default class UserController {
       const result = await UserQuery.insert(values);
 
       if (result.error) {
-        res.status(result.error.status).json({
-          status: result.error.status,
-          error: result.error.message
-        });
+        Helper.error(res, result.error.status, result.error.message);
         return;
       }
 
@@ -74,11 +72,10 @@ export default class UserController {
           firstname: result.rows[0].firstname,
           lastname: result.rows[0].lastname,
           email,
-          phone_number: result.rows[0].phone
+          phone_number: result.rows[0].firstname
         });
-        const display = Object.assign(currentUser);
-
-        return Helper.success(response, SUCCESS_CODE, Object.assign(...display), 'Welcome to Wayfarer');
+        const display = Object.assign(...currentUser);
+        return Helper.success(response, SUCCESS_CODE, display, 'Welcome to Wayfarer');
       }
       return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
     });

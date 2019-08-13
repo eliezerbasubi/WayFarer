@@ -1,24 +1,16 @@
 import Joi from 'joi';
 import Helper from '../helpers/helper';
-import {
-  BAD_REQUEST_CODE, UNPROCESSABLE_ENTITY, RESOURCE_CONFLICT, UNAUTHORIZED_CODE, GONE
-} from '../constants/responseCodes';
-import { BAD_REQUEST_MSG, UNPROCESSABLE_ENTITY_MSG, GONE_MSG } from '../constants/responseMessages';
-import { dbTrip } from '../models/trip';
-import {
-  MAXIMUM_BOOKINGS, SEAT_ALREADY_TAKEN, NOT_LOGGED_IN
-} from '../constants/feedback';
-import { dbBookings } from '../models/booking';
-import { cache } from '../models/user';
 
 export default class Validator {
   static signup(request, response, next) {
     const schema = Joi.object().keys({
       email: Joi.string().email({ minDomainAtoms: 2 }).required(),
-      first_name: Joi.string().min(3).max(25).required(),
-      last_name: Joi.string().min(3).max(25).required(),
+      first_name: Joi.string().regex(/^[aA-zZ]+$/i).min(3).max(25)
+        .required(),
+      last_name: Joi.string().regex(/^[aA-zZ]+$/i).min(3).max(25)
+        .required(),
       password: Joi.string().min(6).max(50).required(),
-      phone_number: Joi.number().positive().required(),
+      phone_number: Joi.string().regex(/^[0-9]{7,10}$/).required(),
       city: Joi.string().min(5).max(30).required(),
       country: Joi.string().min(5).max(30).optional(),
       is_admin: Joi.boolean().strict().valid(true, false).optional()
@@ -71,66 +63,4 @@ export default class Validator {
     if (!error) { return next(); }
     return Helper.joiError(response, error);
   }
-
-  static validateId(req, res, next) {
-    const id = req.params.trip_id || req.params.booking_id;
-    const {
-      error
-    } = Joi.validate(id, Joi.number().integer().positive().required());
-
-    if (!error) {
-      return next();
-    }
-
-    return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
-  }
-
-  // static validateBooking(req, res, next) {
-  //   const bookTripID = req.body.trip_id;
-  //   const bookSeatNumber = req.body.seat_number;
-  //   const schema = Joi.object().keys({
-  //     trip_id: Joi.number().strict().min(1).max(10000)
-  //       .positive()
-  //       .required(),
-  //     seat_number: Joi.number().strict().min(1).max(60)
-  //       .positive()
-  //       .required()
-  //   });
-
-  //   const bookingHeaders = {
-  //     trip_id: bookTripID,
-  //     seat_number: bookSeatNumber
-  //   };
-
-  //   const { error } = Joi.validate(bookingHeaders, schema);
-
-  //   if (error) { return Helper.joiError(res, error); }
-
-  //   if (cache.length < 1) { return Helper.error(res, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
-
-  //   const isBooked = dbBookings.find(booking => booking.trip_id === parseInt(bookTripID, 10)
-  //     && booking.seat_number === bookSeatNumber);
-  //   if (isBooked) { return Helper.error(res, RESOURCE_CONFLICT, SEAT_ALREADY_TAKEN); }
-
-  //   let userEmail = '';
-  //   cache.forEach((element) => { userEmail = element.email; });
-
-  //   const hasBooked = dbBookings.find(booking => booking.email === userEmail
-  //     && booking.trip_id === bookTripID);
-  //   if (hasBooked) { return Helper.error(res, RESOURCE_CONFLICT, MAXIMUM_BOOKINGS); }
-
-  //   const isCancelled = dbTrip.find(trip => trip.trip_id === parseInt(bookTripID, 10)
-  //     && trip.status === 'cancelled');
-
-  //   if (isCancelled) { return Helper.error(res, GONE, GONE_MSG); }
-
-  //   const hasAtrip = dbTrip.find(atrip => atrip.trip_id === parseInt(bookTripID, 10));
-  //   if (hasAtrip) {
-  //     if (parseInt(hasAtrip.seatingCapacity, 10) < parseInt(bookSeatNumber, 10)) {
-  //       return Helper.error(res, UNPROCESSABLE_ENTITY, UNPROCESSABLE_ENTITY_MSG);
-  //     }
-  //   }
-
-  //   return next();
-  // }
 }

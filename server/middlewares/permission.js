@@ -6,8 +6,7 @@ import {
 import Helper from '../helpers/helper';
 import {
   INVALID_TOKEN,
-  NOT_LOGGED_IN,
-  ACCESS_USERS_ONLY
+  NOT_LOGGED_IN
 } from '../constants/feedback';
 import { FORBIDDEN_MSG } from '../constants/responseMessages';
 import { currentUser } from '../models/user';
@@ -16,7 +15,7 @@ dotenv.config();
 
 export default class Permission {
   static grantAccess(request, response, next) {
-    const token = request.headers.authorization || request.headers.token || request.headers['x-access-token'];
+    const token = request.headers.authorization;
     let currentUserID = '';
     try {
       const verified = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
@@ -36,38 +35,4 @@ export default class Permission {
       return Helper.error(response, UNAUTHORIZED_CODE, INVALID_TOKEN);
     }
   }
-
-  static authorize(req, res, next) {
-    const token = req.headers.authorization;
-    let currentUserID = '';
-    try {
-      const verified = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
-      const {
-        id
-      } = verified;
-      currentUser.forEach((item) => {
-        currentUserID = item.id;
-      });
-      if (currentUserID !== id) { return Helper.error(res, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
-
-      return next();
-    } catch (error) { return Helper.error(res, UNAUTHORIZED_CODE, INVALID_TOKEN); }
-  }
-
-  //   static authUsersOnly(request, response, next) {
-  //     const token = request.headers.authorization;
-  //     let currentUserID = '';
-  //     try {
-  //       cache.forEach((item) => {
-  //         currentUserID = item.id;
-  //       });
-  //       const { is_admin, id } = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
-
-  //       if (currentUserID !== id) { return Helper.error(response, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
-
-  //       if (is_admin) { return Helper.error(response, UNAUTHORIZED_CODE, ACCESS_USERS_ONLY); }
-
-//       return next();
-//     } catch (error) { return Helper.error(response, UNAUTHORIZED_CODE, INVALID_TOKEN); }
-//   }
 }

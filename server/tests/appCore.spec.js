@@ -15,7 +15,7 @@ describe('Test case: Root app ', () => {
     describe('Base case: Endpoint not available', () => {
         it('Should return 405 if Bad Request', (done) => {
             request(app)
-                .post('/api/v1/')
+                .post('/api/v2/')
                 .end((err, res) => {
                     expect(res).to.have.status(METHOD_NOT_FOUND);
                     expect(res.body).to.have.property('status').equal(METHOD_NOT_FOUND);
