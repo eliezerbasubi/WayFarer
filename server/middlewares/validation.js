@@ -1,5 +1,7 @@
 import Joi from 'joi';
 import Helper from '../helpers/helper';
+import { BAD_REQUEST_CODE } from '../constants/responseCodes';
+import { BAD_REQUEST_MSG } from '../constants/responseMessages';
 
 export default class Validator {
   static signup(request, response, next) {
@@ -62,5 +64,17 @@ export default class Validator {
 
     if (!error) { return next(); }
     return Helper.joiError(response, error);
+  }
+
+  static validateId(req, res, next) {
+    const id = req.params.trip_id || req.params.booking_id;
+    const {
+      error
+    } = Joi.validate(id, Joi.number().integer().positive().required());
+
+    if (!error) {
+      return next();
+    }
+    return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
   }
 }
