@@ -2,20 +2,20 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import omit from 'object.omit';
-import {
-  RESET_SUCCESSFUL, OLD_PASSWORD_NOT_MATCH,
-  PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD
-} from '../constants/feedback';
 import UserQuery, { currentUser } from '../models/user';
 import {
   CREATED_CODE,
+  BAD_REQUEST_CODE,
   UNAUTHORIZED_CODE,
   SUCCESS_CODE,
-  NOT_FOUND_CODE,
-  BAD_REQUEST_CODE
+  NOT_FOUND_CODE
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
-import { UNAUTHORIZED_ACCESS, BAD_REQUEST_MSG } from '../constants/responseMessages';
+import { BAD_REQUEST_MSG, UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
+import {
+  INCORRECT_PASSWORD, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, RESET_SUCCESSFUL,
+  USER_ID_NOT_FOUND
+} from '../constants/feedback';
 
 dotenv.config();
 
@@ -34,10 +34,7 @@ export default class UserController {
       const result = await UserQuery.insert(values);
 
       if (result.error) {
-        res.status(result.error.status).json({
-          status: result.error.status,
-          error: result.error.message
-        });
+        Helper.error(res, result.error.status, result.error.message);
         return;
       }
 
@@ -74,9 +71,10 @@ export default class UserController {
           firstname: result.rows[0].firstname,
           lastname: result.rows[0].lastname,
           email,
-          phone_number: result.rows[0].phone
+          phone_number: result.rows[0].firstname
         });
-        return Helper.success(response, SUCCESS_CODE, Object.assign(...currentUser), 'Welcome to Wayfarer');
+        const display = Object.assign(...currentUser);
+        return Helper.success(response, SUCCESS_CODE, display, 'Welcome to Wayfarer');
       }
       return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
     });

@@ -40,7 +40,7 @@ export const changePassword = {
   new_password: '12345678',
   confirm_password: '12345678'
 };
-const road = '/api/v1/';
+const road = '/api/v2/';
 
 export const routes = {
   root: '/',
