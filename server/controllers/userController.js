@@ -76,7 +76,9 @@ export default class UserController {
           email,
           phone_number: result.rows[0].phone
         });
-        return Helper.success(response, SUCCESS_CODE, Object.assign(...currentUser), 'Welcome to Wayfarer');
+        const display = Object.assign(currentUser);
+
+        return Helper.success(response, SUCCESS_CODE, Object.assign(...display), 'Welcome to Wayfarer');
       }
       return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
     });

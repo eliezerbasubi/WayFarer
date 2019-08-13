@@ -1,6 +1,3 @@
-import Trip, {
-  dbTrip
-} from '../models/trip';
 import {
   RESOURCE_CONFLICT, CREATED_CODE, NOT_FOUND_CODE, BAD_REQUEST_CODE, SUCCESS_CODE
 } from '../constants/responseCodes';
@@ -10,9 +7,34 @@ import {
   ID_NOT_FOUND
 } from '../constants/feedback';
 import Helper from '../helpers/helper';
+import TripQueries from '../models/trip';
 
 export default class TripController {
-  static createTrip(req, res) {
+  static async createTrip(req, res) {
+    try {
+      const data = [
+        req.body.trip_name,
+        req.body.seating_capacity,
+        req.body.bus_license_number,
+        req.body.origin,
+        req.body.destination,
+        req.body.trip_date,
+        req.body.arrival_date,
+        req.body.time,
+        parseFloat(req.body.fare)
+      ];
+      const result = await TripQueries.create(data);
+      if (result.error) {
+        res.status(result.error.status).json({
+          status: result.error.status,
+          error: result.error.message
+        });
+        return;
+      }
+      Helper.success(res, CREATED_CODE, req.body, 'Account Successfully Created');
+    } catch (error) {
+      Helper.error(res, 409, 'Cannot insert data in db');
+    }
     // const tripData = [];
     // const { bus_license_number, trip_date } = req.body;
     // let onSameDate = [];
@@ -40,8 +62,19 @@ export default class TripController {
     // return Helper.success(res, CREATED_CODE, ...tripData, 'Trip Created Successfully');
   }
 
-  static cancelTrip(req, res) {
-    // const queryParams = parseInt(req.params.trip_id, 10);
+  static async cancelTrip(req, res) {
+    const queryParams = parseInt(req.params.trip_id, 10);
+    const result = await TripQueries.findOne(queryParams);
+    if (result.error) {
+      return res.status(result.error.status).json({
+        status: result.error.status,
+        error: result.error.message
+      });
+    }
+    if (result.rowCount > 0) {
+      return Helper.success(res, SUCCESS_CODE, result.rows, 'Trip cancelled successfully');
+    }
+    return Helper.error(res, NOT_FOUND_CODE, ID_NOT_FOUND);
     // const cancelQuest = dbTrip.find(query => parseInt(query.trip_id, 10) === queryParams);
 
     // if (cancelQuest) {
@@ -55,7 +88,8 @@ export default class TripController {
     // return Helper.error(res, NOT_FOUND_CODE, ID_NOT_FOUND);
   }
 
-  static getAllTrips(req, res) {
+  static async getAllTrips(req, res) {
+    const availableTrips = await TripQueries.findAll();
     // const isCurrentAdmin = Helper.currentUserStatus();
     // if (dbTrip.length < 1) { return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE); }
     // const availableTrips = !isCurrentAdmin ? dbTrip.filter(trip => trip.status === 'active') : dbTrip;
@@ -85,7 +119,7 @@ export default class TripController {
     //   return Helper.success(res, SUCCESS_CODE, origins, `Find ${origins.length} result(s) by origin : ${origin}`);
     // }
 
-    // return Helper.success(res, SUCCESS_CODE, availableTrips, 'Success ! WayFarer Trips !');
+    return Helper.success(res, SUCCESS_CODE, availableTrips.rows, 'Success ! WayFarer Trips !');
   }
 
   static viewSpecificTrip(req, res) {

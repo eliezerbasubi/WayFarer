@@ -19,7 +19,7 @@ import {
 } from '../data/data';
 import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD } from '../constants/feedback';
 import { UNAUTHORIZED_ACCESS, NOT_FOUND } from '../constants/responseMessages';
-import { userTable } from '../models/user';
+import { currentUser } from '../models/user';
 import DB_URL from '../config/config';
 import { dropIntest } from '../models';
 chai.use(chaiHttp);
@@ -35,7 +35,8 @@ export const userTokenId = jwt.sign({ email: "user@gmail.com", id: 1, is_admin: 
     process.env.JWT_KEY, { expiresIn: '10min' });
 
 before(()=>{
-    dropIntest.dropUserTable();
+    dropIntest.dropTable('DROP TABLE IF EXISTS users');
+    dropIntest.dropTable('DROP TABLE IF EXISTS trips');
 });
 
 describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {

@@ -37,22 +37,22 @@ export default class Permission {
     }
   }
 
-  //   static authorize(req, res, next) {
-  //     const token = req.headers.authorization;
-  //     let currentUserID = '';
-  //     try {
-  //       const verified = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
-  //       const {
-  //         id
-  //       } = verified;
-  //       cache.forEach((item) => {
-  //         currentUserID = item.id;
-  //       });
-  //       if (currentUserID !== id) { return Helper.error(res, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
+  static authorize(req, res, next) {
+    const token = req.headers.authorization;
+    let currentUserID = '';
+    try {
+      const verified = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
+      const {
+        id
+      } = verified;
+      currentUser.forEach((item) => {
+        currentUserID = item.id;
+      });
+      if (currentUserID !== id) { return Helper.error(res, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
 
-  //       return next();
-  //     } catch (error) { return Helper.error(res, UNAUTHORIZED_CODE, INVALID_TOKEN); }
-  //   }
+      return next();
+    } catch (error) { return Helper.error(res, UNAUTHORIZED_CODE, INVALID_TOKEN); }
+  }
 
   //   static authUsersOnly(request, response, next) {
   //     const token = request.headers.authorization;

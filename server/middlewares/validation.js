@@ -37,53 +37,53 @@ export default class Validator {
     return Helper.joiError(res, error);
   }
 
-  // static validateTrip(request, response, next) {
-  //   const schema = Joi.object().keys({
-  //     trip_name: Joi.string().min(3).max(60).required(),
-  //     seating_capacity: Joi.number().integer().positive().min(10)
-  //       .max(50)
-  //       .required(),
-  //     bus_license_number: Joi.string().regex(/[a-zA-Z0-9]/).required(),
-  //     origin: Joi.string().min(3).max(30).required(),
-  //     destination: Joi.string().min(3).max(30).required(),
-  //     trip_date: Joi.date().iso().min(Helper.today()).required(),
-  //     arrival_date: Joi.date().iso().min(Joi.ref('trip_date')).required(),
-  //     time: Joi.string().regex(/^(?:[01]\d|2[0-3]):(?:[0-5]\d)$/).required(),
-  //     fare: Joi.number().min(3).max(1000).positive()
-  //       .precision(2)
-  //       .required()
-  //   });
+  static validateTrip(request, response, next) {
+    const schema = Joi.object().keys({
+      trip_name: Joi.string().min(3).max(60).required(),
+      seating_capacity: Joi.number().integer().positive().min(10)
+        .max(50)
+        .required(),
+      bus_license_number: Joi.string().regex(/[a-zA-Z0-9]/).required(),
+      origin: Joi.string().min(3).max(30).required(),
+      destination: Joi.string().min(3).max(30).required(),
+      trip_date: Joi.date().iso().min(Helper.today()).required(),
+      arrival_date: Joi.date().iso().min(Joi.ref('trip_date')).required(),
+      time: Joi.string().regex(/^(?:[01]\d|2[0-3]):(?:[0-5]\d)$/).required(),
+      fare: Joi.number().min(3).max(1000).positive()
+        .precision(2)
+        .required()
+    });
 
-  //   const body = {
-  //     trip_name: request.body.trip_name,
-  //     seating_capacity: request.body.seating_capacity,
-  //     bus_license_number: request.body.bus_license_number,
-  //     origin: request.body.origin,
-  //     destination: request.body.destination,
-  //     trip_date: request.body.trip_date,
-  //     arrival_date: request.body.arrival_date,
-  //     time: request.body.time,
-  //     fare: parseFloat(request.body.fare)
-  //   };
+    const body = {
+      trip_name: request.body.trip_name,
+      seating_capacity: request.body.seating_capacity,
+      bus_license_number: request.body.bus_license_number,
+      origin: request.body.origin,
+      destination: request.body.destination,
+      trip_date: request.body.trip_date,
+      arrival_date: request.body.arrival_date,
+      time: request.body.time,
+      fare: parseFloat(request.body.fare)
+    };
 
-  //   const { error } = Joi.validate(body, schema);
+    const { error } = Joi.validate(body, schema);
 
-  //   if (!error) { return next(); }
-  //   return Helper.joiError(response, error);
-  // }
+    if (!error) { return next(); }
+    return Helper.joiError(response, error);
+  }
 
-  // static validateId(req, res, next) {
-  //   const id = req.params.trip_id || req.params.booking_id;
-  //   const {
-  //     error
-  //   } = Joi.validate(id, Joi.number().integer().positive().required());
+  static validateId(req, res, next) {
+    const id = req.params.trip_id || req.params.booking_id;
+    const {
+      error
+    } = Joi.validate(id, Joi.number().integer().positive().required());
 
-  //   if (!error) {
-  //     return next();
-  //   }
+    if (!error) {
+      return next();
+    }
 
-  //   return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
-  // }
+    return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
+  }
 
   // static validateBooking(req, res, next) {
   //   const bookTripID = req.body.trip_id;
