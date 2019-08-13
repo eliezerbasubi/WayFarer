@@ -37,7 +37,7 @@ export default class TripQueries {
     });
 
     if (isStatusCancel === 'cancelled') {
-      return { error: { status: BAD_REQUEST_CODE, message: BUS_ALREADY_TAKEN } };
+      return { error: { status: BAD_REQUEST_CODE, message: 'Trip Already Cancelled' } };
     }
     const output = await pool.query('UPDATE trips SET status = $1 WHERE id = $2 RETURNING *', ['cancelled', tripId]);
     return output;
