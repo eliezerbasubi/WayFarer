@@ -27,7 +27,7 @@ const {
     request
 } = chai;
 
-describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
+describe('Test case: Trip CRUD Endpoint => /api/v2/trips', () => {
     describe('Base case: Admin can create a trip', () => {
        it('Should return 200. If all fields are provided', (done) => {
         request(app)
@@ -112,11 +112,11 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
     });
 
-    describe('Base case: Admin can cancel a trip => /api/v1/trips/:trip_id/cancel', () => {
+    describe('Base case: Admin can cancel a trip => /api/v2/trips/:trip_id/cancel', () => {
         it('Should return 200. Trip was cancelled successfully', (done) => {
             cache.map(user => { user.id = 1 });
             request(app)
-                .patch('/api/v1/trips/1/cancel')
+                .patch('/api/v2/trips/1/cancel')
                 .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(SUCCESS_CODE);
@@ -127,7 +127,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
         it('Should return 200. Trip already successfully', (done) => {
             request(app)
-                .patch('/api/v1/trips/1/cancel')
+                .patch('/api/v2/trips/1/cancel')
                 .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
@@ -138,7 +138,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
         it('Should return 404. Trip Was Not Found', (done) => {
             request(app)
-                .patch('/api/v1/trips/2/cancel')
+                .patch('/api/v2/trips/2/cancel')
                 .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(NOT_FOUND_CODE);
@@ -150,7 +150,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
 
         it('Should reject invalid ID', (done) => {
             request(app)
-                .patch('/api/v1/trips/-1/cancel')
+                .patch('/api/v2/trips/-1/cancel')
                 .set('Authorization', adminTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
@@ -161,7 +161,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
         it('Should return 401. If the person is not an admin', (done) => {
             request(app)
-                .patch('/api/v1/trips/455/cancel')
+                .patch('/api/v2/trips/455/cancel')
                 .set('Authorization', userTokenId)
                 .end((err, res) => {
                     expect(res).to.have.status(FORBIDDEN_CODE);
@@ -171,7 +171,7 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
         });
     });
 
-    describe('Base case: Both admin and users can view all trips => /api/v1/trips', () =>{
+    describe('Base case: Both admin and users can view all trips => /api/v2/trips', () =>{
         it('Should return 404. If database(dbTrip) is empty', (done) => {
             dbTrip.pop();
             request(app)

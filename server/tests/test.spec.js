@@ -32,7 +32,7 @@ export const adminTokenId = jwt.sign({ email: preSave.email, id: 1, is_admin: pr
 export const userTokenId = jwt.sign({ email: "user@gmail.com", id: 1, is_admin: false },
     process.env.JWT_KEY, { expiresIn: '10min' });
 
-describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
+describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {
 
     describe('Base case: User creates an account', () => {
         it('Should return status 200. Correct credentials', (done) => {
@@ -83,7 +83,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         });
     });
 
-    describe('Base case: User logs in -> /api/v1/auth/signin', () => {
+    describe('Base case: User logs in -> /api/v2/auth/signin', () => {
         it('Should return status 200. Signin user with correct credentials', (done) => {
             request(app)
                 .post(routes.signin)
@@ -138,7 +138,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
     describe('Reset password', ()=> {
         it('Should change user password',(done)=>{
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(SUCCESS_CODE);
                 expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
@@ -151,7 +151,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         it('Should not reset password if it does not match old password',(done)=>{
             changePassword.old_password = "1234567";
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNAUTHORIZED_CODE);
                 expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
@@ -163,7 +163,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
             changePassword.old_password = "123456";
             changePassword.confirm_password = "1234567b";
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNAUTHORIZED_CODE);
                 expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
@@ -174,7 +174,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         it('Should not reset password if ID is not found',(done)=>{
             userTable.map(user => { user.id = 2 })
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNAUTHORIZED_CODE);
                 expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
@@ -186,7 +186,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
             userTable.map(user => { user.id = 1 });
             changePassword.new_password = "123";
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNPROCESSABLE_ENTITY);
                 expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
@@ -198,7 +198,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
     describe('Admin can view all users',()=>{
         it('Should return 404. Users not found',(done) => {
             request(app)
-            .get('/api/v1/users')
+            .get('/api/v2/users')
             .set('Authorization', adminTokenId)
             .end((err,res) => {
                 expect(res.status).to.be.equal(NOT_FOUND_CODE)
@@ -208,7 +208,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         it('Should return 200. Find all users',(done) => {
             userTable.map((user) => { user.is_admin = false})
             request(app)
-            .get('/api/v1/users')
+            .get('/api/v2/users')
             .set('Authorization', adminTokenId)
             .end((err,res) => {
                 expect(res.status).to.be.equal(SUCCESS_CODE);
