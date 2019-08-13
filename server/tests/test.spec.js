@@ -35,6 +35,8 @@ export const userTokenId = jwt.sign({ email: "user@gmail.com", id: 1, is_admin: 
 
 before(()=>{
     dropIntest.dropUserTable('DROP TABLE IF EXISTS users');
+    dropIntest.dropUserTable('DROP TABLE IF EXISTS trips');
+    dropIntest.dropUserTable('DROP TABLE IF EXISTS bookings');
 });
 
 describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {

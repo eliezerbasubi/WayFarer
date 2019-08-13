@@ -32,4 +32,17 @@ export default class Helper {
     if (token.startsWith('Bearer ')) return token.slice(7, token.length);
     return token;
   }
+<<<<<<< HEAD
+=======
+
+  static today() {
+    const todayTime = new Date();
+    const month = todayTime.getMonth() + 1;
+    const day = todayTime.getDate();
+    const year = todayTime.getFullYear();
+
+    const now = `${year}-${month}-${day}`;
+    return now;
+  }
+>>>>>>> ft-postgres-admin-can-create-trip-167834607
 }
