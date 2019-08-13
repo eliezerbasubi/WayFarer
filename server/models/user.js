@@ -22,4 +22,8 @@ export default class UserQuery {
       return { error: { status: 500, message: e, err: e } };
     }
   }
+
+  static async read(values) {
+    return pool.query('SELECT * FROM users WHERE email=$1', values);
+  }
 }

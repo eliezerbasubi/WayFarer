@@ -2,13 +2,16 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import omit from 'object.omit';
-import UserQuery from '../models/user';
+import UserQuery, { currentUser } from '../models/user';
 import {
   CREATED_CODE,
-  BAD_REQUEST_CODE
+  BAD_REQUEST_CODE,
+  UNAUTHORIZED_CODE,
+  SUCCESS_CODE
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
-import { BAD_REQUEST_MSG } from '../constants/responseMessages';
+import { BAD_REQUEST_MSG, UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
+import { INCORRECT_PASSWORD } from '../constants/feedback';
 
 dotenv.config();
 
@@ -42,5 +45,33 @@ export default class UserController {
     } catch (error) {
       Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
     }
+  }
+
+  static async signIn(request, response) {
+    const values = [
+      request.body.email
+    ];
+    const result = await UserQuery.read(values);
+
+    if (result.rowCount <= 0) {
+      return response.status(401).json({ status: 401, error: UNAUTHORIZED_ACCESS });
+    }
+    return bcrypt.compare(request.body.password, result.rows[0].password, (err, resultat) => {
+      if (err) { return Helper.error(response, UNAUTHORIZED_CODE, UNAUTHORIZED_ACCESS); }
+      if (resultat) {
+        const { id, email, isadmin } = result.rows[0];
+        const tokenId = jwt.sign({ email, id, is_admin: isadmin }, process.env.JWT_KEY, { expiresIn: '24h' });
+        currentUser.push({
+          token: tokenId,
+          id,
+          firstname: result.rows[0].firstname,
+          lastname: result.rows[0].lastname,
+          email,
+          phone_number: result.rows[0].firstname
+        });
+        return Helper.success(response, SUCCESS_CODE, ...currentUser, 'Welcome to Wayfarer');
+      }
+      return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
+    });
   }
 }
