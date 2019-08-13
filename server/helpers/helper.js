@@ -27,4 +27,9 @@ export default class Helper {
     };
     return res.status(UNPROCESSABLE_ENTITY).json(body);
   }
+
+  static slice(token) {
+    if (token.startsWith('Bearer ')) return token.slice(7, token.length);
+    return token;
+  }
 }

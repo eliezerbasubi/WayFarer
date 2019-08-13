@@ -1,20 +1,22 @@
+
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import omit from 'object.omit';
+import {
+  RESET_SUCCESSFUL, OLD_PASSWORD_NOT_MATCH,
+  PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD
+} from '../constants/feedback';
 import UserQuery, { currentUser } from '../models/user';
 import {
   CREATED_CODE,
-  BAD_REQUEST_CODE,
   UNAUTHORIZED_CODE,
-  SUCCESS_CODE
+  SUCCESS_CODE,
+  NOT_FOUND_CODE,
+  BAD_REQUEST_CODE
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
-import { BAD_REQUEST_MSG, UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
-import {
-  INCORRECT_PASSWORD, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, RESET_SUCCESSFUL,
-  USER_ID_NOT_FOUND
-} from '../constants/feedback';
+import { UNAUTHORIZED_ACCESS, BAD_REQUEST_MSG } from '../constants/responseMessages';
 
 dotenv.config();
 
@@ -72,7 +74,8 @@ export default class UserController {
           email,
           phone_number: result.rows[0].firstname
         });
-        return Helper.success(response, SUCCESS_CODE, ...currentUser, 'Welcome to Wayfarer');
+        const display = Object.assign(...currentUser);
+        return Helper.success(response, SUCCESS_CODE, display, 'Welcome to Wayfarer');
       }
       return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
     });
@@ -101,5 +104,26 @@ export default class UserController {
     } catch (error) {
       return Helper.error(res, UNAUTHORIZED_CODE, USER_ID_NOT_FOUND);
     }
+  }
+
+  static async viewAllUsers(req, res) {
+    const users = await UserQuery.findAll();
+    if (users.rowCount < 1) {
+      return Helper.error(res, NOT_FOUND_CODE, 'We Cannot Find Any User Now');
+    }
+    const details = [];
+    users.rows.forEach((item) => {
+      details.push({
+        user_id: item.id,
+        first_name: item.firstname,
+        last_name: item.lastname,
+        email: item.email,
+        phone_number: item.phone,
+        city: item.city
+      });
+    });
+    const display = [];
+    Object.assign(display, details);
+    return Helper.success(res, SUCCESS_CODE, display, 'Here is the list of users');
   }
 }

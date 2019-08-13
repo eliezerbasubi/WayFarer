@@ -12,14 +12,15 @@ import {
     changePassword,
 } from '../data/data';
 import {
-    CREATED_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, UNPROCESSABLE_ENTITY, NOT_FOUND_CODE
+    CREATED_CODE, RESOURCE_CONFLICT, SUCCESS_CODE, UNAUTHORIZED_CODE, UNPROCESSABLE_ENTITY, NOT_FOUND_CODE, FORBIDDEN_CODE
 } from '../constants/responseCodes';
 import {
     routes
 } from '../data/data';
-import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD } from '../constants/feedback';
+import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD, INVALID_TOKEN, NOT_LOGGED_IN } from '../constants/feedback';
 import { dropIntest } from '../models';
-import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
+import { UNAUTHORIZED_ACCESS, FORBIDDEN_MSG } from '../constants/responseMessages';
+import { currentUser } from '../models/user';
 chai.use(chaiHttp);
 const {
     expect,
@@ -196,6 +197,76 @@ describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {
                 expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
                 done();
             });
+        });
+    });
+
+    describe('Admin can view all users',()=>{
+        it('Should return 404. Users not found',(done) => {
+            dropIntest.truncateTable('TRUNCATE TABLE users');
+            request(app)
+            .get('/api/v2/users')
+            .set('Authorization', adminTokenId)
+            .end((err,res) => {
+                expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                done();
+            })
+        });
+        it('Should return 201. Account was successfully created', (done) => {
+            request(app)
+                .post(routes.signup)
+                .send(preSave)
+                .set('Accept', JSON_TYPE)
+                .end((err, res) => {
+                    expect(res).to.have.status(CREATED_CODE);
+                    expect(res.type).to.be.equal(JSON_TYPE);
+                    expect(res.body).to.have.property('message');
+                    expect(res.body).to.be.an('object');
+                    
+                    done();
+                });
+        });
+        it('Should return 200. Find all users',(done) => {
+            request(app)
+            .get('/api/v2/users')
+            .set('Authorization', adminTokenId)
+            .end((err,res) => {
+                expect(res.status).to.be.equal(SUCCESS_CODE);
+                expect(res.body.data).to.be.an('array');
+                expect(res.body.message).to.be.a("string")
+                done();
+            })
+        });
+        it('Should return 401. Invalid token',(done) => {
+            request(app)
+            .get('/api/v2/users')
+            .set('Authorization', "Bearer yherkdlso")
+            .end((err,res) => {
+                expect(res.status).to.be.equal(UNAUTHORIZED_CODE);
+                expect(res.body.error).to.be.equal(INVALID_TOKEN);
+                done();
+            })
+        });
+        it('Should return 401. Admin Is Not Signed In',(done) => {
+            currentUser.map(user => { user.id = 2});
+            request(app)
+            .get('/api/v2/users')
+            .set('Authorization', adminTokenId)
+            .end((err,res) => {
+                expect(res.status).to.be.equal(UNAUTHORIZED_CODE);
+                expect(res.body.error).to.be.equal(NOT_LOGGED_IN);
+                done();
+            })
+        });
+        it('Should return 401. Admin Is Not Signed In',(done) => {
+            currentUser.map(user => { user.id = 1; });
+            request(app)
+            .get('/api/v2/users')
+            .set('Authorization', userTokenId)
+            .end((err,res) => {
+                expect(res.status).to.be.equal(FORBIDDEN_CODE);
+                expect(res.body.error).to.be.equal(FORBIDDEN_MSG);
+                done();
+            })
         });
     });
 });

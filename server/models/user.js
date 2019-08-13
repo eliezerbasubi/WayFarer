@@ -34,4 +34,8 @@ export default class UserQuery {
   static async update(values) {
     return pool.query('UPDATE users SET password = $1 WHERE id=$2', values);
   }
+
+  static async findAll() {
+    return pool.query('SELECT * FROM users WHERE isadmin =$1 ORDER BY id ASC', [false]);
+  }
 }
