@@ -6,5 +6,6 @@ const userRouter = express.Router();
 
 userRouter.post('/auth/signup', Validator.signup, UserController.signUp);
 userRouter.post('/auth/signin', UserController.signIn);
+userRouter.patch('/auth/reset/:user_id', Validator.validatePassword, UserController.resetPassword);
 
 export default userRouter;

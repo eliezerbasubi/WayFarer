@@ -26,4 +26,12 @@ export default class UserQuery {
   static async read(values) {
     return pool.query('SELECT * FROM users WHERE email=$1', values);
   }
+
+  static async findOne(id) {
+    return pool.query('SELECT * FROM users WHERE id=$1', [id]);
+  }
+
+  static async update(values) {
+    return pool.query('UPDATE users SET password = $1 WHERE id=$2', values);
+  }
 }

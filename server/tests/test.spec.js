@@ -90,7 +90,7 @@ describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {
         });
     });
 
-    describe('Base case: User logs in -> /api/v1/auth/signin', () => {
+    describe('Base case: User logs in -> /api/v2/auth/signin', () => {
         it('Should return 200. Signin user with correct credentials', (done) => {
             request(app)
                 .post(routes.signin)
@@ -139,6 +139,63 @@ describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {
                     expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE)
                     done();
                 });
+        });
+    });
+
+    describe('Reset password', ()=> {
+        it('Should change user password',(done)=>{
+            request(app)
+            .patch('/api/v2/auth/reset/1')
+            .send(changePassword).end((err,res) =>{
+                expect(res.status).to.equal(SUCCESS_CODE);
+                expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
+                expect(res.body.message).to.be.a("string")
+                done();
+            });
+        });
+
+        it('Should not reset password if it does not match old password',(done)=>{
+            changePassword.old_password = "1234567";
+            request(app)
+            .patch('/api/v2/auth/reset/1')
+            .send(changePassword).end((err,res) =>{
+                expect(res.status).to.equal(UNAUTHORIZED_CODE);
+                expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
+                expect(res.body.error).to.be.equal(OLD_PASSWORD_NOT_MATCH);
+                done();
+            });
+        });
+        it('Should return 401 if confirm password does not match new password',(done)=>{
+            changePassword.old_password = "12345678";
+            changePassword.confirm_password = "1234567b";
+            request(app)
+            .patch('/api/v2/auth/reset/1')
+            .send(changePassword).end((err,res) =>{
+                expect(res.status).to.equal(UNAUTHORIZED_CODE);
+                expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
+                expect(res.body.error).to.be.equal(PASSWORD_DOESNT_MATCH);
+                done();
+            });
+        });
+        it('Should not reset password if ID is not found',(done)=>{
+            request(app)
+            .patch('/api/v2/auth/reset/2')
+            .send(changePassword).end((err,res) =>{
+                expect(res.status).to.equal(UNAUTHORIZED_CODE);
+                expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
+                expect(res.body.error).to.be.equal(USER_ID_NOT_FOUND);
+                done();
+            });
+        });
+        it('Should not reset password If new password is less than 6',(done)=>{
+            changePassword.new_password = "123";
+            request(app)
+            .patch('/api/v2/auth/reset/1')
+            .send(changePassword).end((err,res) =>{
+                expect(res.status).to.equal(UNPROCESSABLE_ENTITY);
+                expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
+                done();
+            });
         });
     });
 });

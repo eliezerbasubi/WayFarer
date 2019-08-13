@@ -22,4 +22,10 @@ export default class Validator {
 
     return Helper.joiError(response, error);
   }
+
+  static validatePassword(req, res, next) {
+    const { error } = Joi.validate(req.body.new_password, Joi.string().min(6).max(50));
+    if (!error) { return next(); }
+    return Helper.joiError(res, error);
+  }
 }

@@ -11,7 +11,10 @@ import {
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
 import { BAD_REQUEST_MSG, UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
-import { INCORRECT_PASSWORD } from '../constants/feedback';
+import {
+  INCORRECT_PASSWORD, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, RESET_SUCCESSFUL,
+  USER_ID_NOT_FOUND
+} from '../constants/feedback';
 
 dotenv.config();
 
@@ -73,5 +76,30 @@ export default class UserController {
       }
       return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
     });
+  }
+
+  static async resetPassword(req, res) {
+    const userId = req.params.user_id;
+    const { new_password, old_password, confirm_password } = req.body;
+    try {
+      const user = await UserQuery.findOne(userId);
+      const { password } = user.rows[0];
+      const compared = await bcrypt.compare(old_password, password);
+      if (!compared) {
+        return res.status(UNAUTHORIZED_CODE).json({
+          status: UNAUTHORIZED_CODE,
+          error: OLD_PASSWORD_NOT_MATCH
+        });
+      }
+      if (new_password !== confirm_password) {
+        return Helper.error(res, UNAUTHORIZED_CODE, PASSWORD_DOESNT_MATCH);
+      }
+      const salt = await bcrypt.genSalt(10);
+      const hashednewPassword = await bcrypt.hash(confirm_password, salt);
+      await UserQuery.update([hashednewPassword, userId]);
+      return res.status(SUCCESS_CODE).json({ status: SUCCESS_CODE, message: RESET_SUCCESSFUL });
+    } catch (error) {
+      return Helper.error(res, UNAUTHORIZED_CODE, USER_ID_NOT_FOUND);
+    }
   }
 }
