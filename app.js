@@ -34,7 +34,7 @@ app.use(bordyParser.urlencoded({
 
 app.use(bordyParser.json());
 
-app.use('/api/v1', routes);
+app.use('/api/v2', routes);
 
 app.use((req, res, next) => {
   const error = new Error(METHOD_NOT_FOUND_MSG);
