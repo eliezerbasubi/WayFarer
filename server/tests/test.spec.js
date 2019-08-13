@@ -18,10 +18,8 @@ import {
     routes
 } from '../data/data';
 import { EMAIL_ALREADY_EXIST, OLD_PASSWORD_NOT_MATCH, PASSWORD_DOESNT_MATCH, USER_ID_NOT_FOUND, INCORRECT_PASSWORD } from '../constants/feedback';
-import { UNAUTHORIZED_ACCESS, NOT_FOUND } from '../constants/responseMessages';
-import { userTable } from '../models/user';
-import DB_URL from '../config/config';
 import { dropIntest } from '../models';
+import { UNAUTHORIZED_ACCESS } from '../constants/responseMessages';
 chai.use(chaiHttp);
 const {
     expect,
@@ -35,13 +33,14 @@ export const userTokenId = jwt.sign({ email: "user@gmail.com", id: 1, is_admin: 
     process.env.JWT_KEY, { expiresIn: '10min' });
 
 before(()=>{
-    dropIntest.dropUserTable();
+    dropIntest.dropUserTable('DROP TABLE IF EXISTS users');
 });
 
-describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
+describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {
   
     describe('Base case: User creates new account', () => {
         it('Should return 201. Account was successfully created', (done) => {
+            preSave.is_admin = false;
             request(app)
                 .post(routes.signup)
                 .send(preSave)
@@ -78,7 +77,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
                 });
         });
 
-        it('Should reject explicit values. Return status 400', (done) => {
+        it('Should return 422. Reject explicit values.', (done) => {
             request(app)
                 .post(routes.signup)
                 .send(explicitData)
@@ -91,7 +90,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         });
     });
 
-    describe('Base case: User logs in -> /api/v1/auth/signin', () => {
+    describe('Base case: User logs in -> /api/v2/auth/signin', () => {
         it('Should return 200. Signin user with correct credentials', (done) => {
             request(app)
                 .post(routes.signin)
@@ -146,7 +145,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
     describe('Reset password', ()=> {
         it('Should change user password',(done)=>{
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(SUCCESS_CODE);
                 expect(res.body).to.have.property('status').equal(SUCCESS_CODE);
@@ -158,7 +157,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         it('Should not reset password if it does not match old password',(done)=>{
             changePassword.old_password = "1234567";
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNAUTHORIZED_CODE);
                 expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
@@ -170,7 +169,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
             changePassword.old_password = "12345678";
             changePassword.confirm_password = "1234567b";
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNAUTHORIZED_CODE);
                 expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
@@ -180,7 +179,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         });
         it('Should not reset password if ID is not found',(done)=>{
             request(app)
-            .patch('/api/v1/auth/reset/2')
+            .patch('/api/v2/auth/reset/2')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNAUTHORIZED_CODE);
                 expect(res.body).to.have.property('status').equal(UNAUTHORIZED_CODE);
@@ -191,7 +190,7 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
         it('Should not reset password If new password is less than 6',(done)=>{
             changePassword.new_password = "123";
             request(app)
-            .patch('/api/v1/auth/reset/1')
+            .patch('/api/v2/auth/reset/1')
             .send(changePassword).end((err,res) =>{
                 expect(res.status).to.equal(UNPROCESSABLE_ENTITY);
                 expect(res.body).to.have.property('status').equal(UNPROCESSABLE_ENTITY);
@@ -199,29 +198,4 @@ describe('Test case: User authentication Endpoint => /api/v1/auth/', () => {
             });
         });
     });
-
-    // describe('Admin can view all users',()=>{
-    //     it('Should return 404. Users not found',(done) => {
-    //         request(app)
-    //         .get('/api/v1/users')
-    //         .set('Authorization', adminTokenId)
-    //         .end((err,res) => {
-    //             expect(res.status).to.be.equal(NOT_FOUND_CODE)
-    //             done();
-    //         })
-    //     });
-    //     it('Should return 200. Find all users',(done) => {
-    //         userTable.map((user) => { user.is_admin = false})
-    //         request(app)
-    //         .get('/api/v1/users')
-    //         .set('Authorization', adminTokenId)
-    //         .end((err,res) => {
-    //             expect(res.status).to.be.equal(SUCCESS_CODE);
-    //             expect(res.body.data).to.be.an('array');
-    //             expect(res.body.message).to.be.a("string")
-    //             done();
-    //         })
-    //     });
-    // });
 });
-
