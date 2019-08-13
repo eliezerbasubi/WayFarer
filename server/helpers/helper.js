@@ -32,8 +32,6 @@ export default class Helper {
     if (token.startsWith('Bearer ')) return token.slice(7, token.length);
     return token;
   }
-<<<<<<< HEAD
-=======
 
   static today() {
     const todayTime = new Date();
@@ -44,5 +42,4 @@ export default class Helper {
     const now = `${year}-${month}-${day}`;
     return now;
   }
->>>>>>> ft-postgres-admin-can-create-trip-167834607
 }
