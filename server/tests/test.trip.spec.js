@@ -26,7 +26,7 @@ const {
     request
 } = chai;
 
-describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
+describe('Test case: Trip CRUD Endpoint => /api/v2/trips', () => {
     describe('Base case: Admin can create a trip', () => {
        it('Should return 201. If all fields are provided', (done) => {
         request(app)
@@ -107,6 +107,55 @@ describe('Test case: Trip CRUD Endpoint => /api/v1/trips', () => {
                     expect(res.body.error).to.be.equal(NOT_LOGGED_IN);
                     expect(res.body.status).to.be.equal(UNAUTHORIZED_CODE);
                     
+                    done();
+                });
+        });
+    });
+
+    describe('Base case: Admin can cancel a trip => /api/v2/trips/:trip_id/cancel', () => {
+        it('Should return 200. Trip was cancelled successfully', (done) => {
+            currentUser.map(user => { user.id = 1 });
+            request(app)
+                .patch('/api/v2/trips/1/cancel')
+                .set('Authorization', adminTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res).to.have.headers;
+                    done();
+                });
+        });
+        it('Should return 400. Trip already successfully', (done) => {
+            request(app)
+                .patch('/api/v2/trips/1/cancel')
+                .set('Authorization', adminTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(BAD_REQUEST_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res).to.have.headers;
+                    done();
+                });
+        });
+        it('Should return 404. Trip Was Not Found', (done) => {
+            request(app)
+                .patch('/api/v2/trips/2/cancel')
+                .set('Authorization', adminTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res).to.have.headers;
+                    done();
+                });
+        });
+
+        it('Should reject invalid ID', (done) => {
+            request(app)
+                .patch('/api/v2/trips/-1/cancel')
+                .set('Authorization', adminTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(BAD_REQUEST_CODE);
+                    expect(res.body.error).to.be.equal(BAD_REQUEST_MSG);
+                    expect(res.body).to.have.property('status').equal(BAD_REQUEST_CODE)
                     done();
                 });
         });

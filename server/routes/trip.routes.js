@@ -6,5 +6,6 @@ import Validator from '../middlewares/validation';
 const tripRouter = express.Router();
 
 tripRouter.post('/trips', Validator.validateTrip, Permission.grantAccess, TripController.createTrip);
+tripRouter.patch('/trips/:trip_id/cancel', Validator.validateId, Permission.grantAccess, TripController.cancelTrip);
 
 export default tripRouter;

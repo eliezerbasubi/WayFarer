@@ -1,5 +1,5 @@
 import { creator, pool } from './index';
-import { RESOURCE_CONFLICT } from '../constants/responseCodes';
+import { RESOURCE_CONFLICT, BAD_REQUEST_CODE } from '../constants/responseCodes';
 import { BUS_ALREADY_TAKEN } from '../constants/feedback';
 
 export default class TripQueries {
@@ -27,5 +27,19 @@ export default class TripQueries {
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`, data);
 
     return result;
+  }
+
+  static async findOne(tripId) {
+    const trip = await pool.query('SELECT * FROM trips WHERE id = $1', [tripId]);
+    let isStatusCancel = '';
+    trip.rows.forEach((item) => {
+      isStatusCancel = item.status;
+    });
+
+    if (isStatusCancel === 'cancelled') {
+      return { error: { status: BAD_REQUEST_CODE, message: 'Trip Already Cancelled' } };
+    }
+    const output = await pool.query('UPDATE trips SET status = $1 WHERE id = $2 RETURNING *', ['cancelled', tripId]);
+    return output;
   }
 }
