@@ -35,4 +35,19 @@ export default class Permission {
       return Helper.error(response, UNAUTHORIZED_CODE, INVALID_TOKEN);
     }
   }
+
+  static authorize(req, res, next) {
+    const token = req.headers.authorization;
+    let currentUserID = '';
+    try {
+      const verified = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
+      const { id } = verified;
+      currentUser.forEach((item) => {
+        currentUserID = item.id;
+      });
+      if (currentUserID !== id) { return Helper.error(res, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
+
+      return next();
+    } catch (error) { return Helper.error(res, UNAUTHORIZED_CODE, INVALID_TOKEN); }
+  }
 }

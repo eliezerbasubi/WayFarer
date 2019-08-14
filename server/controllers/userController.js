@@ -72,10 +72,11 @@ export default class UserController {
           firstname: result.rows[0].firstname,
           lastname: result.rows[0].lastname,
           email,
-          phone_number: result.rows[0].firstname
+          phone_number: result.rows[0].firstname,
+          is_admin: isadmin
         });
         const display = Object.assign(...currentUser);
-        return Helper.success(response, SUCCESS_CODE, display, 'Welcome to Wayfarer');
+        return Helper.success(response, SUCCESS_CODE, omit(display, 'is_admin'), 'Welcome to Wayfarer');
       }
       return Helper.error(response, UNAUTHORIZED_CODE, INCORRECT_PASSWORD);
     });
