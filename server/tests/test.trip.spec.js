@@ -6,6 +6,7 @@ import {
     JSON_TYPE,
     correctTrip,
     invalidToken,
+    preSave,
 } from '../data/data';
 import { userTokenId, adminTokenId } from './test.spec'
 import {
@@ -18,6 +19,8 @@ import {
 import { INVALID_TOKEN, NOT_LOGGED_IN } from '../constants/feedback';
 import { FORBIDDEN_MSG, BAD_REQUEST_MSG } from '../constants/responseMessages';
 import { currentUser } from '../models/user';
+import { dbTrip } from '../models/trip';
+import { dropIntest } from '../models';
 chai.use(chaiHttp);
 dotenv.config();
 
@@ -156,6 +159,74 @@ describe('Test case: Trip CRUD Endpoint => /api/v2/trips', () => {
                     expect(res).to.have.status(BAD_REQUEST_CODE);
                     expect(res.body.error).to.be.equal(BAD_REQUEST_MSG);
                     expect(res.body).to.have.property('status').equal(BAD_REQUEST_CODE)
+                    done();
+                });
+        });
+    });
+
+    describe('Base case: Both admin and users can view all trips => /api/v1/trips', () =>{
+        it('Should return 404. If trip table is empty', (done) => {
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', adminTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.status).to.be.equal(NOT_FOUND_CODE);
+                    
+                    done();
+                });
+        });
+
+        it('Should return 401. If user puts an invalid token', (done) => {
+            correctTrip.bus_license_number = 'KJDKJFOIF'
+            request(app)
+                .get(routes.createTrip)
+                .set('Authorization', correctTrip)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNAUTHORIZED_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.status).to.be.equal(UNAUTHORIZED_CODE);
+                    done();
+                });
+        });
+
+        it('Should return 401. If user is not logged in', (done) => {
+            currentUser.map(user => { user.id = 2 });
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', userTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(UNAUTHORIZED_CODE);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body.status).to.be.equal(UNAUTHORIZED_CODE);
+                    done();
+                });
+        });
+
+        it('Should return 200. Display all available and cancelled trips to admin', (done) => {
+            currentUser.map(user => { user.id = 1, user.is_admin = true });
+            dbTrip.map(trip=> { trip.bus_license_number = 'BI3LK845'});
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', adminTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    
+                    done();
+                });
+        });
+
+        it('Should return 404. Trip not found', (done) => {
+            dbTrip.map(trip=> { trip.bus_license_number = 'BI3LK85645', trip.status = 'cancelled'});
+            currentUser.map(user => { user.id = 1, user.is_admin = false });
+            request(app)
+                .get(routes.getAllTrips)
+                .set('Authorization', userTokenId)
+                .end((err, res) => {
+                    expect(res).to.have.status(NOT_FOUND_CODE);
+                    expect(res.body).to.be.an('object');
                     done();
                 });
         });

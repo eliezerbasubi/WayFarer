@@ -1,7 +1,8 @@
 import { creator, pool } from './index';
-import { RESOURCE_CONFLICT, BAD_REQUEST_CODE } from '../constants/responseCodes';
-import { BUS_ALREADY_TAKEN } from '../constants/feedback';
+import { RESOURCE_CONFLICT, BAD_REQUEST_CODE, NOT_FOUND_CODE } from '../constants/responseCodes';
+import { BUS_ALREADY_TAKEN, NO_TRIP_AVAILABLE } from '../constants/feedback';
 
+export const dbTrip = [];
 export default class TripQueries {
   static async create(data) {
     const sql = `CREATE TABLE IF NOT EXISTS trips(
@@ -41,5 +42,13 @@ export default class TripQueries {
     }
     const output = await pool.query('UPDATE trips SET status = $1 WHERE id = $2 RETURNING *', ['cancelled', tripId]);
     return output;
+  }
+
+  static async findAll() {
+    const tripData = await pool.query('SELECT * FROM trips ORDER BY id ASC');
+    if (tripData.rowCount < 1) {
+      return { error: { status: NOT_FOUND_CODE, message: NO_TRIP_AVAILABLE } };
+    }
+    return tripData;
   }
 }

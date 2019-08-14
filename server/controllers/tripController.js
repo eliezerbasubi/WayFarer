@@ -2,8 +2,8 @@ import {
   CREATED_CODE, NOT_FOUND_CODE, SUCCESS_CODE
 } from '../constants/responseCodes';
 import Helper from '../helpers/helper';
-import TripQueries from '../models/trip';
-import { ID_NOT_FOUND } from '../constants/feedback';
+import TripQueries, { dbTrip } from '../models/trip';
+import { ID_NOT_FOUND, NO_TRIP_AVAILABLE } from '../constants/feedback';
 
 export default class TripController {
   static async createTrip(req, res) {
@@ -27,6 +27,7 @@ export default class TripController {
         });
         return;
       }
+      dbTrip.push(...result.rows);
       Helper.success(res, CREATED_CODE, req.body, 'Account Successfully Created');
     } catch (error) {
       Helper.error(res, 409, 'Cannot insert data in db');
@@ -46,5 +47,15 @@ export default class TripController {
       return Helper.success(res, SUCCESS_CODE, result.rows, 'Trip cancelled successfully');
     }
     return Helper.error(res, NOT_FOUND_CODE, ID_NOT_FOUND);
+  }
+
+  static async getAllTrips(req, res) {
+    const { rows } = await TripQueries.findAll();
+    const isAdmin = Helper.currentUserStatus();
+    const activeTrips = !isAdmin ? rows.filter(trip => trip.status === 'active') : rows;
+    if (activeTrips.length < 1) {
+      return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE);
+    }
+    return Helper.success(res, SUCCESS_CODE, activeTrips, 'Success ! WayFarer Trips !');
   }
 }
