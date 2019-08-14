@@ -1,6 +1,7 @@
 import {
   UNPROCESSABLE_ENTITY
 } from '../constants/responseCodes';
+import { currentUser } from '../models/user';
 
 export default class Helper {
   static error(res, statusCode, error) {
@@ -41,5 +42,11 @@ export default class Helper {
 
     const now = `${year}-${month}-${day}`;
     return now;
+  }
+
+  static currentUserStatus() {
+    let isCurrentAdmin = true;
+    currentUser.forEach((user) => { isCurrentAdmin = user.is_admin; });
+    return isCurrentAdmin;
   }
 }

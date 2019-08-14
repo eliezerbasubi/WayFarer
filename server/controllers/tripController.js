@@ -52,15 +52,23 @@ export default class TripController {
 
   static async getAllTrips(req, res) {
     const { rows } = await TripQueries.findAll();
-    const activeTrips = rows.filter(trip => trip.status === 'active');
-    let isAdmin = true;
-    currentUser.forEach((user) => { isAdmin = user.is_admin; });
-    if (!isAdmin) {
-      if (activeTrips.length > 0) {
-        return Helper.success(res, SUCCESS_CODE, activeTrips, 'Success ! WayFarer Available Trips !');
-      }
-      return Helper.error(res, NOT_FOUND_CODE, 'NO_TRIP_AVAILABLE');
+    const isAdmin = Helper.currentUserStatus();
+    const activeTrips = !isAdmin ? rows.filter(trip => trip.status === 'active') : rows;
+    if (activeTrips.length < 1) {
+      return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE);
     }
-    return Helper.success(res, SUCCESS_CODE, rows, 'Success ! WayFarer Trips !');
+    return Helper.success(res, SUCCESS_CODE, activeTrips, 'Success ! WayFarer Trips !');
+  }
+
+  static async viewSpecificTrip(req, res) {
+    const isAdmin = Helper.currentUserStatus();
+    const { rows } = await TripQueries.findAll();
+    const disponible = !isAdmin ? rows.filter(trip => trip.status === 'active') : rows;
+    const questTrip = disponible.find(quest => quest.id === parseInt(req.params.trip_id, 10));
+    if (questTrip) {
+      return Helper.success(res, SUCCESS_CODE, questTrip, 'We Have Found The Searched Trip');
+    }
+
+    return Helper.error(res, NOT_FOUND_CODE, 'The Specified Trip was Not Found');
   }
 }
