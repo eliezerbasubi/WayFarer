@@ -4,7 +4,6 @@ import {
 import Helper from '../helpers/helper';
 import TripQueries, { dbTrip } from '../models/trip';
 import { ID_NOT_FOUND, NO_TRIP_AVAILABLE } from '../constants/feedback';
-import { currentUser } from '../models/user';
 
 export default class TripController {
   static async createTrip(req, res) {
