@@ -4,6 +4,7 @@ import {
 import Helper from '../helpers/helper';
 import TripQueries, { dbTrip } from '../models/trip';
 import { ID_NOT_FOUND, NO_TRIP_AVAILABLE } from '../constants/feedback';
+import { currentUser } from '../models/user';
 
 export default class TripController {
   static async createTrip(req, res) {
@@ -57,5 +58,17 @@ export default class TripController {
       return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE);
     }
     return Helper.success(res, SUCCESS_CODE, activeTrips, 'Success ! WayFarer Trips !');
+  }
+
+  static async viewSpecificTrip(req, res) {
+    const isAdmin = Helper.currentUserStatus();
+    const { rows } = await TripQueries.findAll();
+    const disponible = !isAdmin ? rows.filter(trip => trip.status === 'active') : rows;
+    const questTrip = disponible.find(quest => quest.id === parseInt(req.params.trip_id, 10));
+    if (questTrip) {
+      return Helper.success(res, SUCCESS_CODE, questTrip, 'We Have Found The Searched Trip');
+    }
+
+    return Helper.error(res, NOT_FOUND_CODE, 'The Specified Trip was Not Found');
   }
 }
