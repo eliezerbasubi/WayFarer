@@ -43,7 +43,6 @@ describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {
   
     describe('Base case: User creates new account', () => {
         it('Should return 201. Account was successfully created', (done) => {
-            preSave.is_admin = false;
             request(app)
                 .post(routes.signup)
                 .send(preSave)

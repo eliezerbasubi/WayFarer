@@ -271,4 +271,78 @@ describe('Test case: Trip CRUD Endpoint => /api/v2/trips', () => {
                 });
         });
     });
+
+    describe('Users can filter trips',()=>{
+        describe('Users can filter trips by origin and destination',()=>{
+            it('Should return 200. Trip origin and destination were found',(done) =>{
+                request(app)
+                .get(`${routes.getAllTrips}?origin=Bukavu&destination=Kigali`)
+                .set('Authorization', userTokenId)
+                .end((err,res) =>{
+                    expect(res.status).to.be.equal(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    done();
+                });
+            });
+    
+            it('Should return 404. Trip origin does not exist',(done) =>{
+                request(app)
+                .get(`${routes.getAllTrips}?origin=Kampala&destination=Goma`)
+                .set('Authorization', userTokenId)
+                .end((err,res) =>{
+                    expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                    expect(res.body).to.have.property('error');
+                    done();
+                });
+            });
+        });
+    
+        describe('Users can filter trip by destination',()=>{
+            it('Should filter all trips with the given destination',(done) =>{
+                request(app)
+                .get(`${routes.getAllTrips}?destination=Kigali`)
+                .set('Authorization', userTokenId)
+                .end((err,res) =>{
+                    expect(res.status).to.be.equal(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    done();
+                });
+            });
+    
+            it('Should not filter if destination does not exist',(done) =>{
+                request(app)
+                .get(`${routes.getAllTrips}?destination=Goma`)
+                .set('Authorization', userTokenId)
+                .end((err,res) =>{
+                    expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                    expect(res.body).to.have.property('error');
+                    done();
+                });
+            });
+        });
+    
+        describe('Users can filter trip by origin',()=>{
+            it('Should filter all trips with the given origin',(done) =>{
+                request(app)
+                .get(`${routes.getAllTrips}?origin=Bukavu`)
+                .set('Authorization', userTokenId)
+                .end((err,res) =>{
+                    expect(res.status).to.be.equal(SUCCESS_CODE);
+                    expect(res.body).to.be.an('object');
+                    done();
+                });
+            });
+    
+            it('Should not filter if origin does not exist',(done) =>{
+                request(app)
+                .get(`${routes.getAllTrips}?origin=Goma`)
+                .set('Authorization', userTokenId)
+                .end((err,res) =>{
+                    expect(res.status).to.be.equal(NOT_FOUND_CODE);
+                    expect(res.body).to.have.property('error').to.equal('Origin Not Found');
+                    done();
+                });
+            });
+        });
+    });
 });

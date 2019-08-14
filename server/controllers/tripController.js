@@ -57,6 +57,29 @@ export default class TripController {
     if (activeTrips.length < 1) {
       return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE);
     }
+    const { origin, destination } = req.query;
+
+    if (req.query.origin && req.query.destination) {
+      const result = activeTrips.filter(trip => trip.origin.toLowerCase()
+      === origin.toLowerCase() && trip.destination.toLowerCase() === destination.toLowerCase());
+
+      if (result.length < 1) { return Helper.error(res, NOT_FOUND_CODE, 'Origin and Destination Are Not Found'); }
+      return Helper.success(res, SUCCESS_CODE, result, `${result.length} result(s) Found`);
+    }
+
+    if (destination) {
+      const place = activeTrips.filter(trip => trip.destination.toLowerCase()
+      === destination.toLowerCase());
+      if (place.length < 1) { return Helper.error(res, NOT_FOUND_CODE, 'Destination Not Found'); }
+      return Helper.success(res, SUCCESS_CODE, place, `Find ${place.length} result(s) by destination ${destination}`);
+    }
+
+    if (origin) {
+      const origins = activeTrips.filter(trip => trip.origin.toLowerCase()
+      === origin.toLowerCase());
+      if (origins.length < 1) { return Helper.error(res, NOT_FOUND_CODE, 'Origin Not Found'); }
+      return Helper.success(res, SUCCESS_CODE, origins, `Find ${origins.length} result(s) by origin : ${origin}`);
+    }
     return Helper.success(res, SUCCESS_CODE, activeTrips, 'Success ! WayFarer Trips !');
   }
 
