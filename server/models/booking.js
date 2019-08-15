@@ -4,6 +4,8 @@ import {
   MAXIMUM_BOOKINGS, HAVE_NO_BOOKINGS, NO_BOOKINGS
 } from '../constants/feedback';
 import { currentUser } from './user';
+import Helper from '../helpers/helper';
+import TripQueries from './trip';
 
 export const dbBooking = [];
 export default class BookingQueries {
@@ -69,5 +71,21 @@ export default class BookingQueries {
       return { error: { status: NOT_FOUND_CODE, message: HAVE_NO_BOOKINGS } };
     }
     return bookings;
+  }
+
+  static async removeOne(booking_id) {
+    const userId = Helper.currentUserId();
+    const result = await pool.query('SELECT * FROM bookings WHERE user_id = $1 AND id = $2', [userId, booking_id]);
+    if (result.rowCount < 1) {
+      return { error: { status: NOT_FOUND_CODE, message: 'We Could Not Find Trip With The Given Id' } };
+    }
+    const trip = await TripQueries.getOneById(result.rows[0].trip_id).then(d => d.rows[0]);
+    const { seating_capacity } = trip;
+
+    const delelted = await pool.query('DELETE FROM bookings WHERE id = $1 AND user_id = $2', [booking_id, userId]);
+    const fields = [seating_capacity + 1, result.rows[0].trip_id];
+    await pool.query('UPDATE trips SET seating_capacity = $1 WHERE id = $2', fields);
+
+    return delelted;
   }
 }

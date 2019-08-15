@@ -60,4 +60,16 @@ export default class BookingController {
     const display = Object.assign({ id, seat_number }, ...rows);
     return Helper.success(res, SUCCESS_CODE, Object.assign(display), 'Found your Bookings');
   }
+
+  static async deleteBooking(req, res) {
+    const booking_id = parseInt(req.params.booking_id, 10);
+    const toBeDeleted = await BookingQueries.removeOne(booking_id);
+    if (toBeDeleted.error) {
+      return Helper.error(res, toBeDeleted.error.status, toBeDeleted.error.message);
+    }
+    return res.status(200).json({
+      status: 200,
+      message: 'Booking Deleted Successfully'
+    });
+  }
 }
