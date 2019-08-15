@@ -8,5 +8,6 @@ const bookingRouter = express.Router();
 bookingRouter.post('/bookings', Validator.validateBooking, Permission.authUsersOnly, BookingController.createBooking);
 bookingRouter.get('/bookings', Permission.authorize, BookingController.viewBooking);
 bookingRouter.get('/bookings/:booking_id', Validator.validateId, Permission.authUsersOnly, BookingController.getOneBooking);
+bookingRouter.delete('/bookings/:booking_id', Validator.validateId, Permission.authUsersOnly, BookingController.deleteBooking);
 
 export default bookingRouter;

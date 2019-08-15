@@ -53,6 +53,12 @@ export default class Helper {
     return isCurrentAdmin;
   }
 
+  static currentUserId() {
+    let userId = 0;
+    currentUser.forEach((user) => { userId = user.id; });
+    return userId;
+  }
+
   static async currentUserBookings(res) {
     const userBookings = await BookingQueries.userBookings();
 
