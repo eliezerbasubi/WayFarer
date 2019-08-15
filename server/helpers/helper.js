@@ -1,7 +1,10 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import {
   UNPROCESSABLE_ENTITY
 } from '../constants/responseCodes';
 import { currentUser } from '../models/user';
+import BookingQueries from '../models/booking';
 
 export default class Helper {
   static error(res, statusCode, error) {
@@ -48,5 +51,20 @@ export default class Helper {
     let isCurrentAdmin = true;
     currentUser.forEach((user) => { isCurrentAdmin = user.is_admin; });
     return isCurrentAdmin;
+  }
+
+  static async currentUserBookings(res) {
+    const userBookings = await BookingQueries.userBookings();
+
+    if (userBookings.error) {
+      return Helper.error(res, userBookings.error.status, userBookings.error.message);
+    }
+    let indexer = ''; const myBookings = [];
+    for (indexer of userBookings.rows) {
+      const row = await BookingQueries.userBookingDetails([indexer.user_id, indexer.trip_id]);
+      const { id, seat_number } = indexer;
+      myBookings.push(Object.assign({ id, seat_number }, ...row.rows));
+    }
+    return Helper.success(res, 200, myBookings, 'Found your Bookings');
   }
 }
