@@ -90,18 +90,13 @@ export const correctBooking = {
 };
 
 export const bookingStore = {
-  booking_id: 1,
-  bus_license_number: 'OPBIEW4',
-  trip_id: '1',
-  trip_date: '2019-12-12',
-  trip_time: '13:30',
-  trip_name: 'Boot trip',
-  fare: '45.9',
-  user_id: '1',
-  first_name: 'John',
-  last_name: 'Doe',
-  email: 'johndoe@gmail.com',
-  seat_number: '34',
-  createdOn: '2019-12-15',
-  status: 'valid'
+  id: 1,
+  seat_number: 14,
+  firstname: 'Ange',
+  lastname: 'Basubi',
+  email: 'ange.basubi3@gmail.com',
+  trip_name: 'Summer',
+  bus_license_number: 'OPDK134126d',
+  trip_date: '2019-10-01T22:00:00.000Z',
+  fare: 45.5
 };

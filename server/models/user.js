@@ -3,6 +3,7 @@ import { RESOURCE_CONFLICT } from '../constants/responseCodes';
 import { EMAIL_ALREADY_EXIST } from '../constants/feedback';
 
 export const currentUser = [];
+export const userDb = [];
 
 export default class UserQuery {
   static async insert(values) {
