@@ -1,6 +1,9 @@
 import { pool } from '.';
-import { RESOURCE_CONFLICT } from '../constants/responseCodes';
-import { MAXIMUM_BOOKINGS } from '../constants/feedback';
+import { RESOURCE_CONFLICT, NOT_FOUND_CODE } from '../constants/responseCodes';
+import {
+  MAXIMUM_BOOKINGS, HAVE_NO_BOOKINGS, NO_BOOKINGS
+} from '../constants/feedback';
+import { currentUser } from './user';
 
 export const dbBooking = [];
 export default class BookingQueries {
@@ -30,5 +33,41 @@ export default class BookingQueries {
     users.firstname, users.lastname, users.email, trips.trip_name, trips.bus_license_number, trips.trip_date, trips.fare 
     FROM users INNER JOIN trips ON users.id = $1 AND trips.id = $2 LIMIT 1`, ids);
     return info;
+  }
+
+  static async userBookings() {
+    let user_id = 0;
+    currentUser.forEach((user) => { user_id = user.id; });
+    const myBookings = await pool.query('SELECT * FROM bookings WHERE user_id = $1', [user_id]);
+    if (myBookings.rowCount < 1) {
+      return { error: { status: NOT_FOUND_CODE, message: HAVE_NO_BOOKINGS } };
+    }
+    return myBookings;
+  }
+
+  static async findAll() {
+    const bookings = await pool.query('SELECT * FROM bookings ');
+    if (bookings.rowCount < 1) {
+      return { error: { status: NOT_FOUND_CODE, message: NO_BOOKINGS } };
+    }
+    return bookings;
+  }
+
+  static async userBookingDetails(ids) {
+    const info = await pool.query(`SELECT 
+    users.firstname, users.lastname, users.email, trips.trip_name, trips.bus_license_number, trips.trip_date, trips.fare 
+    FROM users INNER JOIN trips ON users.id = $1 AND trips.id = $2`, ids);
+    return info;
+  }
+
+  static async findOne(ids) {
+    let user_id = 0;
+    currentUser.forEach((user) => { user_id = user.id; });
+
+    const bookings = await pool.query('SELECT * FROM bookings WHERE id = $1 AND user_id =$2', [ids, user_id]);
+    if (bookings.rowCount < 1) {
+      return { error: { status: NOT_FOUND_CODE, message: HAVE_NO_BOOKINGS } };
+    }
+    return bookings;
   }
 }

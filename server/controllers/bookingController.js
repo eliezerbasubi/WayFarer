@@ -1,8 +1,10 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 import TripQueries from '../models/trip';
 import Helper from '../helpers/helper';
 import { currentUser } from '../models/user';
 import BookingQueries, { dbBooking } from '../models/booking';
-import { CREATED_CODE } from '../constants/responseCodes';
+import { CREATED_CODE, SUCCESS_CODE } from '../constants/responseCodes';
 
 export default class BookingController {
   static async createBooking(req, res) {
@@ -25,5 +27,37 @@ export default class BookingController {
     const display = Object.assign({ id, seat_number }, ...rows);
     dbBooking.push(display);
     return Helper.success(res, CREATED_CODE, display, 'Seat Booked Successfully');
+  }
+
+  static async viewBooking(req, res) {
+    const isAdmin = Helper.currentUserStatus();
+
+    const bookings = await BookingQueries.findAll();
+    let booked = ''; const displayerBooking = [];
+    for (booked of bookings.rows) {
+      const { id, seat_number } = booked;
+      const { rows } = await BookingQueries.userBookingDetails([booked.user_id, booked.trip_id]);
+      displayerBooking.push(Object.assign({ id, seat_number }, ...rows));
+    }
+    if (isAdmin === true) {
+      if (bookings.error) {
+        return Helper.error(res, bookings.error.status, bookings.error.message);
+      }
+      return Helper.success(res, SUCCESS_CODE, displayerBooking, 'We Have Found User Bookings');
+    }
+    return Helper.currentUserBookings(res);
+  }
+
+  static async getOneBooking(req, res) {
+    const { booking_id } = req.params;
+    const booking = await BookingQueries.findOne(booking_id);
+    if (booking.error) {
+      return Helper.error(res, booking.error.status, booking.error.message);
+    }
+    const ids = [booking.rows[0].user_id, booking.rows[0].trip_id];
+    const { rows } = await BookingQueries.userInfo(ids);
+    const { id, seat_number } = booking.rows[0];
+    const display = Object.assign({ id, seat_number }, ...rows);
+    return Helper.success(res, SUCCESS_CODE, Object.assign(display), 'Found your Bookings');
   }
 }
