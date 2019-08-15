@@ -6,11 +6,14 @@ import {
     JSON_TYPE,
     correctBooking,
     correctTrip,
+    bookingStore,
 } from '../data/data';
 import {
     NOT_FOUND_CODE,
     UNPROCESSABLE_ENTITY,
     GONE,
+    UNAUTHORIZED_CODE,
+    SUCCESS_CODE,
 } from '../constants/responseCodes';
 import {
     routes
@@ -19,6 +22,9 @@ import {
     dbTrip
 } from '../models/trip';
 import { userTokenId, adminTokenId } from './test.spec'
+import { currentUser } from '../models/user';
+import { NOT_LOGGED_IN, NO_BOOKINGS, HAVE_NO_BOOKINGS } from '../constants/feedback';
+import { dbBooking } from '../models/booking';
 
 chai.use(chaiHttp);
 
