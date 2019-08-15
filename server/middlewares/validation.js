@@ -1,7 +1,13 @@
 import Joi from 'joi';
 import Helper from '../helpers/helper';
-import { BAD_REQUEST_CODE } from '../constants/responseCodes';
-import { BAD_REQUEST_MSG } from '../constants/responseMessages';
+import {
+  BAD_REQUEST_CODE, RESOURCE_CONFLICT, GONE, UNPROCESSABLE_ENTITY, NOT_FOUND_CODE
+} from '../constants/responseCodes';
+import { BAD_REQUEST_MSG, GONE_MSG } from '../constants/responseMessages';
+import { SEAT_ALREADY_TAKEN, ID_NOT_FOUND } from '../constants/feedback';
+import TripQueries from '../models/trip';
+import BookingQueries from '../models/booking';
+import { creator } from '../models';
 
 export default class Validator {
   static signup(request, response, next) {
@@ -76,5 +82,46 @@ export default class Validator {
       return next();
     }
     return Helper.error(res, BAD_REQUEST_CODE, BAD_REQUEST_MSG);
+  }
+
+  static async validateBooking(req, res, next) {
+    const { trip_id, seat_number } = req.body;
+    const schema = Joi.object().keys({
+      trip_id: Joi.number().strict().min(1).max(10000)
+        .required(),
+      seat_number: Joi.number().strict().min(1).max(60)
+        .required()
+    });
+
+    const { error } = Joi.validate(req.body, schema);
+
+    if (error) { return Helper.joiError(res, error); }
+
+    const data = [parseInt(trip_id, 10), 'cancelled'];
+    const values = [parseInt(trip_id, 10), parseInt(seat_number, 10)];
+
+    const sql = `CREATE TABLE IF NOT EXISTS bookings(
+      id SERIAL PRIMARY KEY,
+      trip_id INTEGER NOT NULL REFERENCES trips(id) ON DELETE RESTRICT,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+      seat_number INTEGER NOT NULL,
+      created_on timestamp without time zone DEFAULT NOW());`;
+    await creator.createTable(sql);
+
+    const isBooked = await BookingQueries.isBooked(values);
+    if (isBooked.rowCount > 0) { return Helper.error(res, RESOURCE_CONFLICT, SEAT_ALREADY_TAKEN); }
+
+    const isCancelled = await TripQueries.getAsSpecified(data);
+    if (isCancelled.rowCount > 0) { return Helper.error(res, GONE, GONE_MSG); }
+
+    const tripSeatingCapacity = await TripQueries.getOneById(parseInt(trip_id, 10));
+    if (tripSeatingCapacity.error) { return Helper.error(res, NOT_FOUND_CODE, ID_NOT_FOUND); }
+
+    const seating_capacity = parseInt(tripSeatingCapacity.rows[0].seating_capacity, 10);
+    if (seating_capacity < parseInt(seat_number, 10)) {
+      return Helper.error(res, UNPROCESSABLE_ENTITY, `Given Seat Number Is Higher Than The Expected Maximum ${seating_capacity}`);
+    }
+
+    return next();
   }
 }

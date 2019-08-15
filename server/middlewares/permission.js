@@ -6,7 +6,8 @@ import {
 import Helper from '../helpers/helper';
 import {
   INVALID_TOKEN,
-  NOT_LOGGED_IN
+  NOT_LOGGED_IN,
+  ACCESS_USERS_ONLY
 } from '../constants/feedback';
 import { FORBIDDEN_MSG } from '../constants/responseMessages';
 import { currentUser } from '../models/user';
@@ -49,5 +50,22 @@ export default class Permission {
 
       return next();
     } catch (error) { return Helper.error(res, UNAUTHORIZED_CODE, INVALID_TOKEN); }
+  }
+
+  static authUsersOnly(request, response, next) {
+    const token = request.headers.authorization;
+    let currentUserID = '';
+    try {
+      currentUser.forEach((item) => {
+        currentUserID = item.id;
+      });
+      const { is_admin, id } = jwt.verify(Helper.slice(token), process.env.JWT_KEY);
+
+      if (currentUserID !== id) { return Helper.error(response, UNAUTHORIZED_CODE, NOT_LOGGED_IN); }
+
+      if (is_admin) { return Helper.error(response, UNAUTHORIZED_CODE, ACCESS_USERS_ONLY); }
+
+      return next();
+    } catch (error) { return Helper.error(response, UNAUTHORIZED_CODE, INVALID_TOKEN); }
   }
 }

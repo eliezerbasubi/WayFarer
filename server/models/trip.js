@@ -1,6 +1,6 @@
 import { creator, pool } from './index';
 import { RESOURCE_CONFLICT, BAD_REQUEST_CODE, NOT_FOUND_CODE } from '../constants/responseCodes';
-import { BUS_ALREADY_TAKEN, NO_TRIP_AVAILABLE } from '../constants/feedback';
+import { BUS_ALREADY_TAKEN, NO_TRIP_AVAILABLE, ID_NOT_FOUND } from '../constants/feedback';
 
 export const dbTrip = [];
 export default class TripQueries {
@@ -50,5 +50,18 @@ export default class TripQueries {
       return { error: { status: NOT_FOUND_CODE, message: NO_TRIP_AVAILABLE } };
     }
     return tripData;
+  }
+
+  static async getOneById(id) {
+    const trip = await pool.query('SELECT * FROM trips WHERE id = $1', [id]);
+    if (trip.rowCount < 1) {
+      return { error: { status: NOT_FOUND_CODE, message: ID_NOT_FOUND } };
+    }
+    return trip;
+  }
+
+  static async getAsSpecified(data) {
+    const output = await pool.query('SELECT * FROM trips WHERE id = $1 AND status = $2', data);
+    return output;
   }
 }

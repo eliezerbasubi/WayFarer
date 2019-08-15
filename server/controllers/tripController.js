@@ -44,7 +44,7 @@ export default class TripController {
       });
     }
     if (result.rowCount > 0) {
-      return Helper.success(res, SUCCESS_CODE, result.rows, 'Trip cancelled successfully');
+      return Helper.success(res, SUCCESS_CODE, Object.assign(result.rows), 'Trip cancelled successfully');
     }
     return Helper.error(res, NOT_FOUND_CODE, ID_NOT_FOUND);
   }

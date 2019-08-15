@@ -34,9 +34,7 @@ export const userTokenId = jwt.sign({ email: "user@gmail.com", id: 1, is_admin: 
     process.env.JWT_KEY, { expiresIn: '10min' });
 
 before(()=>{
-    dropIntest.dropUserTable('DROP TABLE IF EXISTS users');
-    dropIntest.dropUserTable('DROP TABLE IF EXISTS trips');
-    dropIntest.dropUserTable('DROP TABLE IF EXISTS bookings');
+    dropIntest.dropUserTable('DROP TABLE IF EXISTS users, trips, bookings CASCADE');
 });
 
 describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {

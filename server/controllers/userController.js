@@ -72,7 +72,7 @@ export default class UserController {
           firstname: result.rows[0].firstname,
           lastname: result.rows[0].lastname,
           email,
-          phone_number: result.rows[0].firstname,
+          phone_number: result.rows[0].phone,
           is_admin: isadmin
         });
         const display = Object.assign(...currentUser);
