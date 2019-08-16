@@ -4,12 +4,13 @@
   "description": "WayFarer is a public bus transportation service",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development npm run createTables && cross-env NODE_ENV=development babel-watch server.js",
+    "start": "cross-env NODE_ENV=development npm run dropTables && cross-env NODE_ENV=development npm run createTables && cross-env NODE_ENV=development npm run superuser && cross-env NODE_ENV=development babel-watch server.js",
     "test": "cross-env NODE_ENV=test nyc  --reporter=text mocha --require babel-register server/tests/*.js --exit --timeout 10000",
     "test:watch": "mocha --watch",
     "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
     "coveralls-coverage": "coveralls < lcov.info",
     "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage",
+    "superuser" :"babel-node server/config/admin.js",
     "createTables": "babel-node server/config/tableCreator.js",
     "dropTables": "babel-node server/config/dropTables.js"
   },

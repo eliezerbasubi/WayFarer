@@ -1,9 +1,4 @@
-import dotenv from 'dotenv';
 import { pool } from '../models';
-
-dotenv.config();
-
-const data = JSON.parse(process.env.admin);
 
 const createTables = async () => {
   const result = await pool.query(`
@@ -38,11 +33,6 @@ const createTables = async () => {
             seat_number INTEGER NOT NULL,
             created_on timestamp without time zone DEFAULT NOW());
         `);
-
-  await pool.query(`INSERT INTO users (firstname, lastname, email,password,phone,country,city, isadmin) 
-  VALUES('${data.firstname}', '${data.lastname}', '${data.email}', '${data.password}',
-    '${data.phone}','${data.country}','${data.city}', '${data.isadmin}') on conflict (email) do nothing returning *`);
-  await pool.end();
   return result;
 };
 export default createTables();
