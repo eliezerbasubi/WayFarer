@@ -50,7 +50,11 @@ export default class TripController {
   }
 
   static async getAllTrips(req, res) {
-    const { rows } = await TripQueries.findAll();
+    const trips = await TripQueries.findAll();
+    if (trips.error) {
+      return Helper.error(res, NOT_FOUND_CODE, NO_TRIP_AVAILABLE);
+    }
+    const { rows } = trips;
     const isAdmin = Helper.currentUserStatus();
     const activeTrips = !isAdmin ? rows.filter(trip => trip.status === 'active') : rows;
     if (activeTrips.length < 1) {

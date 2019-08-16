@@ -9,6 +9,8 @@ import {
   METHOD_NOT_FOUND
 } from './server/constants/responseCodes';
 import routes from './server/routes/index';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json'
 
 const app = express();
 
@@ -35,6 +37,8 @@ app.use(bordyParser.urlencoded({
 app.use(bordyParser.json());
 
 app.use('/api/v2', routes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res, next) => {
   const error = new Error(METHOD_NOT_FOUND_MSG);

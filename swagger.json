@@ -1,0 +1,515 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : " WayFarer is a public bus transportation booking server.",
+    "version" : "2.0.0",
+    "title" : "WayFarer-API",
+    "contact" : {
+      "email" : "eliezer.basubi30@gmail.com"
+    }
+  },
+  "host" : "",
+  "basePath" : "/api/v2/",
+  "tags" : [ {
+    "name" : "authentication",
+    "description" : "Operations about user authentication"
+  }, {
+    "name" : "bookings",
+    "description" : "Operations about bookings"
+  }, {
+    "name" : "trips",
+    "description" : "Operations about trips"
+  } ],
+  "schemes" : [ "https", "http" ],
+  "paths" : {
+    "/auth/signup" : {
+      "post" : {
+        "tags" : [ "authentication" ],
+        "summary" : "Create user account",
+        "description" : "User sign up",
+        "operationId" : "signupUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "User data object sent to api",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Signup"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Account Successfully Created"
+          },
+          "200" : {
+            "description" : "User account created"
+          },
+          "500" : {
+            "description" : "Internal Server Error "
+          },
+          "409" : {
+            "description" : "Resource Conflict "
+          }
+        }
+      }
+    },
+    "/auth/signin" : {
+      "post" : {
+        "tags" : [ "authentication" ],
+        "summary" : "Sign user in the System",
+        "description" : "User sign in",
+        "operationId" : "signinUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "User data object sent to the api",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Signin"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Welcome to WayFarer"
+          },
+          "401" : {
+            "description" : "Unauthorized Access"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/reset/{user_id}": {
+      "post" :{
+        "tags" : [ "authentication" ],
+        "summary" : "Sign user in the System",
+        "description" : "User sign in",
+        "operationId" : "resetPassword",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "user_id",
+          "description" : "User Account ID ",
+          "required" : true
+        },{
+          "in" : "body",
+          "name" : "body",
+          "description" : "User reset password data",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Reset"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Password Resetted Successfully"
+          },
+          "401" : {
+            "description" : "Unauthorized Access"
+          }
+        }
+      }
+    },
+    "/trips" : {
+      "post" : {
+        "tags" : [ "trips" ],
+        "summary" : "Create trips",
+        "description" : "Create a trip",
+        "operationId" : "createTrip",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Admin authorization header token",
+          "required" : true
+        },
+        {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Trip data object to be created",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Trip"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Trip Created Successfully"
+          },
+          "401" : {
+            "description" : "Unauthorized Access. Please log in"
+          },
+          "403" : {
+            "description" : "Your account is not authorized to access the requested resource"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "trips" ],
+        "summary" : "Get all trips",
+        "description" : "Retrieve all trips",
+        "operationId" : "getAllTrips",
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Authorization header token",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success! WayFarer Trips"
+          },
+          "401" : {
+            "description" : "Unauthorized Access. Please log in"
+          },
+          "404" : {
+            "description" : "No Trip Available Yet. Check Back Later"
+          }
+        }
+      }
+    },
+    "/trips/{tripId}" : {
+      "get" : {
+        "tags" : [ "trips" ],
+        "summary" : "Get a trip by ID",
+        "description" : "Return the given trip as specified by ID",
+        "operationId" : "getOneTrip",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Authorization header token",
+          "required" : true
+        },
+        {
+          "name" : "tripId",
+          "in" : "path",
+          "description" : "ID of trip be fetched",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Trip Successfully Found"
+          },
+          "401" : {
+            "description" : "Unauthorized Access. Please log in"
+          },
+          "400" : {
+            "description" : "The Given ID Is Invalid"
+          },
+          "404" : {
+            "description" : "The Specified Trip Was Not Found"
+          }
+        }
+      }
+    },
+    "/trips/{tripId}/cancel" : {
+      "patch" : {
+        "tags" : [ "trips" ],
+        "summary" : "Cancel a trip by ID",
+        "description" : "Return the cancelled trip",
+        "operationId" : "cancelTrip",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Authorization header token",
+          "required" : true
+        },
+        {
+          "name" : "tripId",
+          "in" : "path",
+          "description" : "ID of trip to be cancelled",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Trip cancelled successfully"
+          },
+          "400" : {
+            "description" : "The Given ID Is Invalid"
+          },
+          "404" : {
+            "description" : "Trip Not Found"
+          }
+        }
+      }
+    },
+    "/bookings" : {
+      "get" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Retrieve all bookings",
+        "description" : "All bookings",
+        "operationId" : "getAllBookings",
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Authorization header token",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success"
+          },
+          "401" : {
+            "description" : "Unauthorized Access. Please Login"
+          },
+          "404" : {
+            "description" : "No Bookings Available Yet"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Create a booking",
+        "description" : "Create booking",
+        "operationId" : "createBooking",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Authorization header token",
+          "required" : true
+        },
+        {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Booking data object to be created",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Booking"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Seat Booked Successfully"
+          },
+          "401" : {
+            "description" : "Unauthorized Access. Please Login In"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/bookings/{bookingId}" : {
+      "get" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Get a single booking by ID",
+        "description" : "Returns a specific booking",
+        "operationId" : "getOneBooking",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Authorization header token",
+          "required" : true
+        },
+        {
+          "name" : "bookingId",
+          "in" : "path",
+          "description" : "Single Booking ID ",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success! Booking was found",
+            "schema": {
+              "$ref": "#/definitions/Booking"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          },
+          "404" : {
+            "description" : "We Could Not Find The Specified Booking"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Delete booking by ID",
+        "description" : "Return deleted data object",
+        "operationId" : "deleteBooking",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "authorization",
+          "description" : "Authorization header token",
+          "required" : true
+        },
+        {
+          "name" : "bookingId",
+          "in" : "path",
+          "description" : "ID of booking to be deleted",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Your Booking Was Deleted Successfull"
+          },
+          "404" : {
+            "description" : "We Cannot Find a Booking With the Specified ID"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Signup" : {
+      "type" : "object",
+      "properties" : {
+        "first_name":{
+          "type":"string",
+          "example":"John"
+        },
+        "last_name":{
+          "type": "string",
+          "example":"Smith"
+        },
+        "email" : {
+          "type" : "string",
+          "example" : "eliezer.basubi30@gmail.com"
+        },
+        "password" : {
+          "type" : "string",
+          "example" : "hash123456"
+        },
+        "phone_number" : {
+          "type" : "number",
+          "example" : "0755985851"
+        },
+        "country" : {
+          "type" : "string",
+          "example" : "DR Congo"
+        },
+        "city" : {
+          "type" : "string",
+          "example" : "Bukavu"
+        }
+      },
+      "xml" : {
+        "name" : "Signup"
+      }
+    },
+    "Signin" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "example" : "eliezer.basubi30@gmail.com"
+        },
+        "password" : {
+          "type" : "string",
+          "example" : "hash123456"
+        }
+      },
+      "xml" : {
+        "name" : "Signin"
+      }
+    },
+    "Reset": {
+      "type" : "object",
+      "properties" : {
+        "old_password" : {
+          "type" : "string",
+          "example" : "hash123456"
+        },
+        "new_password" : {
+          "type" : "string",
+          "example" : "hash12345634"
+        },
+        "confirm_password" : {
+          "type" : "string",
+          "example" : "hash12345634"
+        }
+      },
+      "xml" :{ "name": "resetPassword"}
+    },
+    "Trip" : {
+      "type" : "object",
+      "properties" : {
+        "trip_name" : {
+          "type" : "string",
+          "example" : "Summer Camp Trip"
+        },
+        "seating_capacity" : {
+          "type" : "integer",
+          "example" : 44
+        },
+        "bus_license_number" : {
+          "type" : "string",
+          "example" : "FW0948549"
+        },
+        "origin" : {
+          "type" : "string",
+          "example" : "Bukavu"
+        },
+        "destination" : {
+          "type" : "string",
+          "example" : "Kigali"
+        },
+        "trip_date" : {
+          "type" : "date",
+          "example" : "2019-10-30"
+        },
+        "arrival_date": {
+          "type" : "date",
+          "example": "2019-09-23"
+        },
+        "time": {
+          "type": "time",
+          "example": "12:39"
+        },
+        "fare":{
+          "type": "number",
+          "example": "40.5"
+        }
+      },
+      "xml" : {
+        "name" : "Trip"
+      }
+    },
+    "Booking" : {
+      "type" : "object",
+      "properties" : {
+        "trip_id" : {
+          "type" : "integer",
+          "example" : 1
+        },
+        "seat_number" : {
+          "type" : "integer",
+          "example" : 1
+        }
+      },
+      "xml" : {
+        "name" : "Booking"
+      }
+    }
+  }
+}

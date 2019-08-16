@@ -33,6 +33,7 @@ export default class BookingController {
     const isAdmin = Helper.currentUserStatus();
 
     const bookings = await BookingQueries.findAll();
+    if (bookings.error) { return Helper.error(res, bookings.error.status, bookings.error.message); }
     let booked = ''; const displayerBooking = [];
     for (booked of bookings.rows) {
       const { id, seat_number } = booked;

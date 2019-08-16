@@ -4,6 +4,7 @@ import {
   MAXIMUM_BOOKINGS, HAVE_NO_BOOKINGS, NO_BOOKINGS
 } from '../constants/feedback';
 import { currentUser } from './user';
+// eslint-disable-next-line import/no-cycle
 import Helper from '../helpers/helper';
 import TripQueries from './trip';
 

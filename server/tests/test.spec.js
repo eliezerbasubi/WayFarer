@@ -231,7 +231,7 @@ describe('Test case: User authentication Endpoint => /api/v2/auth/', () => {
             .end((err,res) => {
                 expect(res.status).to.be.equal(SUCCESS_CODE);
                 expect(res.body.data).to.be.an('array');
-                expect(res.body.message).to.be.a("string")
+                expect(res.body.message).to.be.a("string");
                 done();
             })
         });
