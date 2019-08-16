@@ -31,7 +31,6 @@ export default class UserController {
         req.body.country,
         req.body.city
       ];
-      // save the user into the database
       const result = await UserQuery.insert(values);
 
       if (result.error) {
