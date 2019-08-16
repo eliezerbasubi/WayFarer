@@ -4,15 +4,14 @@
   "description": "WayFarer is a public bus transportation service",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=development npm run createTables && cross-env NODE_ENV=development npm run superuser &&  cross-env NODE_ENV=development babel-watch server.js",
+    "start": "cross-env NODE_ENV=development npm run createTables && cross-env NODE_ENV=development babel-watch server.js",
     "test": "cross-env NODE_ENV=test nyc  --reporter=text mocha --require babel-register server/tests/*.js --exit --timeout 10000",
     "test:watch": "mocha --watch",
     "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
     "coveralls-coverage": "coveralls < lcov.info",
     "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage",
-    "superuser": "node --require @babel/register server/config/admin.js",
-    "createTables": "node --require @babel/register server/config/tableCreator.js",
-    "dropTables": "node --require @babel/register server/config/dropTables.js"
+    "createTables": "babel-node server/config/tableCreator.js",
+    "dropTables": "babel-node server/config/dropTables.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +27,7 @@
   "dependencies": {
     "@babel/cli": "^7.5.0",
     "@babel/core": "^7.5.4",
+    "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.4",
     "@babel/register": "^7.5.5",
     "babel-preset-env": "^1.7.0",

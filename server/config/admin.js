@@ -10,7 +10,7 @@ const superAdmin = async () => {
     '${data.phone}','${data.country}','${data.city}', '${data.isadmin}') on conflict (email) do nothing returning *`);
   console.log('super admin creating...');
   await pool.end();
-return res;
+  return res;
 };
 
 superAdmin();
