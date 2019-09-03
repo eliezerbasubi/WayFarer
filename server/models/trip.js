@@ -45,7 +45,7 @@ export default class TripQueries {
   }
 
   static async findAll() {
-    const tripData = await pool.query('SELECT * FROM trips ORDER BY id ASC');
+    const tripData = await pool.query('SELECT * FROM trips ORDER BY id DESC');
     if (tripData.rowCount < 1) {
       return { error: { status: NOT_FOUND_CODE, message: NO_TRIP_AVAILABLE } };
     }

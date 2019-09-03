@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import bordyParser from 'body-parser';
+import swaggerUi from 'swagger-ui-express';
 import {
   METHOD_NOT_FOUND_MSG
 } from './server/constants/responseMessages';
@@ -9,8 +10,7 @@ import {
   METHOD_NOT_FOUND
 } from './server/constants/responseCodes';
 import routes from './server/routes/index';
-import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json'
+import swaggerDocument from './swagger.json';
 
 const app = express();
 
@@ -37,6 +37,8 @@ app.use(bordyParser.urlencoded({
 app.use(bordyParser.json());
 
 app.use('/api/v2', routes);
+
+app.use('/UI', express.static('UI'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

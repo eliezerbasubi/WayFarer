@@ -41,7 +41,7 @@ export default class BookingQueries {
   static async userBookings() {
     let user_id = 0;
     currentUser.forEach((user) => { user_id = user.id; });
-    const myBookings = await pool.query('SELECT * FROM bookings WHERE user_id = $1', [user_id]);
+    const myBookings = await pool.query('SELECT * FROM bookings WHERE user_id = $1 ORDER BY id ASC', [user_id]);
     if (myBookings.rowCount < 1) {
       return { error: { status: NOT_FOUND_CODE, message: HAVE_NO_BOOKINGS } };
     }

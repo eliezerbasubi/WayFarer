@@ -36,9 +36,9 @@ export default class BookingController {
     if (bookings.error) { return Helper.error(res, bookings.error.status, bookings.error.message); }
     let booked = ''; const displayerBooking = [];
     for (booked of bookings.rows) {
-      const { id, seat_number } = booked;
+      const { id, seat_number, created_on } = booked;
       const { rows } = await BookingQueries.userBookingDetails([booked.user_id, booked.trip_id]);
-      displayerBooking.push(Object.assign({ id, seat_number }, ...rows));
+      displayerBooking.push(Object.assign({ id, seat_number, created_on }, ...rows));
     }
     if (isAdmin === true) {
       if (bookings.error) {

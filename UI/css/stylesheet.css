@@ -448,7 +448,9 @@ header .navbar {
     height: 60px;
     width: 60px;
 }
-
+.username {
+    text-transform: capitalize;
+}
 .navbar-icon {
     width: 30px;
     height: 30px;
@@ -765,6 +767,9 @@ header .navbar {
     background-color: #fff;
 }
 
+.data-already-cancelled{
+    display: none;
+}
 /******** *****************************
 **************END DASHBOARD ***********/
 

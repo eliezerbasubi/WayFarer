@@ -41,12 +41,12 @@ class HomePage {
 
   homeButtonsEvent() {
     $('#btn-create-account').addEventListener('click', () => {
-      document.location.href = 'html/signup.html';
+      document.location.href = 'pages/signup.html';
     });
     const btn_details = $$('.btn_details');
     btn_details.forEach((btn) => {
       btn.addEventListener('click', () => {
-        document.location.href = 'html/login.html';
+        document.location.href = 'pages/login.html';
       });
     });
   }

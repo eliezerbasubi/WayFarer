@@ -29,7 +29,7 @@
         <div class="avatar-cover">
             <img src="../assets/images/avatar.png" alt="user profile" class="avatar" aria-hidden="true">
             <span>
-                <p class="username">Eliezer Basubi</p>
+                <p class="username info">Eliezer Basubi</p>
             </span>
             <label for="toggler">
                 <img src="../assets/images/humberger.png" alt="menu icon" class="navbar-icon">
@@ -38,12 +38,11 @@
         </div>
         <input type="checkbox" name="" id="toggler">
         <div class="tab">
-            <button class="tablinks admin-default-tab" onclick="new Dashboard().displayDash(event, 'create_trip')"
-                id="defaultOpen" aria-admin-access>Create
-                trip</button>
-            <button class="tablinks user-default-tab" onclick="new Dashboard().displayDash(event, 'view_trip')" aria-both-access>View trips</button>
-            <button class="tablinks" onclick="new Dashboard().displayDash(event, 'book_seat')" id="book_a_seat" aria-user-access>Book seat</button>
-            <button class="tablinks" onclick="new Dashboard().displayDash(event, 'bookings')" aria-both-access>Bookings</button>
+            <button class="tablinks admin-default-tab" onclick="new SideBarManager().displayDash(event, 'create_trip')"
+                id="defaultOpen" aria-admin-access>Create trip</button>
+            <button class="tablinks user-default-tab" id="link_view" onclick="new SideBarManager().displayDash(event, 'view_trip')" aria-both-access>View trips</button>
+            <button class="tablinks" onclick="new SideBarManager().displayDash(event, 'book_seat')" id="book_a_seat" aria-user-access>Book seat</button>
+            <button class="tablinks" id="link_bookings" onclick="new SideBarManager().displayDash(event, 'bookings')" aria-both-access>Bookings</button>
         </div>
     </section>
     <section class="content">
@@ -53,7 +52,7 @@
                 <div class="flex-center-card">
                     <p><span class="error"></span></p>
                     <h1 class="section-title">Create a trip</h1>
-
+                    <span class="error error-api"></span>
                     <div class="col-md-2">
                         <div class="flex-input-center">
                             <label for="trip_name"><b>Trip name</b></label>
@@ -142,212 +141,33 @@
                     <div class="col-md-2">
                         <div class="flex-input-center">
                         <label for="country"><b>Origin</b></label>
-                        <select name="country" id="user_country" class="flex-input-center">
-                            <option value="">Filter trip by origin</option>
-                            <option value="">Uvira</option>
-                            <option value="">Kinshasa</option>
-                            <option value="">Gatuna</option>
-                            <option value="">Katuna</option>
-                            <option value="">Tanzania</option>
+                        <select name="country" id="trip_origin_filter" class="flex-input-center trip_filters">
+                            <option value="" selected disabled>Filter trip by origin</option>
                         </select>
                         </div>
                         <div class="flex-input-center responsive-margin-top">
                         <label for="user_city" class="flex-input-center responsive-margin-top"><b>Destination</b></label>
-                        <select name="" id="user_city" class="flex-input-center ">
-                            <option value="">Filter trip by destination</option>
-                            <option value="">Bukavu</option>
-                            <option value="">Kigali</option>
-                            <option value="">Kampala</option>
-                            <option value="">Nairobi</option>
-                            <option value="">Dar-es-salem</option>
+                        <select name="" id="trip_destination_filter" class="flex-input-center trip_filters">
+                            <option value="" selected disabled>Filter trip by destination</option>
                         </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-2 flex-justify-space-evenly">
-                    <!-- First trip card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/trip4.jpg" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h2 class="section-title trip-name">Smart trip</h2>
-                            <p class="align-center">
-                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
-                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
-                            </p>
-                            <p class="align-center pad-small">
-                                <span><i class="far fa-calendar-alt fg-origin"></i> 16 August 2019</span>
-                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified">
-                            <div class="flex flex-card-fare">
-                                <p class="box-shadowed">$12.5</p>
-                            </div>
-                            <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
-                                <button class="view_specific_trip flex-button-action"><i
-                                    class="fas fa-eye "></i></button>
-                                <button class="cancel_trip flex-button-action" aria-admin-access><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Second trip card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/trip5.jpg" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h2 class="section-title trip-name">Agile trip</h2>
-                            <p class="align-center">
-                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
-                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
-                            </p>
-                            <p class="align-center pad-small">
-                                <span><i class="far fa-calendar-alt fg-origin"></i> 12 August 2019</span>
-                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified">
-                            <div class="flex flex-card-fare">
-                                <p class="box-shadowed">$90.5</p>
-                            </div>
-                            <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
-                                <button class="view_specific_trip flex-button-action"><i
-                                    class="fas fa-eye "></i></button>
-                                <button class="cancel_trip flex-button-action" aria-admin-access><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-2 flex-justify-space-evenly" id="display-trips">
+                    
                 </div>
 
-                <!-- Second Row  -->
-                <div class="col-md-2 flex-justify-space-evenly">
-                    <!-- Third trip card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/trip7.jpg" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h2 class="section-title trip-name">Easter trip</h2>
-                            <p class="align-center">
-                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
-                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
-                            </p>
-                            <p class="align-center pad-small">
-                                <span><i class="far fa-calendar-alt fg-origin"></i> 25 August 2019</span>
-                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified">
-                            <div class="flex flex-card-fare">
-                                <p class="box-shadowed">$35.5</p>
-                            </div>
-                            <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
-                                <button class="view_specific_trip flex-button-action"><i
-                                    class="fas fa-eye "></i></button>
-                                <button class="cancel_trip flex-button-action" aria-admin-access><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fourth trip -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/tn_trip9.jpg" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h2 class="section-title trip-name">Classic trip</h2>
-                            <p class="align-center">
-                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
-                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
-                            </p>
-                            <p class="align-center pad-small">
-                                <span><i class="far fa-calendar-alt fg-origin"></i> 16 August 2019</span>
-                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified">
-                            <div class="flex flex-card-fare">
-                                <p class="box-shadowed">$45.5</p>
-                            </div>
-                            <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
-                                <button class="view_specific_trip flex-button-action"><i
-                                        class="fas fa-eye "></i></button>
-                                <button class="cancel_trip flex-button-action" aria-admin-access><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- View more -->
                 <div class="col-md-2 flex-justify-space-evenly" id="aria-view-more">
-                    <!-- fifth trip card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/tn_trip6.jpg" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h2 class="section-title trip-name">Mario trip</h2>
-                            <p class="align-center">
-                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
-                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
-                            </p>
-                            <p class="align-center pad-small">
-                                <span><i class="far fa-calendar-alt fg-origin"></i> 25 August 2019</span>
-                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified">
-                            <div class="flex flex-card-fare">
-                                <p class="box-shadowed">$35.5</p>
-                            </div>
-                            <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
-                                <button class="view_specific_trip flex-button-action"><i
-                                    class="fas fa-eye "></i></button>
-                                <button class="cancel_trip flex-button-action" aria-admin-access><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fourth trip -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/tn_trip11.jpg" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h2 class="section-title trip-name">Classic trip</h2>
-                            <p class="align-center">
-                                <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span>
-                                <span><i class="fas fa-map-marker-alt fg-destination"></i> Kampala</span>
-                            </p>
-                            <p class="align-center pad-small">
-                                <span><i class="far fa-calendar-alt fg-origin"></i> 16 August 2019</span>
-                                <span><i class="far fa-clock fg-origin"></i> 11:30</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified">
-                            <div class="flex flex-card-fare">
-                                <p class="box-shadowed">$45.5</p>
-                            </div>
-                            <div class="flex flex-justify-space-around box-shadowed flex-card-actions">
-                                <button class="view_specific_trip flex-button-action"><i
-                                        class="fas fa-eye "></i></button>
-                                <button class="cancel_trip flex-button-action" aria-admin-access><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
                 <!-- VIEW MORE  -->
                 <div class="view_more align-center">
-                    <button type="button" value="" class="btn btn-primary" id="btn_view_more"><i class="fas fa-angle-double-down"></i> View more</button>
+                    <button type="button" value="" class="btn btn-primary" id="btn_view_more">
+                        <i class="fas fa-angle-double-down" id="indicator"></i> 
+                        <span id="btn_more_text">View more</span>
+                    </button>
                 </div>
                 <!-- End of view trips tab -->
             </div>
@@ -362,18 +182,16 @@
                     </div>
                     <div class="flex-trip-description" id="booking_details">
                         <h2>Submit your booking</h2>
+                        <p>
+                            <span class="error booking-api-error"></span>
+                        </p>
                         <p class="error" id="seat_not_entered"></p>
                         <form action="" id="form-booking">
                             <!-- <input type="text" class="form-input-control"> -->
-                            <select name="select_trip" id="select_trip" class="flex-input-center">
+                            <select name="select_trip" id="dropdown_booking" class="flex-input-center">
                                 <option value="" selected disabled>Select a trip</option>
-                                <option value="">Summer camp</option>
-                                <option value="">Quantico</option>
-                                <option value="">Bootcamp</option>
-                                <option value="">Trinity</option>
-                                <option value="">Pilgrimage</option>
                             </select>
-                            <input type="text" class="form-input-control" id="fare" value="$45.9" readonly>
+                            <input type="text" class="form-input-control" id="booking_fare" value="$45.9" readonly>
                             <input type="text" class="form-input-control" id="selected_seat_no"
                                 placeholder="Seat number">
                             <input type="button" value="Submit" class="btn btn-secondary" id="btn-submit-booking">
@@ -383,144 +201,8 @@
             </div>
 
             <div id="bookings" class="tabcontent marg-top">
-                <div class="col-md-2 marg-top">
-                    <!-- First booking card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/avatar.png" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h3 class="section-title username">John Doe</h3>
-                            <p class="align-center">
-                                <span>Booking ID :</span>
-                                <span></i> 020</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Seat No.:</span>
-                                <span></i>34</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Created on.:</span>
-                                <span></i>16 July 2019</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified" aria-user-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                        <div class="flex-card-minified" aria-admin-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="fa fa-check flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Second booking card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/default_avatar.png" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h3 class="section-title username">Don Basubi</h3>
-                            <p class="align-center">
-                                <span>Booking ID :</span>
-                                <span></i> 006</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Seat No.:</span>
-                                <span></i>06</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Created on.:</span>
-                                <span></i>10 August 2019</span>
-                            </p>
-                        </div>
-                        <div class="flex-card-minified" aria-user-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                        <div class="flex-card-minified" aria-admin-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="fa fa-check flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Third booking card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/default_avatar.png" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h3 class="section-title username">Don Basubi</h3>
-                            <p class="align-center">
-                                <span>Booking ID :</span>
-                                <span></i> 001</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Seat No.:</span>
-                                <span></i>09</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Created on.:</span>
-                                <span></i>16 August 2019</span>
-                            </p>
-
-                        </div>
-                        <div class="flex-card-minified" aria-user-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="far fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                        <div class="flex-card-minified" aria-admin-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="fa fa-check flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fourth booking card -->
-                    <div class="flex-justify-card marg-bottom">
-                        <div class="flex-img-left">
-                            <img src="../assets/images/avatar.png" alt="" class="trip_img_view">
-                        </div>
-                        <div class="flex-align-items-center">
-                            <h3 class="section-title username">John Doe</h3>
-                            <p class="align-center">
-                                <span>Booking ID :</span>
-                                <span></i> 004</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Seat No.:</span>
-                                <span></i>20</span>
-                            </p>
-                            <p class="align-center">
-                                <span>Created on.:</span>
-                                <span></i>01 August 2019</span>
-                            </p>
-
-                        </div>
-                        <div class="flex-card-minified" aria-user-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="fa fa-trash-alt flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                        <div class="flex-card-minified" aria-admin-access>
-                            <div class="flex flex-justify-space-around flex-card-actions">
-                                <button class="delete_booking flex-button-action"><i
-                                        class="fa fa-check flex-fare-style"></i></button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-2 marg-top" id="display_bookings">
+                    
                 </div> <!-- End of col-md-2 div-->
             </div> <!-- End of bookings tab content -->
         </div> <!-- End of wrapper div -->
@@ -540,13 +222,16 @@
                 <div class="flex-trip-description">
                     <h2 class="section-title display-trip-name">Easter trip</h2>
                     <p>
-                        <span>Origin :</span> <span><i class="fas fa-map-marker fg-origin"></i> Bukavu</span> </p>
-                    <p>Destination: <i class="fas fa-map-marker-alt fg-destination"></i> Kampala</p>
-                    <p>Departure : <i class="far fa-calendar-alt fg-origin"></i> 16 August 2019</p>
-                    <p>Time: <i class="far fa-clock fg-origin"></i> 11:30</p>
-                    <p>Arrival : <i class="far fa-calendar-alt fg-destination"></i> 16 August 2019</p>
-                    <p>Bus license number : <i class="fas fa-bus fg-destination"></i> FW009845</p>
-                    <p>Seating Capacity : <i class="fas fa-bus fg-destination"></i> 44</p>
+                        <span>Origin :</span> <span><i class="fas fa-map-marker fg-origin"></i> 
+                            <span class="display-trip-origin"> Bukavu</span></span> </p>
+                    <p>Destination: <i class="fas fa-map-marker-alt fg-destination"></i> 
+                        <span class="display-trip-destination"> Kampala</span></span></p>
+                    <p>Departure : <i class="far fa-calendar-alt fg-origin"></i> 
+                        <span class="display-trip-departure"> 16 August 2019</span></span></p>
+                    <p>Time: <i class="far fa-clock fg-origin"></i> <span class="display-trip-time"> 11:30</span></p>
+                    <p>Arrival : <i class="far fa-calendar-alt fg-destination"></i> <span class="display-trip-arrival"> 16 August 2019</span></p>
+                    <p>Bus license number : <i class="fas fa-bus fg-destination"></i> <span class="display-trip-license"> FW009845</span></p>
+                    <p>Seating Capacity : <i class="fas fa-bus fg-destination"></i> <span class="display-trip-capacity"> 44</span></p>
 
                     <div class="flex-book-button">
                         <input type="button" value="Book now" class="btn btn-secondary" id="btn-booking">

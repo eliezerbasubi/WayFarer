@@ -69,8 +69,8 @@ export default class Helper {
     let indexer = ''; const myBookings = [];
     for (indexer of userBookings.rows) {
       const row = await BookingQueries.userBookingDetails([indexer.user_id, indexer.trip_id]);
-      const { id, seat_number } = indexer;
-      myBookings.push(Object.assign({ id, seat_number }, ...row.rows));
+      const { id, seat_number, created_on } = indexer;
+      myBookings.push(Object.assign({ id, seat_number, created_on }, ...row.rows));
     }
     return Helper.success(res, 200, myBookings, 'Found your Bookings');
   }

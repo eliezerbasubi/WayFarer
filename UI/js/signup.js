@@ -9,76 +9,88 @@ class SignUp extends Validator {
     document.location.assign('login.html');
   }
 
-  allowSignUp() {
-    const errorFname = $('.error-firstname');
-    const errorLname = $('.error-lastname');
-    const errorEmail = $('.error-email');
-    const errorPhone = $('.error-phone');
-    const errorPwd = $('.error-password');
-    const errorConPwd = $('.error-confirmPassword');
-    const errorCity = $('.error-city');
-
-    const firstName = $('#firstName').value;
-    const lastName = $('#lastName').value;
-    const email = $('#email').value;
-    const phone = $('#phone').value;
-    const password = $('#password').value;
-    const confirmPassword = $('#confirmPassword').value;
-    const city = $('#user_city').textContent;
-
+  validateFields(){
     let isValid = true;
 
-    if (firstName === '') {
-      errorFname.textContent = 'Firstname is required';
+    if ($('#firstName').value === '') {
+      $('.error-firstname').textContent = 'Firstname is required';
       isValid = false;
     } else {
-      errorFname.textContent = '';
+      $('.error-firstname').textContent = '';
     }
 
-    if (lastName === '') {
-      errorLname.textContent = 'Lastname is required';
+    if ($('#lastName').value === '') {
+      $('.error-lastname').textContent = 'Lastname is required';
       isValid = false;
     } else {
-      errorLname.textContent = '';
+      $('.error-lastname').textContent = '';
     }
 
-    if (!this.validate('email', email)) {
-      errorEmail.textContent = 'Invalid email';
+    if (!this.validate('email', $('#email').value)) {
+      $('.error-email').textContent = 'Invalid email';
       isValid = false;
     } else {
-      errorEmail.textContent = '';
+      $('.error-email').textContent = '';
     }
 
-    if (!this.validate('phone', phone)) {
-      errorPhone.textContent = 'Invalid phone number';
+    if (!this.validate('phone', $('#phone').value)) {
+      $('.error-phone').textContent = 'Invalid phone number';
       isValid = false;
     } else {
-      errorPhone.textContent = '';
+      $('.error-phone').textContent = '';
     }
 
-    if (password.length < 6) {
-      errorPwd.textContent = 'Short password. At least 6 characters';
+    if ($('#password').value.length < 6) {
+      $('.error-password').textContent = 'Short password. At least 6 characters';
       isValid = false;
     } else {
-      errorPwd.textContent = '';
+      $('.error-password').textContent = '';
     }
 
-    if (password !== confirmPassword) {
-      errorConPwd.textContent = 'Password does not match';
+    if ($('#password').value !== $('#confirmPassword').value) {
+      $('.error-confirmPassword').textContent = 'Password does not match';
       isValid = false;
     } else {
-      errorConPwd.textContent = '';
+      $('.error-confirmPassword').textContent = '';
     }
 
-    if (city === '') {
-      errorCity.textContent = 'Please select your city';
+    if ($('#user_city').textContent === '') {
+      $('.error-city').textContent = 'Please select your city';
       isValid = false;
     } else {
-      errorCity.textContent = '';
+      $('.error-city').textContent = '';
+    }
+    return isValid;
+  }
+
+  allowSignUp() {
+    const url = 'http://127.0.0.1:5500/api/v2/auth/signup';
+
+    const userData = {
+      first_name: $('#firstName').value,
+      last_name: $('#lastName').value,
+      email: $('#email').value,
+      phone_number: $('#phone').value,
+      password: $('#password').value,
+      city: $('#user_city').value,
+      country: $('#user_country').value
     }
 
-    if (isValid === true) {
+    const init = {
+      method: 'POST', body: JSON.stringify(userData), 
+      headers: {'Content-Type': 'Application/json'} 
+    }
+
+    fetch(url, init)
+    .then((res) => res.json())
+    .then((response) => {
+      if(response.error){
+        console.log(response);
+        console.log($('#user_city').value);
+        
+        return;
+      }
       this.intent();
-    }
+    }).catch(error => console.error('Error', error))
   }
 }
